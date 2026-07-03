@@ -1,0 +1,67 @@
+---
+import { Image } from "astro:assets";
+import { formatDate } from "../../lib/dates";
+import { getPostDate, getPostDescription, getPostSearchText, getPostTags } from "../../lib/posts";
+
+interface Props {
+  post: any;
+  cover: { filename: string; src: any };
+  words: number;
+  index: number;
+}
+
+const { post, cover, words, index } = Astro.props;
+const coverSrc = cover.src;
+const isPublicCover = typeof coverSrc === "string";
+const date = post.data.updatedDate ?? getPostDate(post);
+const description = getPostDescription(post);
+const tags = getPostTags(post);
+---
+
+<article class="timeline-entry blog-note" data-note-card data-search={getPostSearchText(post)}>
+  <div class="timeline-date">
+    <time datetime={date.toISOString()}>{formatDate(date)}</time>
+    <span>updated</span>
+    <i aria-hidden="true"></i>
+  </div>
+  <a class="note-card soft-card" href={`/blog/${post.id}/`} style={`--stagger:${index}`}>
+    <div class="photo-frame">
+      <span class="photo-tape" aria-hidden="true"></span>
+      {
+        isPublicCover ? (
+          <img
+            src={coverSrc}
+            alt={post.data.coverAlt ?? post.data.title}
+            width="320"
+            height="390"
+            loading={index === 0 ? "eager" : "lazy"}
+            decoding="async"
+          />
+        ) : (
+          <Image
+            src={coverSrc}
+            alt={post.data.coverAlt ?? post.data.title}
+            width={320}
+            height={390}
+            loading={index === 0 ? "eager" : "lazy"}
+            decoding="async"
+          />
+        )
+      }
+      <span class="photo-notch" aria-hidden="true"></span>
+    </div>
+    <div class="note-copy">
+      <p class="note-meta">
+        <span>{tags[0] ?? "Article"}</span>
+        <span>发布 {formatDate(getPostDate(post))}</span>
+        {post.data.updatedDate && <span>更新 {formatDate(post.data.updatedDate)}</span>}
+      </p>
+      <h2>{post.data.title}</h2>
+      <p>{description}</p>
+      <div class="tag-row">
+        {tags.map((tag) => <span class="tag-chip">#{tag}</span>)}
+      </div>
+      <span class="word-count">{words.toLocaleString("zh-CN")} 字</span>
+    </div>
+  </a>
+</article>

@@ -1,0 +1,36 @@
+﻿---
+interface Props {
+  count?: number;
+}
+
+const { count = 64 } = Astro.props;
+
+function seededRandom(seed: number) {
+  const value = Math.sin(seed * 9973.17) * 10000;
+  return value - Math.floor(value);
+}
+
+const petals = Array.from({ length: count }, (_, index) => {
+  const seed = index + 1;
+  const x = seededRandom(seed) * 100;
+  const size = 8 + seededRandom(seed + 11) * 13;
+  const drift = (seededRandom(seed + 23) - 0.5) * 28;
+  const sway = 4 + seededRandom(seed + 37) * 10;
+  const duration = 13 + seededRandom(seed + 41) * 13;
+  const delay = -seededRandom(seed + 53) * duration;
+  const opacity = 0.22 + seededRandom(seed + 67) * 0.34;
+  const spin = 120 + seededRandom(seed + 79) * 380;
+  return { index, x, size, drift, sway, duration, delay, opacity, spin };
+});
+---
+
+<div class="sakura-layer" aria-hidden="true">
+  {
+    petals.map((petal) => (
+      <span
+        class="petal"
+        style={`--x:${petal.x.toFixed(2)}%; --size:${petal.size.toFixed(2)}px; --drift:${petal.drift.toFixed(2)}vw; --sway:${petal.sway.toFixed(2)}vw; --duration:${petal.duration.toFixed(2)}s; --delay:${petal.delay.toFixed(2)}s; --opacity:${petal.opacity.toFixed(2)}; --spin:${petal.spin.toFixed(1)}deg; --petal-index:${petal.index};`}
+      />
+    ))
+  }
+</div>

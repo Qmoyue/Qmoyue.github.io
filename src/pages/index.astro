@@ -1,11 +1,132 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { site } from "../data/site";
+import { createCoverAllocator } from "../lib/blogCovers";
+import { formatDate } from "../lib/dates";
+import { countWords } from "../lib/reading";
+import { getPostDate, getPostDescription, getPostTags } from "../lib/posts";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const posts = (await getCollection("blog", ({ data }) => import.meta.env.PROD ? data.draft !== true : true))
+  .sort((a, b) => getPostDate(b as any).valueOf() - getPostDate(a as any).valueOf());
+const coverForPost = createCoverAllocator(posts as any);
+const latest = posts[0];
+const latestCover = latest ? coverForPost(latest as any) : undefined;
+const latestCoverSrc = latestCover?.src;
+const latestCoverIsPublic = typeof latestCoverSrc === "string";
+const latestTags = latest ? getPostTags(latest as any) : [];
+const latestWords = latest ? countWords((latest as any).body ?? latest.data.title) : 0;
+const fallingWords = ["少女乐队", "二次元", "web安全", "agent", "月美", "[oblivious]", "ギター英雄", "だから僕は音楽を辞めた", "私が神になります", "個性を捨てたら、死んだも同然"];
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<BaseLayout title={site.name} description={site.description} bodyClass="home-page">
+  <main class="home-root is-first" data-home-root>
+    <section class="home-panel home-first" data-home-panel="first" aria-label="首页介绍">
+      <div class="home-hero-brand" aria-hidden="true">
+        <p>{site.subtitle}</p>
+        <h1>{site.displayName}</h1>
+      </div>
+
+      <div class="identity-stage home-identity-stage">
+        <button class="hero-avatar" type="button" aria-label="弹一下吉他">
+          <img src={site.avatar} alt="Moyue avatar" width="226" height="226" loading="eager" decoding="async" />
+          <span class="avatar-sparkle" aria-hidden="true">♪</span>
+          <span class="avatar-guitar" data-avatar-guitar aria-hidden="true">
+            <img src="/images/guitar-cutout.png" alt="" width="146" height="146" loading="eager" decoding="async" />
+          </span>
+          <span class="avatar-speech" data-avatar-speech aria-hidden="true">Bobobobocchi desu!</span>
+        </button>
+
+        <section class="terminal-card terminal-ubuntu" aria-label="terminal identity">
+          <div class="terminal-topbar" aria-hidden="true">
+            <span class="terminal-lights"><i></i><i></i><i></i></span>
+            <span class="terminal-window-title">moyue@blog:~</span>
+          </div>
+          <div class="terminal-screen">
+            <p class="terminal-path">~/moyue/blog</p>
+            <p class="terminal-line"><span class="terminal-prompt">$</span> <span class="terminal-command" data-terminal-command></span><span class="terminal-caret"></span></p>
+            <p class="terminal-line terminal-output" data-terminal-output></p>
+            <p class="terminal-hint">学习笔记 / 漏洞研究 / 一点点电波</p>
+          </div>
+          <div class="terminal-links">
+            <a class="github-pill" href={site.githubUrl} aria-label="Github">
+              <span class="github-pill-icon"><img src="/images/github-mark.svg" alt="" width="24" height="24" loading="lazy" /></span>
+              <span>Github</span>
+            </a>
+          </div>
+        </section>
+      </div>
+      <p class="home-cue">scroll / space</p>
+    </section>
+
+    <section class="home-panel home-second" data-home-panel="second" aria-label="首页模块">
+      <div class="home-second-dashboard">
+        {latest && latestCoverSrc && (
+          <section class="home-bento-card home-latest-panel" aria-label="最新文章">
+            <a class="home-latest-card is-primary" href={`/blog/${latest.id}/`}>
+              <span class="home-latest-image">
+                {latestCoverIsPublic ? (
+                  <img src={latestCoverSrc} alt={latest.data.coverAlt ?? latest.data.title} width="320" height="390" loading="eager" decoding="async" />
+                ) : (
+                  <Image src={latestCoverSrc} alt={latest.data.coverAlt ?? latest.data.title} width={320} height={390} loading="eager" decoding="async" />
+                )}
+              </span>
+              <span class="home-latest-copy">
+                <time datetime={getPostDate(latest as any).toISOString()}>{formatDate(getPostDate(latest as any))}</time>
+                <h3>{latest.data.title}</h3>
+                <p>{getPostDescription(latest as any)}</p>
+                <span class="home-latest-meta">
+                  {latestTags.slice(0, 2).map((tag) => <span>#{tag}</span>)}
+                  <small>{latestWords.toLocaleString("zh-CN")} 字</small>
+                </span>
+              </span>
+            </a>
+          </section>
+        )}
+
+        <div class="home-bento-card home-flower-banner" aria-hidden="true">
+          <img src="/images/flower.jpg" alt="" width="760" height="280" loading="eager" decoding="async" />
+        </div>
+
+        <section class="home-bento-card home-profile-widget" aria-label="Moyue">
+          <img src={site.avatar} alt="Moyue avatar" width="120" height="120" loading="lazy" decoding="async" />
+          <p><span>I'm <strong>Moyue</strong></span><span>Nice to meet you!</span></p>
+        </section>
+
+        <section class="home-bento-card home-clock-widget" aria-label="当前时间">
+          <p class="clock-date" data-clock-date></p>
+          <p class="clock-time" data-clock-time>00:00</p>
+        </section>
+
+        <section class="home-bento-card home-calendar-widget" aria-label="日历">
+          <div class="home-bento-head is-small">
+            <div>
+              <p class="home-bento-label">CALENDAR</p>
+              <time data-calendar-month>2026 / 07</time>
+            </div>
+            <span data-calendar-today>07.03</span>
+          </div>
+          <div class="home-calendar-weekdays" aria-hidden="true">
+            <span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span>
+          </div>
+          <div class="home-calendar-days" data-calendar-days></div>
+        </section>
+
+        <section class="home-bento-card home-quote-widget" aria-label="格言">
+          <p>「梦是现实的延续，</p>
+          <p>现实是梦的终结。」</p>
+        </section>
+      </div>
+      <div class="falling-stage" data-falling-stage aria-hidden="true"></div>
+      <script type="application/json" data-falling-source set:html={JSON.stringify(fallingWords)}></script>
+    </section>
+  </main>
+
+  <script src="../scripts/home-snap.js"></script>
+  <script src="../scripts/clock.js"></script>
+  <script src="../scripts/terminal-welcome.js"></script>
+  <script src="../scripts/avatar-guitar.js"></script>
+  <script src="../scripts/falling-items.js"></script>
+</BaseLayout>
+

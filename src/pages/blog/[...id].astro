@@ -1,0 +1,48 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ArticleToc from "../../components/blog/ArticleToc.astro";
+import { formatDate } from "../../lib/dates";
+import { countWords } from "../../lib/reading";
+import { getPostDate, getPostDescription, getPostTags } from "../../lib/posts";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog", ({ data }) => import.meta.env.PROD ? data.draft !== true : true);
+
+  return posts.map((post) => ({
+    params: { id: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+const words = countWords((post as any).body ?? `${post.data.title}`);
+const date = getPostDate(post as any);
+const description = getPostDescription(post as any);
+const tags = getPostTags(post as any);
+---
+
+<BaseLayout title={post.data.title} description={description}>
+  <main class="page-shell article-shell">
+    <article class="article-card glass-card">
+      <a class="back-link" href="/blog/">← 回到文章列表</a>
+      <p class="article-meta">
+        <span>{tags[0] ?? "Article"}</span>
+        <time datetime={date.toISOString()}>{formatDate(date)}</time>
+        <span>{words.toLocaleString("zh-CN")} 字</span>
+      </p>
+      <h1 class="article-title">{post.data.title}</h1>
+      <p class="article-description">{description}</p>
+      <div class="tag-row">
+        {tags.map((tag) => <span class="tag-chip">#{tag}</span>)}
+      </div>
+
+      <div class="article-content">
+        <Content />
+      </div>
+    </article>
+
+    <ArticleToc headings={headings} />
+  </main>
+</BaseLayout>

@@ -1,0 +1,27 @@
+---
+interface Props {
+  project: {
+    name: string;
+    description: string;
+    tags: string[];
+    status: string;
+    url: string;
+  };
+  index: number;
+}
+
+const { project, index } = Astro.props;
+---
+
+<a class="project-card soft-card" href={project.url} target="_blank" rel="noreferrer" style={`--stagger:${index}`}>
+  <span class="project-mark">{project.status}</span>
+  <div>
+    <p class="section-label">PROJECT</p>
+    <h2>{project.name}</h2>
+    <p>{project.description}</p>
+    <div class="tag-row">
+      {project.tags.map((tag) => <span class="tag-chip">#{tag}</span>)}
+    </div>
+  </div>
+  <span class="project-arrow">↗</span>
+</a>

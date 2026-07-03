@@ -1,0 +1,42 @@
+---
+import DropdownNav from "../components/navigation/DropdownNav.astro";
+import ScrollRail from "../components/navigation/ScrollRail.astro";
+import SakuraLayer from "../components/effects/SakuraLayer.astro";
+import SiteFooter from "../components/shared/SiteFooter.astro";
+import "../styles/global.css";
+import { site } from "../data/site";
+
+interface Props {
+  title?: string;
+  description?: string;
+  bodyClass?: string;
+  showSakura?: boolean;
+}
+
+const {
+  title = site.name,
+  description = site.description,
+  bodyClass = "",
+  showSakura = true,
+} = Astro.props;
+const fullTitle = title === site.name ? title : `${title} · ${site.name}`;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/png" href={site.doro} />
+    <title>{fullTitle}</title>
+  </head>
+  <body class={bodyClass}>
+    {showSakura && <SakuraLayer />}
+    <DropdownNav />
+    <ScrollRail />
+    <slot />
+    <SiteFooter />
+  </body>
+</html>

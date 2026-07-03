@@ -1,0 +1,33 @@
+---
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: Heading[];
+}
+
+const { headings } = Astro.props;
+const visibleHeadings = headings.filter((heading) => heading.depth > 1 && heading.depth < 4);
+---
+
+<aside class="article-toc soft-card" data-article-toc>
+  <p class="toc-label">ON THIS PAGE</p>
+  {
+    visibleHeadings.length > 0 ? (
+      <nav aria-label="文章目录">
+        {visibleHeadings.map((heading) => (
+          <a href={`#${heading.slug}`} class={`toc-depth-${heading.depth}`}>
+            <span>{heading.text}</span><b>#</b>
+          </a>
+        ))}
+      </nav>
+    ) : (
+      <p class="toc-empty">这一页很轻，还没有目录。</p>
+    )
+  }
+</aside>
+
+<script src="../../scripts/article-toc.js"></script>

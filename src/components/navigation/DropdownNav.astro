@@ -1,0 +1,29 @@
+---
+import Icon from "../shared/Icon.astro";
+import { navItems } from "../../data/site";
+
+const currentPath = Astro.url.pathname;
+const normalize = (href: string) => (href === "/" ? "/" : href.replace(/\/$/, ""));
+const isActive = (href: string) => {
+  if (href === "/") return currentPath === "/";
+  return normalize(currentPath).startsWith(normalize(href));
+};
+---
+
+<nav class="top-nav" aria-label="主导航">
+  <button class="nav-trigger" type="button" aria-label="打开导航">
+    <Icon name="menu" />
+  </button>
+  <div class="nav-panel">
+    {navItems.map((item) => (
+      <a class:list={["nav-item", { "is-active": isActive(item.href) }]} href={item.href}>
+        <span class="nav-icon"><Icon name={item.icon} /></span>
+        <span class="nav-copy">
+          <strong>{item.label}</strong>
+          <small>{item.subtitle}</small>
+        </span>
+      </a>
+    ))}
+  </div>
+  <span class="nav-handle" aria-hidden="true"></span>
+</nav>

@@ -1,0 +1,54 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Icon from "../../components/shared/Icon.astro";
+import NoteCard from "../../components/blog/NoteCard.astro";
+import { createCoverAllocator } from "../../lib/blogCovers";
+import { countWords } from "../../lib/reading";
+import { getPostDate } from "../../lib/posts";
+
+const posts = (await getCollection("blog", ({ data }) => import.meta.env.PROD ? data.draft !== true : true))
+  .sort((a, b) => getPostDate(b as any).valueOf() - getPostDate(a as any).valueOf());
+
+const coverForPost = createCoverAllocator(posts as any);
+const postsWithWords = posts.map((post) => ({
+  post,
+  cover: coverForPost(post as any),
+  words: countWords((post as any).body ?? `${post.data.title}`),
+}));
+---
+
+<BaseLayout title="Blog" description="开发经验、站点折腾和兴趣记录。">
+  <main class="page-shell">
+    <section class="page-intro glass-card">
+      <p class="section-label">ARCHIVE</p>
+      <h1 class="big-title">Blog</h1>
+      <p class="page-lead page-script-lead"><span>my-blog</span></p>
+    </section>
+
+    <section class="blog-search-card glass-card" aria-label="搜索笔记">
+      <div class="search-title">
+        <span class="search-icon"><Icon name="search" /></span>
+        <div>
+          <p class="section-label">SEARCH</p>
+          <h2>翻找笔记</h2>
+        </div>
+      </div>
+      <div class="search-field">
+        <label for="blog-search">关键词</label>
+        <input id="blog-search" type="search" placeholder="请输入关键词喵~" data-blog-search />
+        <p class="search-count" data-search-count>共 {posts.length} 篇文章</p>
+      </div>
+    </section>
+
+    <section class="timeline" aria-label="博客时间轴">
+      {postsWithWords.map(({ post, cover, words }, index) => <NoteCard post={post} cover={cover} words={words} index={index} />)}
+    </section>
+
+    <p class="empty-state" data-blog-empty hidden>没有翻到对应笔记，换个关键词试试。</p>
+  </main>
+
+  <script src="../../scripts/blog-search.js"></script>
+</BaseLayout>
+
+

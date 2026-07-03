@@ -1,0 +1,57 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { interests } from "../../data/interests";
+import { site } from "../../data/site";
+import { techStack } from "../../data/techStack";
+---
+
+<BaseLayout title="Me" description="关于 Moyue 的个人介绍、兴趣和技术栈。">
+  <main class="page-shell me-board">
+    <aside class="me-sidebar">
+      <section class="profile-avatar-card glass-card">
+        <img src={site.avatar} alt={`${site.displayName} avatar`} width="210" height="210" />
+      </section>
+
+      <section class="profile-intro-card glass-card">
+        <p class="section-label">PROFILE README</p>
+        <h1 class="profile-script-name">𝓜𝓸𝔂𝓾𝓮</h1>
+        <p><strong>{site.displayName} · {site.name}</strong></p>
+        <p>二次元宅/蒟蒻CTFer，只会点vibeslop，努力成为大手子ing</p>
+      </section>
+    </aside>
+
+    <section class="me-main">
+      <article class="readme-card glass-card">
+        <p class="section-label">README.MD</p>
+        <h1>Hi,I'm Moyue.</h1>
+        <p>欢迎来到我的博客，这里是记录了我的学习笔记和我的小想法的神奇小屋，让我们一起进行奇妙冒险吧。</p>
+      </article>
+
+      <article class="interests-card glass-card">
+        <p class="section-label">INTEREST TAGS</p>
+        <h2>兴趣标签</h2>
+        <div class="interest-cloud">
+          {interests.map((item) => <span>{item}</span>)}
+        </div>
+      </article>
+
+      <article class="tech-card glass-card">
+        <p class="section-label">TECH STACK</p>
+        <h2>技术栈</h2>
+        {techStack.length > 0 ? (
+          <div class="tech-grid">
+            {techStack.map((tech) => (
+              <section class="tech-item" data-tone={tech.tone}>
+                <span class="tech-icon">{tech.icon}</span>
+                <h3>{tech.name}</h3>
+                <p>{tech.description}</p>
+              </section>
+            ))}
+          </div>
+        ) : (
+          <p class="tech-empty-script">[该用户很懒，什么也没有留下(T^T)]</p>
+        )}
+      </article>
+    </section>
+  </main>
+</BaseLayout>

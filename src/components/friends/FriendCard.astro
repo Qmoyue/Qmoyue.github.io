@@ -1,0 +1,23 @@
+---
+interface Props {
+  friend: {
+    name: string;
+    description?: string;
+    avatar: string;
+    url: string;
+  };
+  index: number;
+}
+
+const { friend, index } = Astro.props;
+---
+
+<a class="friend-card soft-card" href={friend.url} target="_blank" rel="noreferrer" style={`--stagger:${index}`}>
+  <img src={friend.avatar} alt={`${friend.name} avatar`} width="112" height="112" loading="lazy" referrerpolicy="no-referrer" />
+  <div>
+    <p class="section-label">FRIEND LINK</p>
+    <h2>{friend.name}</h2>
+    {friend.description && <p>{friend.description}</p>}
+  </div>
+  <span class="friend-arrow">↗</span>
+</a>

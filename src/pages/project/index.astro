@@ -1,0 +1,20 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ProjectCard from "../../components/project/ProjectCard.astro";
+import { projects } from "../../data/projects";
+---
+
+<BaseLayout title="Project" description="项目、实验和 GitHub 仓库记录。">
+  <main class="page-shell">
+    <section class="page-intro glass-card">
+      <p class="section-label">PROJECTS</p>
+      <h1 class="big-title">Project</h1>
+      <p class="page-lead page-script-lead"><span>my-projects</span></p>
+    </section>
+
+    <section class="list-stack" aria-label="项目列表">
+      {projects.map((project, index) => <ProjectCard project={project} index={index} />)}
+    </section>
+  </main>
+</BaseLayout>
+
