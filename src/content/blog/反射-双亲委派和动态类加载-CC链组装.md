@@ -1,8 +1,8 @@
 ---
 title: "反射-双亲委派和动态类加载-CC链组装"
 description: "Java 反射、双亲委派与动态类加载总结，围绕 CC 链组装思路做整理。"
-pubDate: "2026-05-01"
-updatedDate: "2026-05-01"
+pubDate: "2026-04-01"
+updatedDate: "2026-04-01"
 tags: ["Java", "反序列化", "Web安全"]
 cover: auto
 coverAlt: "反射-双亲委派和动态类加载-CC链组装 的文章封面"

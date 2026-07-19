@@ -1,8 +1,8 @@
 ---
 title: "Q CTF2025 Web 题解汇总"
 description: "Q CTF 2025 Web方向比赛WP，整理解题思路、关键利用点和赛后复盘记录。"
-pubDate: "2026-05-01"
-updatedDate: "2026-05-01"
+pubDate: "2026-01-01"
+updatedDate: "2026-01-01"
 tags: ["CTF", "Web安全", "WP"]
 cover: auto
 coverAlt: "Q CTF2025 Web 题解汇总 的文章封面"
