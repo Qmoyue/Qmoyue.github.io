@@ -1,0 +1,65 @@
+---
+import HomeOpeningSequence from "../../src/islands/home/opening/HomeOpeningSequence.vue";
+import LatestPostBlock from "../../src/islands/home/blocks/LatestPostBlock.vue";
+import FlowerBannerBlock from "../../src/islands/home/blocks/FlowerBannerBlock.vue";
+import ProfileBlock from "../../src/islands/home/blocks/ProfileBlock.vue";
+import ClockBlock from "../../src/islands/home/blocks/ClockBlock.vue";
+import CalendarBlock from "../../src/islands/home/blocks/CalendarBlock.vue";
+import QuoteBlock from "../../src/islands/home/blocks/QuoteBlock.vue";
+import HomeScrollRail from "../../src/islands/home/HomeScrollRail.vue";
+import FallingTags from "../../src/islands/home/effects/FallingTags.vue";
+import type { HomePageModel } from "../../src/framework/contracts/home";
+
+const model: HomePageModel = {
+  renderedAt: "2026-07-03T09:30:00.000Z",
+  identity: {
+    subtitle: "A diary",
+    displayName: "Fixture Author",
+    avatar: "/images/avatar.jpg",
+    githubUrl: "https://github.com/example",
+  },
+  guitarImage: "/images/guitar-cutout.png",
+  avatarSpeech: "Hello!",
+  cue: "scroll / space",
+  terminal: {
+    host: "author@blog:~",
+    path: "~/author/blog",
+    command: "cat /flag",
+    output: "flag{fixture}",
+    hint: "Notes / diary",
+  },
+  latest: {
+    href: "/blog/first/",
+    title: "First note",
+    description: "A note from the fixture",
+    coverSrc: "/images/flower.jpg",
+    coverAlt: "Flower cover",
+    pubDate: "2026-07-03T00:00:00.000Z",
+    dateLabel: "2026.07.03",
+    tags: ["journal"],
+    wordsLabel: "1,200 字",
+  },
+  flowerImage: "/images/flower.jpg",
+  profileGreeting: { intro: "I'm", outro: "Nice to meet you!" },
+  quote: ["First line", "Second line"],
+  fallingWords: ["one", "two"],
+};
+---
+
+<main>
+  <HomeScrollRail thumbSrc="/images/doro.png" panel="first" />
+  <HomeOpeningSequence
+    model={model}
+    command={model.terminal.command}
+    output={model.terminal.output}
+  />
+  <div class="home-second-dashboard">
+    <LatestPostBlock model={model} />
+    <FlowerBannerBlock model={model} />
+    <ProfileBlock model={model} />
+    <ClockBlock model={model} />
+    <CalendarBlock model={model} />
+    <QuoteBlock model={model} />
+  </div>
+  <FallingTags panel="first" words={model.fallingWords} seed={17} />
+</main>

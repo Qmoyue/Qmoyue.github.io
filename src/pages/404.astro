@@ -1,0 +1,20 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageIntro from "../components/shared/PageIntro.astro";
+---
+
+<BaseLayout
+  metadata={{
+    kind: "website",
+    title: "页面未找到",
+    description: "这个地址没有页面。",
+    noindex: true,
+  }}
+>
+  <main class="page-shell">
+    <PageIntro eyebrow="NOT FOUND" title="404" scriptLead="lost-page" />
+    <p class="page-copy">
+      这个地址没有页面。<a href="/">回到首页</a>继续看看吧。
+    </p>
+  </main>
+</BaseLayout>

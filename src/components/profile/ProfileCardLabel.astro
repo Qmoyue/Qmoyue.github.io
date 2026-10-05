@@ -1,0 +1,18 @@
+---
+interface Props {
+  text: string;
+}
+
+const { text } = Astro.props;
+---
+
+<p class="section-label">{text}</p>
+
+<style>
+  .section-label {
+    color: #717d91;
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1.78;
+  }
+</style>

@@ -1,0 +1,88 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  scriptLead: string;
+}
+
+const { eyebrow, title, scriptLead } = Astro.props;
+---
+
+<section class="page-intro glass-card">
+  <p class="section-label">{eyebrow}</p>
+  <h1 class="big-title">{title}</h1>
+  <p class="page-script-lead"><span>{scriptLead}</span></p>
+</section>
+
+<style>
+  .page-intro {
+    min-height: 330px;
+    padding: 70px 74px;
+  }
+
+  .section-label {
+    width: fit-content;
+  }
+
+  .big-title {
+    margin: 24px 0 22px;
+    color: var(--blue-deep);
+    font-size: clamp(3.6rem, 7vw, 7rem);
+    font-weight: 950;
+    line-height: 0.95;
+    letter-spacing: 0;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  }
+
+  .page-script-lead {
+    max-width: none;
+    margin: 14px 0 0;
+    font-family:
+      "Brush Script MT", "Segoe Script", "Comic Sans MS", "Microsoft YaHei",
+      cursive;
+    font-size: clamp(3.2rem, 6.5vw, 6.6rem);
+    font-weight: 700;
+    line-height: 1.02;
+    letter-spacing: 0;
+  }
+
+  .page-script-lead span {
+    display: inline-block;
+    color: transparent;
+    background:
+      radial-gradient(
+        circle at 14% 16%,
+        rgba(255, 255, 255, 0.92),
+        transparent 0.45em
+      ),
+      linear-gradient(
+        105deg,
+        #e979a8 0%,
+        #df6f99 28%,
+        #82c9e8 62%,
+        #eab95c 100%
+      );
+    -webkit-background-clip: text;
+    background-clip: text;
+    filter: drop-shadow(0 3px 0 rgba(255, 255, 255, 0.58))
+      drop-shadow(0 14px 22px rgba(112, 126, 148, 0.16));
+    transform: rotate(-1deg);
+  }
+
+  @media (max-width: 900px) {
+    .page-intro {
+      min-height: auto;
+      padding: 46px 28px;
+    }
+
+    .big-title {
+      font-size: 3.35rem;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .page-script-lead {
+      font-size: clamp(2.6rem, 15vw, 4.2rem);
+    }
+  }
+</style>

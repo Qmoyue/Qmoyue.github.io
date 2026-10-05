@@ -4,7 +4,7 @@ description: "React2Shell 漏洞分析，围绕 RSC 反序列化风险、利用�
 pubDate: "2026-03-30"
 updatedDate: "2026-03-30"
 tags: ["React", "CVE", "Web安全"]
-cover: auto
+cover: "f0ec2604387145abb3d0fdc9064b4bed59a045b8_raw..jpg"
 coverAlt: "React2shell 的文章封面"
 draft: false
 ---
@@ -22,7 +22,7 @@ React Server Components（RSC）是一个react提供的服务端渲染机制。�
 
 React Flight Protocol 是 React 用于在客户端和服务器之间传输数据的二进制协议。它使用特殊的前缀符号（以 $ 开头）来表示不同的数据类型和引用。
 
-```
+```text
 符号	含义	编码示例	解码结果	使用场景
 $@	Chunk 引	Promise → "$@1"	getChunk(response, 1)	异步数据、Promise
 $K	FormData 引用	FormData → "$K1"	从 FormData 提取 ID=1	表单数据、文件上传

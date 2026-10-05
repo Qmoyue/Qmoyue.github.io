@@ -4,13 +4,13 @@ description: "RCTF 2025 Web方向比赛WP，整理解题思路、关键利用点
 pubDate: "2025-12-01"
 updatedDate: "2025-12-01"
 tags: ["CTF", "Web安全", "WP"]
-cover: auto
+cover: "7325362531771d6b2142ce16b26ed4fadf6cc1d0_raw..jpg"
 coverAlt: "RCTF2025 web 的文章封面"
 draft: false
 ---
-### RootKB
+## RootKB
 
-```
+```text
 MAXKB_SANDBOX_PYTHON_BANNED_HOSTS="127.0.0.1,localhost,host.docker.internal,maxkb,pgsql,redis"
 MAXKB_SANDBOX_PYTHON_BANNED_KEYWORDS="subprocess.,system(,exec(,execve(,pty.,eval(,compile(,shutil.,input(,__import__"
 ```

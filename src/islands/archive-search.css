@@ -1,0 +1,102 @@
+.archive-search .blog-search-card {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.7fr) minmax(280px, 1.4fr);
+  gap: 34px;
+  align-items: center;
+  margin: 34px 0 48px;
+  padding: 42px 52px;
+  border-radius: 18px;
+}
+
+.archive-search .search-title {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.archive-search .search-icon {
+  display: grid;
+  width: 58px;
+  height: 58px;
+  place-items: center;
+  border-radius: 999px;
+  color: #c96d93;
+  background: rgba(255, 216, 231, 0.72);
+}
+
+.archive-search .search-title h2 {
+  margin: 8px 0 0;
+  font-size: 1.7rem;
+}
+
+.archive-search .search-field label {
+  display: block;
+  margin-bottom: 12px;
+  color: #78627b;
+  font-weight: 900;
+}
+
+.archive-search .search-field input {
+  width: 100%;
+  min-height: 64px;
+  padding: 0 24px;
+  border: 1px solid rgba(95, 119, 140, 0.18);
+  border-radius: 18px;
+  color: var(--blue-deep);
+  background: rgba(255, 255, 255, 0.72);
+  outline: none;
+  caret-color: #d76f9d;
+}
+
+.archive-search .search-field input:focus {
+  border-color: rgba(246, 169, 199, 0.68);
+  box-shadow: 0 0 0 4px rgba(246, 169, 199, 0.14);
+}
+
+.archive-search .search-field input::placeholder {
+  color: #d76f9d;
+  font-family:
+    "Segoe Script", "STXingkai", "华文行楷", "KaiTi", "Microsoft YaHei", cursive;
+  font-size: 1.08em;
+  font-weight: 800;
+  opacity: 0.78;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.82),
+    0 8px 18px rgba(211, 115, 160, 0.15);
+}
+
+.archive-search .search-field input:placeholder-shown {
+  color: #d76f9d;
+}
+
+.archive-search .search-count {
+  min-height: 1.4em;
+  margin: 12px 0 0;
+  color: #8a7d91;
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+
+.archive-search .blog-search-card .section-label {
+  width: fit-content;
+}
+
+.archive-search .empty-state {
+  margin: 40px 0;
+  padding: 28px;
+  border: 1px dashed var(--line-pink);
+  border-radius: var(--radius-sm);
+  color: var(--muted);
+  text-align: center;
+  background: rgba(255, 255, 255, 0.42);
+}
+
+.archive-search [data-note-card][hidden] {
+  display: none;
+}
+
+@media (max-width: 980px) {
+  .archive-search .blog-search-card {
+    grid-template-columns: 1fr;
+  }
+}

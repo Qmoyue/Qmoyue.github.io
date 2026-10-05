@@ -71,14 +71,16 @@ function inferMetadata(filename, title) {
 
   if (/react2shell|cve-?2025-?55182/.test(text)) {
     return {
-      description: "React2Shell 漏洞分析，围绕 RSC 反序列化风险、利用链和防护思路做复盘。",
+      description:
+        "React2Shell 漏洞分析，围绕 RSC 反序列化风险、利用链和防护思路做复盘。",
       tags: uniqueTags(["React", "CVE", "Web安全"]),
     };
   }
 
   if (/数据库|database/.test(text)) {
     return {
-      description: "数据库指纹识别总结，整理 SQL 注入场景下判断数据库类型的常用方法。",
+      description:
+        "数据库指纹识别总结，整理 SQL 注入场景下判断数据库类型的常用方法。",
       tags: uniqueTags(["数据库", "SQL", "Web安全"]),
     };
   }
@@ -92,28 +94,32 @@ function inferMetadata(filename, title) {
 
   if (/sql.*upload|upload.*sql/.test(text)) {
     return {
-      description: "SQL 注入写文件与上传利用总结，梳理利用条件、路径判断和实战注意点。",
+      description:
+        "SQL 注入写文件与上传利用总结，梳理利用条件、路径判断和实战注意点。",
       tags: uniqueTags(["SQL", "文件上传", "Web安全"]),
     };
   }
 
   if (/sql.*绕过|bypass/.test(text)) {
     return {
-      description: "SQL 注入绕过技巧总结，整理过滤场景、绕过思路和常见 payload 变形。",
+      description:
+        "SQL 注入绕过技巧总结，整理过滤场景、绕过思路和常见 payload 变形。",
       tags: uniqueTags(["SQL", "绕过", "Web安全"]),
     };
   }
 
   if (/sql/.test(text)) {
     return {
-      description: "SQL 注入漏洞总结，梳理漏洞原理、利用方式、绕过思路和防护要点。",
+      description:
+        "SQL 注入漏洞总结，梳理漏洞原理、利用方式、绕过思路和防护要点。",
       tags: uniqueTags(["SQL", "漏洞总结", "Web安全"]),
     };
   }
 
   if (/xss|csrf/.test(text)) {
     return {
-      description: "XSS 与 CSRF 漏洞总结，梳理攻击场景、风险影响和常见防护方式。",
+      description:
+        "XSS 与 CSRF 漏洞总结，梳理攻击场景、风险影响和常见防护方式。",
       tags: uniqueTags(["XSS", "CSRF", "Web安全"]),
     };
   }
@@ -127,42 +133,48 @@ function inferMetadata(filename, title) {
 
   if (/ssrf/.test(text)) {
     return {
-      description: "SSRF 漏洞总结，整理服务端请求伪造的利用入口、内网探测和防护思路。",
+      description:
+        "SSRF 漏洞总结，整理服务端请求伪造的利用入口、内网探测和防护思路。",
       tags: uniqueTags(["SSRF", "漏洞总结", "Web安全"]),
     };
   }
 
   if (/ssti/.test(text)) {
     return {
-      description: "SSTI 注入漏洞总结，整理模板注入的判断方法、利用链和防护要点。",
+      description:
+        "SSTI 注入漏洞总结，整理模板注入的判断方法、利用链和防护要点。",
       tags: uniqueTags(["SSTI", "漏洞总结", "Web安全"]),
     };
   }
 
   if (/反序列化|deserialization|php/.test(text)) {
     return {
-      description: "PHP 反序列化漏洞总结，梳理魔术方法、POP 链构造和常见利用条件。",
+      description:
+        "PHP 反序列化漏洞总结，梳理魔术方法、POP 链构造和常见利用条件。",
       tags: uniqueTags(["PHP", "反序列化", "Web安全"]),
     };
   }
 
   if (/文件包含|文件上传|file-include|upload/.test(text)) {
     return {
-      description: "文件包含与文件上传漏洞总结，整理触发条件、利用方式和绕过技巧。",
+      description:
+        "文件包含与文件上传漏洞总结，整理触发条件、利用方式和绕过技巧。",
       tags: uniqueTags(["文件上传", "文件包含", "Web安全"]),
     };
   }
 
   if (/sandbox|沙箱/.test(text)) {
     return {
-      description: "MaxKB sandbox 漏洞挖掘记录，整理漏洞发现过程、利用条件和复现思路。",
+      description:
+        "MaxKB sandbox 漏洞挖掘记录，整理漏洞发现过程、利用条件和复现思路。",
       tags: uniqueTags(["沙箱逃逸", "漏洞挖掘", "Web安全"]),
     };
   }
 
   if (/cc链|双亲委派|类加载|java|反射/.test(text)) {
     return {
-      description: "Java 反射、双亲委派与动态类加载总结，围绕 CC 链组装思路做整理。",
+      description:
+        "Java 反射、双亲委派与动态类加载总结，围绕 CC 链组装思路做整理。",
       tags: uniqueTags(["Java", "反序列化", "Web安全"]),
     };
   }

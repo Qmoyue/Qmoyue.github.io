@@ -1,42 +1,114 @@
 ---
 import DropdownNav from "../components/navigation/DropdownNav.astro";
-import ScrollRail from "../components/navigation/ScrollRail.astro";
-import SakuraLayer from "../components/effects/SakuraLayer.astro";
+import SakuraField from "../components/effects/SakuraField.astro";
 import SiteFooter from "../components/shared/SiteFooter.astro";
-import "../styles/global.css";
-import { site } from "../data/site";
+import ReadingProgress from "../islands/ReadingProgress.vue";
+import type { PageMetadata } from "../framework/contracts/metadata";
+import { absoluteSiteUrl } from "../framework/seo";
+import "../components/navigation/scroll-rail.css";
+import "../site/styles.css";
+import { blogConfig, site } from "../site/config";
 
 interface Props {
-  title?: string;
-  description?: string;
+  metadata: PageMetadata;
   bodyClass?: string;
   showSakura?: boolean;
+  showReadingProgress?: boolean;
 }
 
 const {
-  title = site.name,
-  description = site.description,
+  metadata,
   bodyClass = "",
   showSakura = true,
+  showReadingProgress = true,
 } = Astro.props;
-const fullTitle = title === site.name ? title : `${title} · ${site.name}`;
+if (!Astro.site)
+  throw new Error("Astro site URL is required for page metadata");
+const fullTitle =
+  metadata.title === site.name
+    ? metadata.title
+    : `${metadata.title} · ${site.name}`;
+const canonical = absoluteSiteUrl(Astro.url.pathname, Astro.site);
+const image = metadata.image
+  ? absoluteSiteUrl(metadata.image, Astro.site)
+  : undefined;
 ---
 
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme={blogConfig.preset.id}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <meta name="description" content={description} />
+    <meta name="description" content={metadata.description} />
     <meta name="generator" content={Astro.generator} />
+    {
+      metadata.kind === "website" && metadata.noindex && (
+        <meta name="robots" content="noindex" />
+      )
+    }
+    {
+      !(metadata.kind === "website" && metadata.noindex) && (
+        <link rel="canonical" href={canonical} />
+      )
+    }
+    <meta property="og:type" content={metadata.kind} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={metadata.description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={site.name} />
+    {image && <meta property="og:image" content={image} />}
+    {
+      metadata.kind === "article" && (
+        <meta
+          property="article:published_time"
+          content={metadata.publishedAt.toISOString()}
+        />
+      )
+    }
+    {
+      metadata.kind === "article" && metadata.updatedAt && (
+        <meta
+          property="article:modified_time"
+          content={metadata.updatedAt.toISOString()}
+        />
+      )
+    }
+    <meta
+      name="twitter:card"
+      content={image ? "summary_large_image" : "summary"}
+    />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={metadata.description} />
+    {image && <meta name="twitter:image" content={image} />}
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={`${site.name} RSS`}
+      href={absoluteSiteUrl("/rss.xml", Astro.site)}
+    />
+    <link
+      rel="sitemap"
+      type="application/xml"
+      href={absoluteSiteUrl("/sitemap.xml", Astro.site)}
+    />
     <link rel="icon" type="image/png" href={site.doro} />
     <title>{fullTitle}</title>
   </head>
   <body class={bodyClass}>
-    {showSakura && <SakuraLayer />}
+    {showSakura && <SakuraField count={blogConfig.preset.sakura.count} />}
     <DropdownNav />
-    <ScrollRail />
+    {
+      showReadingProgress && (
+        <ReadingProgress thumbSrc={site.doro} client:idle />
+      )
+    }
     <slot />
-    <SiteFooter />
+    <SiteFooter
+      displayName={site.displayName}
+      siteName={site.name}
+      line={site.footer.line}
+      status={site.footer.status}
+      backgroundImage={site.footer.backgroundImage}
+    />
   </body>
 </html>

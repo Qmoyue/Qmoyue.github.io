@@ -24,7 +24,9 @@ jobs:
       - name: Install, build, and upload
         uses: withastro/action@v6
         with:
-          node-version: 22
+          node-version: 24
+          package-manager: pnpm@11.28.4
+          build-cmd: pnpm run format:check && pnpm run lint && pnpm run check && pnpm run test:unit && pnpm run build
 
   deploy:
     environment:

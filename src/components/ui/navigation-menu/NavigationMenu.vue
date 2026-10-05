@@ -1,0 +1,14 @@
+<script setup lang="ts">
+import type { NavigationMenuRootEmits, NavigationMenuRootProps } from "reka-ui";
+import { NavigationMenuRoot, useForwardPropsEmits } from "reka-ui";
+
+const props = defineProps<NavigationMenuRootProps>();
+const emit = defineEmits<NavigationMenuRootEmits>();
+const forwarded = useForwardPropsEmits(props, emit);
+</script>
+
+<template>
+  <NavigationMenuRoot data-slot="navigation-menu" v-bind="forwarded">
+    <slot />
+  </NavigationMenuRoot>
+</template>

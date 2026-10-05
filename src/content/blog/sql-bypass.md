@@ -4,7 +4,7 @@ description: "SQL 注入绕过技巧总结，整理过滤场景、绕过思路�
 pubDate: "2026-03-26"
 updatedDate: "2026-03-26"
 tags: ["SQL", "绕过", "Web安全"]
-cover: auto
+cover: "IMG_20260701_150915_726..webp"
 coverAlt: "SQL绕过 的文章封面"
 draft: false
 ---

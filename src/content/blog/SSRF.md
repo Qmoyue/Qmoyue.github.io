@@ -4,11 +4,11 @@ description: "SSRF 漏洞总结，整理服务端请求伪造的利用入口、�
 pubDate: "2026-03-29"
 updatedDate: "2026-03-29"
 tags: ["SSRF", "漏洞总结", "Web安全"]
-cover: auto
+cover: "1782889039399..jpeg"
 coverAlt: "SSRF 的文章封面"
 draft: false
 ---
-## SSRF[参考SSRF]()
+## SSRF
 
 服务器端请求伪造（Server-Side Request Forgery，简称SSRF）是一种由攻击者构造并由服务端发起请求的安全漏洞。与客户端请求伪造（CSRF）不同，SSRF利用的是服务器的权限和信任关系，使服务器成为攻击的"代理人"。本质上，SSRF是一种"服务器被动代理攻击"，攻击者通过操纵服务器，使其向攻击者指定的目标发送请求。
 

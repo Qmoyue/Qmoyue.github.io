@@ -11,6 +11,9 @@ playwright-report/
 .preview/
 .tmp/
 coverage/
+tests/visual/baseline/
+tests/visual/before-home/
+tests/visual/pre-*/
 
 # Local env/logs
 .env
@@ -30,5 +33,11 @@ Thumbs.db
 # Local-only visual references, not required for runtime/build
 picture/
 
-# Doc
-docs/
+# 文档策略：docs/ 下只有公开架构进入 Git。
+# 以下 Agent 工作簿仅保存在本地：
+# - docs/audit-and-componentization.md（当前证据）
+# - docs/vue3-refactor-guide.md（执行方法）
+# - docs/todo.md（逐项 Loop 队列）
+# 它们不得成为构建、测试、贡献或公共 API 的依赖。
+docs/*
+!docs/architecture.md

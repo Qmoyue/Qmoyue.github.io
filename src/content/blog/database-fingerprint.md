@@ -4,7 +4,7 @@ description: "数据库指纹识别总结，整理 SQL 注入场景下判断数�
 pubDate: "2026-03-26"
 updatedDate: "2026-03-26"
 tags: ["数据库", "SQL", "Web安全"]
-cover: auto
+cover: "7cb4959feda812f6a49d8ee36a95b061290750052_raw..jpg"
 coverAlt: "数据库识别 的文章封面"
 draft: false
 ---

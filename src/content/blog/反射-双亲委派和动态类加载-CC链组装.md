@@ -4,11 +4,11 @@ description: "Java 反射、双亲委派与动态类加载总结，围绕 CC 链
 pubDate: "2026-04-01"
 updatedDate: "2026-04-01"
 tags: ["Java", "反序列化", "Web安全"]
-cover: auto
+cover: "1782887895598..jpeg"
 coverAlt: "反射-双亲委派和动态类加载-CC链组装 的文章封面"
 draft: false
 ---
-# 反射
+## 反射
 
 反射是Java中可以动态更改对象属性调用对象方法的重要途经，也是Java反序列化漏洞中常用的一个操作，是Java的重要特性。
 
@@ -83,7 +83,7 @@ interface Hello {
 
 动态代理并没有多神秘，本质上只是让JVM在运行时动态创建class字节码加载的过程。
 
-# 双亲委派和动态类加载
+## 双亲委派和动态类加载
 
 ## 双亲委派
 
@@ -123,7 +123,7 @@ loadClass -> findClass(重写的方法) -> defineClass(从字节码加载类)
 
 或者用Unsafe.defineClass来字节码加载（类不能实际生成，Spring可以）
 
-# CC链组装
+## CC链组装
 
 ## CC1
 

@@ -1,0 +1,13 @@
+.icon {
+  width: 1.15em;
+  height: 1.15em;
+  overflow: visible;
+}
+
+.icon path {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}

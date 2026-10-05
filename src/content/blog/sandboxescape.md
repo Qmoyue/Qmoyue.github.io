@@ -4,7 +4,7 @@ description: "MaxKB sandbox 漏洞挖掘记录，整理漏洞发现过程、利�
 pubDate: "2026-01-20"
 updatedDate: "2026-01-20"
 tags: ["沙箱逃逸", "漏洞挖掘", "Web安全"]
-cover: auto
+cover: "1782887770618..jpeg"
 coverAlt: "MaxKB v2.3.1 sandbox漏洞挖掘 的文章封面"
 draft: false
 ---
@@ -24,7 +24,7 @@ draft: false
 
 首先.SANDBOX_BANNED_HOSTS中存在如下内容，
 
-```
+```text
 127.0.0.1,localhost,host.docker.internal,maxkb,pgsql,redis,7b74845e3202,172.17.0.2
 ```
 
@@ -32,7 +32,6 @@ draft: false
 
 将sandbox.c和.SANDBOX_BANNED_HOSTS让ai理出实现逻辑，下面贴上LLM的简单分析
 
-```
 这段代码实现了一个基于 LD_PRELOAD 的网络连接拦截器（沙盒），其主要功能是阻止程序访问特定的 IP 地址和域名。
 
 核心机制
@@ -72,7 +71,6 @@ IP 地址拦截（connect函数）
 总结
 
 此代码片段构建了一个轻量级的应用层防火墙，通过劫持网络相关的系统调用和库函数，根据可配置的黑名单规则，在连接建立阶段和域名解析阶段对程序试图访问的特定网络目标（IP 和域名）进行阻断。代码末尾给出的示例黑名单 127.0.0.1,localhost,host.docker.internal,...即为会被拦截的目标。
-```
 
 显而易见，这个只hook了两个库函数，socket可以正常使用，所以我们尝试使用一个底层的方法来实现绕过，比如syscall。
 
@@ -199,7 +197,7 @@ if __name__ == "__main__":
         print(f"使用的方法: {result['method']}")
 ```
 
-```python
+```json
 {
   "status": "success",
   "message": "Redis 登录成功",

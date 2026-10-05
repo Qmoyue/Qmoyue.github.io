@@ -1,48 +1,61 @@
 ---
-import { getCollection, render } from "astro:content";
+import { render } from "astro:content";
+import { getImage } from "astro:assets";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import ArticleToc from "../../components/blog/ArticleToc.astro";
+import ArticleToc from "../../islands/ArticleToc.vue";
 import { formatDate } from "../../lib/dates";
-import { countWords } from "../../lib/reading";
-import { getPostDate, getPostDescription, getPostTags } from "../../lib/posts";
+import { blogRepository } from "../../site/blog";
+import "../../styles/prose/article.css";
+import "./article.css";
 
 export async function getStaticPaths() {
-  const posts = await getCollection("blog", ({ data }) => import.meta.env.PROD ? data.draft !== true : true);
-
+  const posts = await blogRepository.listDetails();
   return posts.map((post) => ({
-    params: { id: post.id },
+    params: { id: post.summary.id },
     props: { post },
   }));
 }
 
 const { post } = Astro.props;
-const { Content, headings } = await render(post);
-const words = countWords((post as any).body ?? `${post.data.title}`);
-const date = getPostDate(post as any);
-const description = getPostDescription(post as any);
-const tags = getPostTags(post as any);
+const { Content, headings } = await render(post.entry);
+const { title, description, pubDate, tags, words } = post.summary;
+const socialCover = await getImage({
+  src: post.summary.cover.src,
+  width: 1200,
+  height: 630,
+  fit: "cover",
+});
 ---
 
-<BaseLayout title={post.data.title} description={description}>
+<BaseLayout
+  metadata={{
+    kind: "article",
+    title,
+    description,
+    image: socialCover.src,
+    publishedAt: pubDate,
+    updatedAt: post.summary.updatedDate,
+  }}
+>
   <main class="page-shell article-shell">
     <article class="article-card glass-card">
       <a class="back-link" href="/blog/">← 回到文章列表</a>
       <p class="article-meta">
-        <span>{tags[0] ?? "Article"}</span>
-        <time datetime={date.toISOString()}>{formatDate(date)}</time>
+        <span>{tags[0]}</span>
+        <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
         <span>{words.toLocaleString("zh-CN")} 字</span>
       </p>
-      <h1 class="article-title">{post.data.title}</h1>
+      <h1 class="article-title">{title}</h1>
       <p class="article-description">{description}</p>
       <div class="tag-row">
         {tags.map((tag) => <span class="tag-chip">#{tag}</span>)}
       </div>
 
-      <div class="article-content">
+      <div class="article-prose">
         <Content />
       </div>
     </article>
 
-    <ArticleToc headings={headings} />
+    <ArticleToc headings={headings} client:idle />
   </main>
 </BaseLayout>

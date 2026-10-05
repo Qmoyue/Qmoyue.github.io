@@ -1,0 +1,17 @@
+---
+interface Props {
+  label: string;
+}
+
+const { label } = Astro.props;
+---
+
+<section class="card-stack" aria-label={label}><slot /></section>
+
+<style>
+  .card-stack {
+    display: grid;
+    gap: 24px;
+    margin-top: 42px;
+  }
+</style>

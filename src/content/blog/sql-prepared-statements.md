@@ -4,7 +4,7 @@ description: "SQL 预编译机制总结，记录参数化查询、防注入边�
 pubDate: "2026-03-26"
 updatedDate: "2026-03-26"
 tags: ["SQL", "数据库", "Web安全"]
-cover: auto
+cover: "1782887760335..jpeg"
 coverAlt: "SQL预编译 的文章封面"
 draft: false
 ---
@@ -34,4 +34,4 @@ draft: false
 
 预编译也不是万能的，在有些场景是无法使用的，比如order by / group by这类的情况，它们后面的参数不能携带引号，如果携带引号，以order by为例，预编译后查询结果其实等同于order by NULL或者order by TRUE，还有列名，表名，limit等都会失效，这种情况我们的防护可以通过设置白名单，输入内容限制，构建映射表，前端传递引用数字。
 
-##### 注：order by 的注入可以通过rand函数来自己构建实现布尔盲注
+#### 注：order by 的注入可以通过rand函数来自己构建实现布尔盲注

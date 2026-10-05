@@ -1,0 +1,24 @@
+---
+import { minimalSite } from "./minimal-site";
+import "../../src/presets/neutral/theme.css";
+
+const { site, preset, navigation } = minimalSite;
+---
+
+<!doctype html>
+<html lang="en" data-theme={preset.id}>
+  <head>
+    <meta charset="UTF-8" />
+    <title>{site.name}</title>
+    <meta name="description" content={site.description} />
+  </head>
+  <body>
+    <nav aria-label="Main navigation">
+      {navigation.map((item) => <a href={item.href}>{item.label}</a>)}
+    </nav>
+    <main>
+      <h1>{site.name}</h1>
+      <p>{site.description}</p>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,79 @@
+---
+import ProfileCardLabel from "./ProfileCardLabel.astro";
+
+interface Props {
+  scriptName: string;
+  displayName: string;
+  siteName: string;
+  bio: string;
+}
+
+const { scriptName, displayName, siteName, bio } = Astro.props;
+---
+
+<section class="profile-intro-card glass-card">
+  <ProfileCardLabel text="PROFILE README" />
+  <p class="profile-script-name">{scriptName}</p>
+  <p><strong>{displayName} · {siteName}</strong></p>
+  <p class="profile-bio">{bio}</p>
+</section>
+
+<style>
+  .profile-intro-card {
+    padding: 42px;
+    overflow: hidden;
+  }
+
+  .profile-intro-card p:not(.section-label, .profile-script-name) {
+    color: #717d91;
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1.78;
+  }
+
+  .profile-intro-card .profile-script-name {
+    display: block;
+    max-width: 100%;
+    margin: 20px 0 22px;
+    color: transparent;
+    background:
+      radial-gradient(
+        circle at 16% 18%,
+        rgba(255, 255, 255, 0.88),
+        transparent 0.48em
+      ),
+      linear-gradient(
+        105deg,
+        #df6f9f 0%,
+        #e99ab8 30%,
+        #88cbe7 66%,
+        #e6b960 100%
+      );
+    -webkit-background-clip: text;
+    background-clip: text;
+    filter: drop-shadow(0 2px 0 rgba(255, 255, 255, 0.62))
+      drop-shadow(0 14px 22px rgba(102, 118, 142, 0.14));
+    font-family: "Brush Script MT", "Segoe Script", "Comic Sans MS", cursive;
+    font-size: clamp(3.1rem, 4.4vw, 5.2rem);
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 1.02;
+    white-space: nowrap;
+  }
+
+  .profile-intro-card p.profile-bio {
+    max-width: 16em;
+    font-size: clamp(1.05rem, 1.45vw, 1.24rem);
+    line-height: 1.78;
+  }
+
+  @media (max-width: 980px) {
+    .profile-intro-card {
+      padding: 28px;
+    }
+
+    .profile-intro-card .profile-script-name {
+      font-size: clamp(3rem, 15vw, 5rem);
+    }
+  }
+</style>

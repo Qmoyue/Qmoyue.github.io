@@ -1,0 +1,30 @@
+:root[data-theme="moyue"] {
+  color-scheme: light;
+  --paper: #fff8f1;
+  --paper-strong: #fffdf8;
+  --surface: rgba(255, 252, 246, 0.78);
+  --surface-strong: rgba(255, 253, 248, 0.9);
+  --pink: #f6a9c7;
+  --pink-soft: #ffd8e7;
+  --pink-pale: #fff0f6;
+  --blue: #cfe8f3;
+  --blue-soft: #e7f5fa;
+  --blue-deep: #2f405d;
+  --muted: #6f7d91;
+  --line: rgba(95, 119, 140, 0.28);
+  --line-pink: rgba(246, 169, 199, 0.44);
+  --yellow: #fff0a9;
+  --mint: #ccf2de;
+  --peach: #ffd8c6;
+  --lavender-chip: #e8ddff;
+  --shadow: 0 18px 55px rgba(134, 108, 126, 0.16);
+  --shadow-card: 0 14px 36px rgba(105, 121, 139, 0.14);
+  --radius: 26px;
+  --radius-sm: 18px;
+  --type-body:
+    "Nunito", "Inter", "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB",
+    system-ui, sans-serif;
+  font-family: var(--type-body);
+  color: var(--blue-deep);
+  background: var(--paper);
+}

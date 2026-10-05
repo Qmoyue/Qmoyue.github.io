@@ -1,23 +1,100 @@
 ---
+import type { FriendLink } from "../../framework/contracts/friend";
+
 interface Props {
-  friend: {
-    name: string;
-    description?: string;
-    avatar: string;
-    url: string;
-  };
-  index: number;
+  friend: FriendLink;
 }
 
-const { friend, index } = Astro.props;
+const { friend } = Astro.props;
 ---
 
-<a class="friend-card soft-card" href={friend.url} target="_blank" rel="noreferrer" style={`--stagger:${index}`}>
-  <img src={friend.avatar} alt={`${friend.name} avatar`} width="112" height="112" loading="lazy" referrerpolicy="no-referrer" />
+<a
+  class="friend-card soft-card"
+  href={friend.url}
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  <img
+    src={friend.avatar}
+    alt={`${friend.name} 的头像`}
+    width="112"
+    height="112"
+    loading="lazy"
+    decoding="async"
+    referrerpolicy="no-referrer"
+  />
   <div>
     <p class="section-label">FRIEND LINK</p>
     <h2>{friend.name}</h2>
     {friend.description && <p>{friend.description}</p>}
   </div>
-  <span class="friend-arrow">↗</span>
+  <span class="friend-arrow" aria-hidden="true">↗</span>
 </a>
+
+<style>
+  .friend-card {
+    display: grid;
+    grid-template-columns: 132px minmax(0, 1fr) auto;
+    gap: 28px;
+    align-items: center;
+    min-height: 198px;
+    padding: 36px 44px;
+    transition:
+      transform 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  .friend-card:hover {
+    box-shadow: 0 22px 58px rgba(105, 121, 139, 0.18);
+    transform: translateY(-3px);
+  }
+
+  .friend-card:focus-visible {
+    outline: 3px solid var(--pink);
+    outline-offset: 4px;
+  }
+
+  h2 {
+    margin: 18px 0 14px;
+    color: #30415d;
+    font-size: clamp(2rem, 3.5vw, 3.4rem);
+    line-height: 1.1;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  }
+
+  p {
+    margin: 0 0 22px;
+    color: #717d91;
+    font-size: 1.13rem;
+    font-weight: 700;
+    line-height: 1.7;
+  }
+
+  img {
+    width: 112px;
+    height: 112px;
+    border: 6px solid rgba(255, 255, 255, 0.82);
+    border-radius: 999px;
+    object-fit: cover;
+    box-shadow: var(--shadow-card);
+  }
+
+  .friend-arrow {
+    display: grid;
+    width: 52px;
+    height: 52px;
+    place-items: center;
+    border-radius: 999px;
+    color: #7a6480;
+    background: rgba(255, 216, 231, 0.64);
+    font-size: 1.4rem;
+    font-weight: 900;
+  }
+
+  @media (max-width: 980px) {
+    .friend-card {
+      grid-template-columns: 1fr;
+      padding: 28px;
+    }
+  }
+</style>

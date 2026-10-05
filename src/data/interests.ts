@@ -1,12 +1,3 @@
-export const interests = [
-  "少女乐队",
-  "二次元",
-  "月美",
-  "agent",
-  "web安全",
-  "vibeslop",
-];
-
 export const fallingCorpus = [
   "だから僕は音楽を辞めた",
   "「oblivious」",

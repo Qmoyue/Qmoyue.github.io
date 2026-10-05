@@ -1,46 +1,36 @@
 ---
 import { Image } from "astro:assets";
+import type { PostSummary } from "../../domain/blog/posts";
 import { formatDate } from "../../lib/dates";
-import { getPostDate, getPostDescription, getPostSearchText, getPostTags } from "../../lib/posts";
+import "./note-card.css";
 
 interface Props {
-  post: any;
-  cover: { filename: string; src: any };
-  words: number;
+  post: PostSummary;
   index: number;
 }
 
-const { post, cover, words, index } = Astro.props;
-const coverSrc = cover.src;
-const isPublicCover = typeof coverSrc === "string";
-const date = post.data.updatedDate ?? getPostDate(post);
-const description = getPostDescription(post);
-const tags = getPostTags(post);
+const { post, index } = Astro.props;
+const date = post.updatedDate ?? post.pubDate;
 ---
 
-<article class="timeline-entry blog-note" data-note-card data-search={getPostSearchText(post)}>
+<article
+  class="timeline-entry blog-note"
+  data-note-card
+  data-search={post.searchText}
+>
   <div class="timeline-date">
     <time datetime={date.toISOString()}>{formatDate(date)}</time>
     <span>updated</span>
     <i aria-hidden="true"></i>
   </div>
-  <a class="note-card soft-card" href={`/blog/${post.id}/`} style={`--stagger:${index}`}>
+  <a class="note-card soft-card" href={post.href} style={`--stagger:${index}`}>
     <div class="photo-frame">
       <span class="photo-tape" aria-hidden="true"></span>
       {
-        isPublicCover ? (
-          <img
-            src={coverSrc}
-            alt={post.data.coverAlt ?? post.data.title}
-            width="320"
-            height="390"
-            loading={index === 0 ? "eager" : "lazy"}
-            decoding="async"
-          />
-        ) : (
+        (
           <Image
-            src={coverSrc}
-            alt={post.data.coverAlt ?? post.data.title}
+            src={post.cover.src}
+            alt={post.coverAlt}
             width={320}
             height={390}
             loading={index === 0 ? "eager" : "lazy"}
@@ -52,16 +42,16 @@ const tags = getPostTags(post);
     </div>
     <div class="note-copy">
       <p class="note-meta">
-        <span>{tags[0] ?? "Article"}</span>
-        <span>发布 {formatDate(getPostDate(post))}</span>
-        {post.data.updatedDate && <span>更新 {formatDate(post.data.updatedDate)}</span>}
+        <span>{post.tags[0]}</span>
+        <span>发布 {formatDate(post.pubDate)}</span>
+        {post.updatedDate && <span>更新 {formatDate(post.updatedDate)}</span>}
       </p>
-      <h2>{post.data.title}</h2>
-      <p>{description}</p>
+      <h2>{post.title}</h2>
+      <p>{post.description}</p>
       <div class="tag-row">
-        {tags.map((tag) => <span class="tag-chip">#{tag}</span>)}
+        {post.tags.map((tag) => <span class="tag-chip">#{tag}</span>)}
       </div>
-      <span class="word-count">{words.toLocaleString("zh-CN")} 字</span>
+      <span class="word-count">{post.words.toLocaleString("zh-CN")} 字</span>
     </div>
   </a>
 </article>

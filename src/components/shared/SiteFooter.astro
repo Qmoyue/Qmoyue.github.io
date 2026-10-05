@@ -1,9 +1,122 @@
 ---
-import { site } from "../../data/site";
+interface Props {
+  displayName: string;
+  siteName: string;
+  line: string;
+  status: string;
+  backgroundImage: string;
+}
+
+const { displayName, siteName, line, status, backgroundImage } = Astro.props;
 ---
 
-<footer class="site-footer">
-  <p>© 2026 by {site.displayName} / {site.name}</p>
-  <p class="footer-line">学习笔记、漏洞研究，还有一点点电波。</p>
-  <p class="footer-status">sakura: falling / doro: on duty</p>
+<footer class="site-footer" style={`--footer-image: url("${backgroundImage}")`}>
+  <p>© {new Date().getFullYear()} by {displayName} / {siteName}</p>
+  <p class="footer-line">{line}</p>
+  <p class="footer-status">{status}</p>
 </footer>
+
+<style>
+  .site-footer {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    overflow: hidden;
+    width: 100%;
+    min-height: clamp(260px, 30vh, 340px);
+    margin: 0;
+    padding: clamp(38px, 5vh, 58px) 24px clamp(34px, 4.8vh, 52px);
+    place-items: center;
+    gap: 5px;
+    border: 0;
+    border-radius: 0;
+    color: #596b84;
+    background:
+      linear-gradient(
+        135deg,
+        rgba(255, 250, 245, 0.68),
+        rgba(231, 247, 252, 0.38) 45%,
+        rgba(255, 228, 239, 0.42)
+      ),
+      radial-gradient(
+        circle at 18% 70%,
+        rgba(255, 212, 130, 0.2),
+        transparent 22rem
+      ),
+      radial-gradient(
+        circle at 84% 76%,
+        rgba(241, 133, 101, 0.14),
+        transparent 20rem
+      ),
+      var(--footer-image) center / cover fixed;
+    box-shadow: none;
+    text-align: center;
+    backdrop-filter: none;
+    isolation: isolate;
+  }
+
+  .site-footer::before {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    content: "";
+    background:
+      linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.4),
+        rgba(255, 248, 242, 0.52)
+      ),
+      repeating-linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0.045) 0 2px,
+        transparent 2px 7px
+      );
+  }
+
+  .site-footer::after {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    content: "";
+    background:
+      radial-gradient(
+        circle at 20% 84%,
+        rgba(255, 214, 137, 0.18),
+        transparent 20rem
+      ),
+      radial-gradient(
+        circle at 72% 88%,
+        rgba(240, 126, 100, 0.13),
+        transparent 22rem
+      );
+  }
+
+  .site-footer > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .site-footer p {
+    margin: 0;
+    font-weight: 900;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.72);
+  }
+
+  .site-footer p:first-child {
+    color: #526782;
+    font-size: clamp(1rem, 1.35vw, 1.28rem);
+  }
+
+  .site-footer .footer-line {
+    color: #5e7087;
+    font-size: clamp(0.98rem, 1.26vw, 1.18rem);
+  }
+
+  .site-footer .footer-status {
+    color: #927598;
+    font-family: "Courier New", monospace;
+    font-size: clamp(0.78rem, 1vw, 0.92rem);
+  }
+</style>

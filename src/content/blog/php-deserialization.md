@@ -4,11 +4,11 @@ description: "PHP 反序列化漏洞总结，梳理魔术方法、POP 链构造�
 pubDate: "2025-12-09"
 updatedDate: "2025-12-09"
 tags: ["PHP", "反序列化", "Web安全"]
-cover: auto
+cover: "db5268c121b0bb7150b4ebe2f6fc6e855af3adb1_raw..jpg"
 coverAlt: "php反序列化漏洞总结 的文章封面"
 draft: false
 ---
-# PHP反序列化漏洞利用
+## PHP反序列化漏洞利用
 
 ## 什么是序列化和反序列化（参考[什么是序列化和反序列化](https://blog.csdn.net/m0_53518956/article/details/147578420)）
 
@@ -50,7 +50,7 @@ draft: false
 
 常见的魔术方法有以下几种
 
-```
+```text
 __construct
 构造函数，在实例化一个对象的时候，首先会去自动触发（执行）的一个方法
 上面已经见识过了
@@ -291,7 +291,7 @@ clone($cc);
 以下是一道试题的示例
 
 ?CTF2025 新生赛
-```
+```php
  <?php
 highlight_file(__FILE__);
 error_reporting(0);
@@ -352,7 +352,7 @@ if (isset($_POST['eat'])){
 这道题存粹考察了对魔术方法的利用，没有涉及什么绕过比较简单，下附payload，可以和上文中的魔术方法一个个对照来学习
 
 payload
-```
+```php
 <?php 
 class Wuhuarou{
     public $Wuhuarou;
@@ -427,7 +427,7 @@ echo urlencode(serialize($wuhuarou));
 
 以下是一个示例
 
-```
+```php
 <?php
 
 class KeyPort{
@@ -488,7 +488,7 @@ phar文件会以序列化的形式存储用户自定义的meta-data这一特性�
 
 以下是一个简单的phar文件生成
 
-```
+```php
 <?php
     class TestObject {
     }
@@ -516,7 +516,7 @@ phar文件会以序列化的形式存储用户自定义的meta-data这一特性�
 
 比如我们用如下payload生成一个phar文件
 
-```
+```php
 <?php
 $phar = new Phar('exploit.phar');
 $phar->startBuffering();

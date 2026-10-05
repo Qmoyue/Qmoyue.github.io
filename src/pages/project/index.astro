@@ -1,20 +1,29 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ProjectCard from "../../components/project/ProjectCard.astro";
-import { projects } from "../../data/projects";
+import CardStack from "../../components/shared/CardStack.astro";
+import PageIntro from "../../components/shared/PageIntro.astro";
+import { projects } from "../../site/projects";
 ---
 
-<BaseLayout title="Project" description="项目、实验和 GitHub 仓库记录。">
+<BaseLayout
+  metadata={{
+    kind: "website",
+    title: "Project",
+    description: "项目、实验和 GitHub 仓库记录。",
+  }}
+>
   <main class="page-shell">
-    <section class="page-intro glass-card">
-      <p class="section-label">PROJECTS</p>
-      <h1 class="big-title">Project</h1>
-      <p class="page-lead page-script-lead"><span>my-projects</span></p>
-    </section>
+    <PageIntro eyebrow="PROJECTS" title="Project" scriptLead="my-projects" />
 
-    <section class="list-stack" aria-label="项目列表">
-      {projects.map((project, index) => <ProjectCard project={project} index={index} />)}
-    </section>
+    <CardStack label="项目列表">
+      {
+        projects.length > 0 ? (
+          projects.map((project) => <ProjectCard project={project} />)
+        ) : (
+          <p class="sr-only">当前没有公开项目</p>
+        )
+      }
+    </CardStack>
   </main>
 </BaseLayout>
-

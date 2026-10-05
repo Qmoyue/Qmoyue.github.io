@@ -1,0 +1,30 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+}
+
+const { src, alt } = Astro.props;
+---
+
+<section class="profile-avatar-card glass-card">
+  <img src={src} alt={alt} width="210" height="210" />
+</section>
+
+<style>
+  .profile-avatar-card {
+    display: grid;
+    min-height: 300px;
+    place-items: center;
+    overflow: hidden;
+  }
+
+  img {
+    width: 210px;
+    height: 210px;
+    border: 8px solid rgba(255, 255, 255, 0.9);
+    border-radius: 999px;
+    object-fit: cover;
+    box-shadow: var(--shadow-card);
+  }
+</style>

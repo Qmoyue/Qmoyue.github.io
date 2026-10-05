@@ -4,7 +4,7 @@ description: "SUCTF 2026 Web方向比赛WP，整理解题思路、关键利用�
 pubDate: "2026-05-01"
 updatedDate: "2026-05-01"
 tags: ["CTF", "Web安全", "WP"]
-cover: auto
+cover: "7325362531771d6b2142ce16b26ed4fadf6cc1d0_raw..jpg"
 coverAlt: "SUCTF2026 Web 解出汇总 的文章封面"
 draft: false
 ---
@@ -189,7 +189,7 @@ func main() {
 }
 ```
 
-```
+```text
 SUCTF{SsRF_tO_rC3_by_d0CkEr_15_s0_FUn}
 ```
 
@@ -197,7 +197,7 @@ SUCTF{SsRF_tO_rC3_by_d0CkEr_15_s0_FUn}
 
 简单测试发现search.php对搜索内容拼接到`<script>`标签下，存在xss漏洞，然后利用bot功能进行数据外带。
 
-```
+```python
 import re
 import time
 import urllib.parse
@@ -284,7 +284,7 @@ if __name__ == "__main__":
     main()
 ```
 
-```
+```text
 SUCTF{110110100}
 ```
 
@@ -292,7 +292,7 @@ SUCTF{110110100}
 
 同xss脚本
 
-```
+```text
 SUCTF{1101101010}
 ```
 
@@ -380,15 +380,19 @@ assert flag, "Empty response"
 print(f"\n[+] FLAG: {flag}\n")
 ```
 
-```
+```text
 SUCTF{c4ddy_4dm1n_4p1_2019_pr1v35c}
 ```
 
 ## wms
 
 先审一下web.xml，发现
-		<servlet-name>restSpringMvc</servlet-name>
-		<url-pattern>/rest/*</url-pattern>
+
+```xml
+<servlet-name>restSpringMvc</servlet-name>
+<url-pattern>/rest/*</url-pattern>
+```
+
 因为是前台rce，随后审计spring-mvc.xml，看一下拦截器的认证机制
 审计一下org.jeecgframework.core.interceptors.AuthInterceptor下的源码
 
@@ -410,7 +414,7 @@ File targetFile = buildFile(directoryPath + File.separator + zipEntry.getName(),
 
 找到利用链，参数传递的?号可以利用multipart/form-data 的特性绕过，当请求是 multipart/form-data 格式时，Spring MVC 的 request.getParameter("doMigrateIn") 不仅会查找 URL 查询参数，还会查找 multipart 表单中的普通字段，
 
-```
+```http
 POST /jeewms/rest/cgformSqlController HTTP/1.1  
 Content-Type: multipart/form-data
 

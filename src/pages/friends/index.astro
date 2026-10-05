@@ -1,20 +1,23 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import FriendCard from "../../components/friends/FriendCard.astro";
-import { friends } from "../../data/friends";
+import CardStack from "../../components/shared/CardStack.astro";
+import PageIntro from "../../components/shared/PageIntro.astro";
+import { friends } from "../../site/friends";
 ---
 
-<BaseLayout title="Friends" description="友链和小伙伴们。">
+<BaseLayout
+  metadata={{
+    kind: "website",
+    title: "Friends",
+    description: "友链和小伙伴们。",
+  }}
+>
   <main class="page-shell">
-    <section class="page-intro glass-card">
-      <p class="section-label">FRIENDS</p>
-      <h1 class="big-title">Friends</h1>
-      <p class="page-lead page-script-lead"><span>my-friends</span></p>
-    </section>
+    <PageIntro eyebrow="FRIENDS" title="Friends" scriptLead="my-friends" />
 
-    <section class="list-stack" aria-label="友链列表">
-      {friends.map((friend, index) => <FriendCard friend={friend} index={index} />)}
-    </section>
+    <CardStack label="友链列表">
+      {friends.map((friend) => <FriendCard friend={friend} />)}
+    </CardStack>
   </main>
 </BaseLayout>
-

