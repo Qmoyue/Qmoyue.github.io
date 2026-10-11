@@ -44,6 +44,10 @@ test("friend portraits load and carousel controls reach each friend", async ({
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/friends/");
 
+  await expect(page.getByRole("slider", { name: "页面滚动进度" })).toHaveCount(
+    0,
+  );
+
   const carousel = page.getByRole("region", { name: "友链轮播" });
   const nick = carousel.getByRole("link", { name: /访问 Nick Chen 的博客/ });
   await expect(nick).toHaveAttribute("href", "https://www.nickchen.top/");
