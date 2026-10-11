@@ -1,7 +1,35 @@
 import { ref } from "vue";
 import type { HomePageModel } from "../../framework/contracts/home";
 
-const glyphs = "abcdefghijklmnopqrstuvwxyz0123456789_{}#$%&*@";
+const leet: Record<string, string> = {
+  a: "4",
+  e: "3",
+  i: "1",
+  l: "1",
+  o: "0",
+  s: "5",
+  t: "7",
+};
+const glyphs = "013457";
+
+function varyFlag(value: string, random: () => number): string {
+  const chars = [...value];
+  const positions = chars.flatMap((char, index) =>
+    index > 4 && index < chars.length - 1 && leet[char] ? [index] : [],
+  );
+
+  for (let index = positions.length - 1; index > 0; index -= 1) {
+    const other = Math.floor(random() * (index + 1));
+    [positions[index], positions[other]] = [positions[other], positions[index]];
+  }
+  for (const position of positions.slice(
+    0,
+    Math.round(positions.length * 0.28),
+  )) {
+    chars[position] = leet[chars[position]];
+  }
+  return chars.join("");
+}
 
 export function useTerminalSequence(terminal: HomePageModel["terminal"]) {
   const command = ref(terminal.command);
@@ -20,11 +48,14 @@ export function useTerminalSequence(terminal: HomePageModel["terminal"]) {
   function reset(reducedMotion: boolean): void {
     cancel();
     command.value = reducedMotion ? terminal.command : "";
-    output.value = reducedMotion ? terminal.output : "";
+    output.value = reducedMotion ? varyFlag(terminal.output, Math.random) : "";
   }
 
   function start(random: () => number = Math.random): void {
     cancel();
+    command.value = "";
+    output.value = "";
+    const result = varyFlag(terminal.output, random);
     let elapsed = 0;
     for (const char of terminal.command) {
       elapsed += 46 + random() * 18;
@@ -32,23 +63,18 @@ export function useTerminalSequence(terminal: HomePageModel["terminal"]) {
       later(() => (command.value += next), elapsed);
     }
 
-    elapsed += 220;
-    for (let frame = 0; frame < 36; frame += 1) {
-      const progress = Math.floor((frame / 35) * terminal.output.length);
-      later(
-        () => {
-          output.value = [...terminal.output]
-            .map((char, index) => {
-              if (char === "{" || char === "}" || char === "_") return char;
-              if (index < progress) return char;
-              return glyphs[Math.floor(random() * glyphs.length)];
-            })
-            .join("");
-        },
-        elapsed + frame * 42,
-      );
+    elapsed += 180;
+    for (const [index, char] of [...result].entries()) {
+      elapsed += 44;
+      const settled = result.slice(0, index);
+      if (/[a-z0-9]/.test(char) && index % 3 === 0) {
+        const glyph = glyphs[Math.floor(random() * glyphs.length)];
+        later(() => (output.value = settled + glyph), elapsed);
+        later(() => (output.value = settled + char), elapsed + 22);
+      } else {
+        later(() => (output.value = settled + char), elapsed);
+      }
     }
-    later(() => (output.value = terminal.output), elapsed + 36 * 42);
   }
 
   return { command, output, reset, start, cancel };

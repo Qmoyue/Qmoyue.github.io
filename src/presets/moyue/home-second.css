@@ -1,0 +1,412 @@
+.home-page .scroll-rail {
+  --doro-offset-x: -48%;
+}
+
+.home-second {
+  min-height: 100dvh;
+  padding: clamp(100px, 11vh, 130px) clamp(28px, 4vw, 76px) 72px;
+  padding-right: clamp(100px, 7vw, 140px);
+  align-items: center;
+  overflow: hidden;
+  background: transparent;
+}
+
+.home-second-dashboard {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(280px, 350px) minmax(0, 1fr) minmax(
+      290px,
+      335px
+    );
+  align-items: center;
+  gap: clamp(32px, 3.6vw, 60px);
+  width: min(1500px, 100%);
+  margin: 0 auto;
+}
+
+.home-portrait {
+  width: 100%;
+  height: clamp(490px, 62vh, 630px);
+}
+
+.home-center-column {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  gap: 34px;
+  transform: translateY(12px);
+}
+
+.home-clock-widget,
+.home-calendar-widget {
+  border: 1px solid rgba(255, 255, 255, 0.84);
+  background: rgba(255, 253, 250, 0.8);
+  box-shadow: 0 18px 45px rgba(85, 105, 117, 0.12);
+  backdrop-filter: blur(15px);
+}
+
+.home-quote-widget {
+  width: min(100%, 520px);
+}
+
+.home-profile-cluster {
+  position: relative;
+  width: min(520px, 100%);
+  aspect-ratio: 1;
+}
+
+.home-profile-cluster::before {
+  position: absolute;
+  inset: 0;
+  background: url("/images/profile-octopus.png") center / contain no-repeat;
+  content: "";
+  filter: saturate(0.62) brightness(1.12);
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.home-profile-widget {
+  position: absolute;
+  top: 9%;
+  left: 50%;
+  display: flex;
+  width: 64%;
+  height: 62%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transform: translateX(-50%);
+}
+
+.home-profile-widget img {
+  width: 128px;
+  height: 128px;
+  border: 5px solid white;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 9px 22px rgba(104, 107, 120, 0.14);
+}
+
+.home-profile-widget p {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  color: #6b7e96;
+  font-family: "Comic Sans MS", "Segoe Print", cursive;
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: center;
+}
+
+.home-profile-widget strong {
+  color: #d66f9a;
+  font-family: "Segoe Print", "Comic Sans MS", cursive;
+  font-size: 1.35em;
+}
+
+.home-quick-links {
+  position: absolute;
+  inset: 0;
+}
+
+.home-quick-links a {
+  position: absolute;
+  display: flex;
+  width: 18%;
+  aspect-ratio: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border-radius: 50%;
+  color: #315471;
+  text-decoration: none;
+  transform: translate(-50%, -50%);
+  transition: transform 0.2s ease;
+}
+
+.home-quick-links a:nth-of-type(1) {
+  top: 73.5%;
+  left: 14.4%;
+}
+.home-quick-links a:nth-of-type(2) {
+  top: 83.5%;
+  left: 36%;
+}
+.home-quick-links a:nth-of-type(3) {
+  top: 83.5%;
+  left: 64%;
+}
+.home-quick-links a:nth-of-type(4) {
+  top: 73.5%;
+  left: 85.6%;
+}
+.home-quick-links a:hover {
+  transform: translate(-50%, -50%) scale(1.08);
+}
+
+.home-quick-links a:active {
+  transform: translate(-50%, -50%) scale(0.97);
+}
+.home-quick-links a:focus-visible {
+  outline: 3px solid #5595ae;
+  outline-offset: -3px;
+}
+.home-quick-links a svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.home-quick-links a span {
+  font-size: 0.72rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.home-time-column {
+  display: grid;
+  gap: 34px;
+}
+.home-clock-widget {
+  position: relative;
+  border-color: rgba(170, 146, 119, 0.42);
+  border-radius: 5px 13px 8px 4px;
+  background:
+    radial-gradient(rgba(132, 110, 83, 0.055) 0.6px, transparent 0.7px) 0 0 /
+      6px 6px,
+    linear-gradient(135deg, #faf4e9, #ede3d3);
+  box-shadow:
+    0 18px 34px rgba(102, 85, 68, 0.14),
+    inset 0 0 0 6px rgba(255, 252, 246, 0.48);
+  text-align: center;
+  transform: rotate(1.2deg);
+}
+.home-clock-widget::before,
+.home-calendar-widget::before {
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  width: 72px;
+  height: 22px;
+  content: "";
+  background: rgba(225, 206, 178, 0.65);
+  box-shadow: 0 2px 4px rgba(110, 91, 68, 0.08);
+  transform: translateX(-50%) rotate(-3deg);
+}
+.home-clock-widget > div {
+  padding: 25px 20px 24px;
+}
+.home-clock-widget p {
+  margin: 0;
+}
+.home-clock-widget .clock-label {
+  margin-bottom: 9px;
+  color: #a18065;
+  font-family: "Courier New", monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+}
+.home-clock-widget .clock-date {
+  margin-bottom: 8px;
+  color: #846c58;
+  font-family: "KaiTi", "STKaiti", serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.home-clock-widget .clock-time {
+  color: #5e564f;
+  font-family: "Courier New", monospace;
+  font-size: clamp(3.3rem, 5vw, 4.6rem);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.05;
+  letter-spacing: 0.02em;
+}
+
+.home-calendar-widget {
+  position: relative;
+  border-color: rgba(170, 146, 119, 0.45);
+  border-radius: 10px 4px 13px 6px;
+  background:
+    radial-gradient(rgba(132, 110, 83, 0.055) 0.6px, transparent 0.7px) 0 0 /
+      6px 6px,
+    linear-gradient(145deg, #f9f2e6, #f0e6d7);
+  box-shadow:
+    0 19px 38px rgba(102, 85, 68, 0.15),
+    inset 0 0 0 6px rgba(255, 252, 246, 0.42);
+  transform: rotate(-0.7deg);
+}
+.home-calendar-widget::before {
+  left: 28%;
+  transform: translateX(-50%) rotate(5deg);
+}
+.home-calendar-head {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 29px 26px 18px;
+  border-bottom: 1px dashed rgba(151, 126, 100, 0.36);
+}
+.home-calendar-label {
+  margin: 0 0 4px;
+  color: #a18065;
+  font-family: "Courier New", monospace;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+.home-calendar-head time {
+  color: #685d52;
+  font-family: Georgia, "KaiTi", serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.home-calendar-head > span {
+  padding: 7px 11px;
+  border: 1px solid rgba(170, 146, 119, 0.28);
+  border-radius: 4px;
+  color: #87705d;
+  background: rgba(255, 250, 239, 0.65);
+  font-family: "Courier New", monospace;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+.home-calendar-widget > div:last-child {
+  padding: 18px 22px 26px;
+}
+.home-calendar-weekdays,
+.home-calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+}
+.home-calendar-weekdays {
+  margin-bottom: 12px;
+  color: #9a8877;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+.home-calendar-days {
+  row-gap: 7px;
+}
+.home-calendar-days span {
+  display: grid;
+  width: 33px;
+  height: 33px;
+  margin: auto;
+  place-items: center;
+  border-radius: 5px;
+  color: #756c62;
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.home-calendar-days .is-blank {
+  visibility: hidden;
+}
+.home-calendar-days .is-weekend {
+  color: #b77d82;
+}
+.home-calendar-days .is-today {
+  color: #fff9ee;
+  background: #ae7f73;
+  box-shadow: 0 4px 9px rgba(125, 83, 71, 0.22);
+}
+
+.falling-stage {
+  z-index: 2;
+  pointer-events: none;
+}
+
+@media (max-width: 1190px) {
+  .home-second-dashboard {
+    grid-template-columns: minmax(220px, 0.85fr) minmax(390px, 1.4fr);
+    max-width: 940px;
+  }
+  .home-time-column {
+    grid-column: 1 / -1;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+  .home-portrait {
+    height: 545px;
+  }
+  .home-center-column {
+    transform: none;
+  }
+}
+
+@media (max-width: 800px) {
+  .home-second {
+    padding: 86px 22px 62px;
+    padding-right: clamp(64px, 19vw, 76px);
+    overflow: visible;
+  }
+  .home-second-dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+    width: min(100%, 440px);
+  }
+  .home-portrait {
+    width: min(86%, 320px);
+    height: 420px;
+    align-self: flex-start;
+  }
+  .home-center-column {
+    width: 100%;
+    gap: 18px;
+  }
+  .home-quote-widget {
+    width: 100%;
+  }
+  .home-profile-widget {
+    top: 7%;
+    width: 68%;
+    height: 56%;
+    gap: 8px;
+  }
+  .home-profile-widget img {
+    width: 94px;
+    height: 94px;
+  }
+  .home-profile-widget p {
+    gap: 4px;
+    font-size: 0.86rem;
+  }
+  .home-quick-links a svg {
+    width: 19px;
+    height: 19px;
+  }
+  .home-quick-links a span {
+    font-size: 0.58rem;
+  }
+  .home-time-column {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+  .home-calendar-days span {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-quick-links a {
+    transition: none;
+  }
+}

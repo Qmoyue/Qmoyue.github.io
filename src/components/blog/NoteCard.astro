@@ -21,25 +21,21 @@ const date = post.updatedDate ?? post.pubDate;
   <div class="timeline-date">
     <time datetime={date.toISOString()}>{formatDate(date)}</time>
     <span>updated</span>
-    <i aria-hidden="true"></i>
+    <span class="timeline-marker" aria-hidden="true"></span>
   </div>
-  <a class="note-card soft-card" href={post.href} style={`--stagger:${index}`}>
-    <div class="photo-frame">
-      <span class="photo-tape" aria-hidden="true"></span>
-      {
-        (
-          <Image
-            src={post.cover.src}
-            alt={post.coverAlt}
-            width={320}
-            height={390}
-            loading={index === 0 ? "eager" : "lazy"}
-            decoding="async"
-          />
-        )
-      }
-      <span class="photo-notch" aria-hidden="true"></span>
-    </div>
+  <a class="note-card" href={post.href}>
+    <figure class="note-cover">
+      <Image
+        src={post.cover.src}
+        alt={post.coverAlt}
+        width={640}
+        height={800}
+        quality={88}
+        loading={index === 0 ? "eager" : "lazy"}
+        decoding="async"
+      />
+      <span class="note-pin" aria-hidden="true"></span>
+    </figure>
     <div class="note-copy">
       <p class="note-meta">
         <span>{post.tags[0]}</span>
@@ -47,7 +43,7 @@ const date = post.updatedDate ?? post.pubDate;
         {post.updatedDate && <span>更新 {formatDate(post.updatedDate)}</span>}
       </p>
       <h2>{post.title}</h2>
-      <p>{post.description}</p>
+      <p class="note-description">{post.description}</p>
       <div class="tag-row">
         {post.tags.map((tag) => <span class="tag-chip">#{tag}</span>)}
       </div>

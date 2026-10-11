@@ -17,9 +17,8 @@ export const blogConfig = defineBlogConfig({
     homeAltBackground: "/images/flower.jpg",
     homeSecondBackground: "/images/muzimi.png",
     footer: {
-      line: "学习笔记、漏洞研究，还有一点点电波。",
+      line: "学习笔记 & 漏洞研究",
       status: "sakura: falling / doro: on duty",
-      backgroundImage: "/images/muzimi.png",
     },
     email: "hello@example.com",
   },

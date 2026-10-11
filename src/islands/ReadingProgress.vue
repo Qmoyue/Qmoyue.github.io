@@ -9,6 +9,7 @@ const progress = ref(0);
 const dragging = ref(false);
 const running = ref(false);
 let wheelRunTimer = 0;
+let grabOffset = 0;
 
 function maxScroll() {
   return Math.max(
@@ -18,26 +19,32 @@ function maxScroll() {
 }
 
 function updateProgress() {
+  if (dragging.value) return;
   const max = maxScroll();
   progress.value =
     max === 0 ? 0 : Math.min(1, Math.max(0, window.scrollY / max));
 }
 
-function seek(ratio: number) {
+function seek(ratio: number, behavior: ScrollBehavior = "smooth") {
   const next = Math.min(1, Math.max(0, ratio));
-  window.scrollTo({ top: maxScroll() * next, behavior: "smooth" });
+  window.scrollTo({ top: maxScroll() * next, behavior });
   progress.value = next;
 }
 
 function seekFromPointer(event: PointerEvent) {
   const rect = track.value?.getBoundingClientRect();
   if (!rect) return;
-  seek((event.clientY - rect.top) / rect.height);
+  seek((event.clientY - rect.top - grabOffset) / rect.height, "instant");
 }
 
 function startDrag(event: PointerEvent) {
   if (event.button !== 0) return;
   event.preventDefault();
+  const rect = track.value?.getBoundingClientRect();
+  grabOffset =
+    rect && event.target === rail.value?.querySelector(".scroll-rail-thumb")
+      ? event.clientY - (rect.top + progress.value * rect.height)
+      : 0;
   dragging.value = true;
   running.value = true;
   rail.value?.setPointerCapture(event.pointerId);
@@ -52,6 +59,7 @@ function endDrag(event: PointerEvent) {
   if (!dragging.value) return;
   dragging.value = false;
   running.value = false;
+  grabOffset = 0;
   if (rail.value?.hasPointerCapture(event.pointerId)) {
     rail.value.releasePointerCapture(event.pointerId);
   }
@@ -61,6 +69,7 @@ function endDrag(event: PointerEvent) {
 function losePointer() {
   dragging.value = false;
   running.value = false;
+  grabOffset = 0;
 }
 
 function onWheel() {

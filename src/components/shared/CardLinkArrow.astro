@@ -1,0 +1,44 @@
+<span class="card-link-arrow" aria-hidden="true">
+  <svg viewBox="0 0 24 24" fill="none" focusable="false">
+    <path
+      d="M5 19 19 5M9 5h10v10"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"></path>
+  </svg>
+</span>
+
+<style>
+  .card-link-arrow {
+    display: grid;
+    width: 100%;
+    aspect-ratio: 1;
+    place-items: center;
+    color: #71849a;
+    transition: color 180ms ease;
+  }
+
+  svg {
+    width: 23px;
+    height: 23px;
+    transition: transform 180ms ease;
+  }
+
+  :global(a:hover) .card-link-arrow,
+  :global(a:focus-visible) .card-link-arrow {
+    color: #ad7f90;
+  }
+
+  :global(a:hover) .card-link-arrow svg,
+  :global(a:focus-visible) .card-link-arrow svg {
+    transform: translate(2px, -2px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card-link-arrow,
+    svg {
+      transition: none;
+    }
+  }
+</style>

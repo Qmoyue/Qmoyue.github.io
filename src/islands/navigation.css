@@ -7,16 +7,18 @@
   align-items: center;
   transform: translateX(-50%);
   --nav-panel-radius: 42px;
-  --nav-inner-bar: linear-gradient(
+  --nav-accent: linear-gradient(
     90deg,
-    rgba(220, 124, 166, 0.58),
-    rgba(188, 174, 205, 0.42),
-    rgba(105, 189, 222, 0.62)
+    var(--rainbow-rose) 0%,
+    var(--rainbow-honey) 24%,
+    var(--rainbow-leaf) 49%,
+    var(--rainbow-sky) 74%,
+    var(--rainbow-lavender) 100%
   );
+  --nav-focus: #829aa5;
   top: 0;
   --nav-handle-width: 226px;
   --nav-handle-height: 44px;
-  --nav-panel-gap: 14px;
   --nav-metal-line: rgba(72, 95, 116, 0.26);
   --nav-metal-shadow: rgba(45, 70, 92, 0.18);
 }
@@ -51,7 +53,7 @@
 }
 
 :where(.top-nav) .nav-trigger:focus-visible {
-  outline: 3px solid var(--blue);
+  outline: 3px solid var(--nav-focus);
   outline-offset: 4px;
 }
 
@@ -97,7 +99,7 @@
 }
 
 .top-nav:has(.nav-trigger:focus-visible) .nav-panel[data-state="open"] {
-  outline: 3px solid var(--blue);
+  outline: 3px solid var(--nav-focus);
   outline-offset: 4px;
 }
 
@@ -158,95 +160,38 @@
 :where(.top-nav) .nav-trigger::after {
   position: absolute;
   left: 50%;
-  width: 92px;
-  height: 9px;
+  width: 68px;
+  height: 5px;
   border-radius: 999px;
   content: "";
-  background: var(--nav-inner-bar);
+  background: var(--nav-accent);
   box-shadow:
-    inset 0 1px 1px rgba(65, 86, 105, 0.18),
-    0 1px 0 rgba(255, 255, 255, 0.6),
-    0 0 10px rgba(150, 204, 226, 0.08);
+    inset 0 1px 2px rgba(65, 86, 105, 0.2),
+    0 1px 0 rgba(255, 255, 255, 0.7);
   transform: translateX(-50%);
   bottom: 12px;
-}
-
-:where(.top-nav) .nav-panel::after {
-  position: absolute;
-  content: "";
-  left: 50%;
-  transform: translateX(-50%);
-  width: var(--nav-handle-width);
-  height: var(--nav-handle-height);
-  border: 1px solid var(--nav-metal-line);
-  border-top: 0;
-  border-radius: 0 0 25px 25px;
-  background:
-    linear-gradient(180deg, #f8fbfc 0%, #e8f0f4 45%, #d9e5ec 100%),
-    linear-gradient(
-      110deg,
-      rgba(255, 255, 255, 0.7),
-      rgba(174, 196, 211, 0.18) 46%,
-      rgba(255, 255, 255, 0.24)
-    );
-  box-shadow:
-    0 12px 22px var(--nav-metal-shadow),
-    inset 0 1px 0 rgba(255, 255, 255, 0.95),
-    inset 0 -7px 13px rgba(80, 105, 126, 0.14),
-    inset 16px 0 28px rgba(255, 255, 255, 0.2),
-    inset -18px 0 24px rgba(104, 137, 158, 0.09);
-  backdrop-filter: none;
-  top: calc(100% + var(--nav-panel-gap));
-  z-index: -1;
-}
-
-:where(.top-nav) .nav-panel::before {
-  position: absolute;
-  left: 50%;
-  width: 92px;
-  height: 9px;
-  border-radius: 999px;
-  content: "";
-  background: var(--nav-inner-bar);
-  box-shadow:
-    inset 0 1px 1px rgba(65, 86, 105, 0.18),
-    0 1px 0 rgba(255, 255, 255, 0.6),
-    0 0 10px rgba(150, 204, 226, 0.08);
-  transform: translateX(-50%);
-  z-index: 2;
-  top: calc(100% + var(--nav-panel-gap) + 24px);
 }
 
 :where(.top-nav) .nav-item::after {
   position: absolute;
   border-radius: 999px;
   content: "";
-  opacity: 0;
-  transform: scaleX(0.2);
-  transform-origin: left center;
-  transition:
-    transform 180ms ease,
-    opacity 180ms ease;
+  display: none;
   left: 58px;
-  right: 22px;
+  width: min(76px, calc(100% - 80px));
   bottom: 8px;
   height: 4px;
-  background: linear-gradient(
-    90deg,
-    rgba(224, 94, 150, 0.76),
-    rgba(236, 184, 74, 0.62),
-    rgba(74, 188, 164, 0.68),
-    rgba(63, 165, 222, 0.78),
-    rgba(147, 118, 222, 0.62)
-  );
-  box-shadow: 0 2px 8px rgba(85, 115, 145, 0.13);
+  background: var(--nav-accent);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.65);
 }
 
-:where(.top-nav) .nav-item:hover::after,
-:where(.top-nav) .nav-item:focus-visible::after,
 :where(.top-nav) .nav-item.is-active::after {
-  transform: scaleX(1);
-  opacity: 0.88;
+  display: block;
+}
+
+:where(.top-nav) .nav-item:focus-visible {
+  outline: 2px solid var(--nav-focus);
+  outline-offset: 2px;
 }
 
 :where(.top-nav) .nav-item:hover .nav-icon,
@@ -274,16 +219,6 @@
   opacity: 1;
   pointer-events: auto;
   transform: translate(-50%, 0) scale(1);
-}
-
-@media (max-width: 980px) {
-  :where(.top-nav) .nav-panel::after {
-    display: none;
-  }
-
-  :where(.top-nav) .nav-panel::before {
-    display: none;
-  }
 }
 
 @media (max-width: 900px) {

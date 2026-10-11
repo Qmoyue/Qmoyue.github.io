@@ -1,7 +1,15 @@
-import { onMounted, onUnmounted, ref, shallowRef, type Ref } from "vue";
+import {
+  nextTick,
+  onMounted,
+  onUnmounted,
+  ref,
+  shallowRef,
+  type Ref,
+} from "vue";
 import type MatterTypes from "matter-js";
 
 const colors = ["pink", "blue", "yellow", "mint", "lavender", "cream"] as const;
+const edgeInset = 24;
 
 export interface FallingChip {
   id: number;
@@ -75,16 +83,39 @@ export function useMatterWorld(
     fadeStarted = false;
   }
 
+  function measureChip(
+    text: string,
+    wide: boolean,
+  ): { width: number; height: number } {
+    const element = stage.value;
+    if (!element) throw new Error("Falling tags stage is missing");
+    const probe = document.createElement("span");
+    probe.className = wide ? "falling-item is-wide" : "falling-item";
+    probe.style.visibility = "hidden";
+    probe.style.transform = "none";
+    const label = document.createElement("b");
+    label.textContent = text;
+    probe.append(label);
+    element.append(probe);
+    const { width, height } = probe.getBoundingClientRect();
+    probe.remove();
+    return { width: Math.ceil(width), height: Math.ceil(height) };
+  }
+
   function spawn(index: number, width: number, random: () => number): void {
     if (!matter || !engine || !running.value) return;
     const text = words[index % words.length];
     const wide = text.length > 12;
-    const chipWidth = wide
-      ? Math.min(300, 140 + text.length * 7)
-      : 112 + Math.min(text.length, 10) * 7;
-    const height = wide ? 48 : 42;
+    const { width: chipWidth, height } = measureChip(text, wide);
     const lane = (index * 0.618) % 1;
-    const x = width * (0.16 + lane * 0.68) + (random() - 0.5) * 48;
+    const halfSpan = Math.hypot(chipWidth, height) / 2;
+    const x = Math.min(
+      width - edgeInset - halfSpan,
+      Math.max(
+        edgeInset + halfSpan,
+        width * (0.16 + lane * 0.68) + (random() - 0.5) * 48,
+      ),
+    );
     const y = -76 - random() * 126;
     const body = matter.Bodies.rectangle(x, y, chipWidth, height, {
       chamfer: { radius: 21 },
@@ -152,7 +183,7 @@ export function useMatterWorld(
       chip.x = body.position.x;
       chip.y = body.position.y;
       chip.angle = body.angle;
-      if (!chip.fading && body.position.y > -40) chip.opacity = 0.96;
+      if (!chip.fading && body.bounds.min.y >= 0) chip.opacity = 0.96;
     }
     publish();
     if (!fadeStarted && now - startedAt > 5100) fadeBottomFirst();
@@ -190,11 +221,15 @@ export function useMatterWorld(
         restitution: 0.03,
       },
     );
-    const left = matter.Bodies.rectangle(-42, height / 2, 84, height * 1.45, {
-      isStatic: true,
-    });
+    const left = matter.Bodies.rectangle(
+      edgeInset - 42,
+      height / 2,
+      84,
+      height * 1.45,
+      { isStatic: true },
+    );
     const right = matter.Bodies.rectangle(
-      width + 42,
+      width + 42 - edgeInset,
       height / 2,
       84,
       height * 1.45,
@@ -204,6 +239,8 @@ export function useMatterWorld(
     );
     matter.Composite.add(newEngine.world, [floor, left, right]);
     running.value = true;
+    await nextTick();
+    if (!active || !running.value || currentGeneration !== generation) return;
     startedAt = performance.now();
     const count = Math.min(10, Math.max(8, words.length));
     for (let index = 0; index < count; index++) {

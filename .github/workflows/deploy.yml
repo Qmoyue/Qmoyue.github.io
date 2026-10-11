@@ -28,6 +28,23 @@ jobs:
           package-manager: pnpm@11.28.4
           build-cmd: pnpm run format:check && pnpm run lint && pnpm run check && pnpm run test:unit && pnpm run build
 
+      - name: Install Chromium for browser tests
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Test the built site in Chromium
+        run: pnpm run test:e2e
+        env:
+          PLAYWRIGHT_USE_BUILT_SITE: "1"
+
+      - name: Upload browser test diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v5
+        with:
+          name: playwright-results
+          path: test-results/
+          if-no-files-found: ignore
+          retention-days: 7
+
   deploy:
     environment:
       name: github-pages

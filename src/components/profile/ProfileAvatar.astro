@@ -7,24 +7,26 @@ interface Props {
 const { src, alt } = Astro.props;
 ---
 
-<section class="profile-avatar-card glass-card">
-  <img src={src} alt={alt} width="210" height="210" />
-</section>
+<figure class="profile-avatar">
+  <img src={src} alt={alt} width="236" height="236" />
+</figure>
 
 <style>
-  .profile-avatar-card {
-    display: grid;
-    min-height: 300px;
-    place-items: center;
-    overflow: hidden;
+  .profile-avatar {
+    position: relative;
+    z-index: 3;
+    width: 236px;
+    height: 236px;
+    margin: 0;
   }
 
   img {
-    width: 210px;
-    height: 210px;
+    display: block;
+    width: 100%;
+    height: 100%;
     border: 8px solid rgba(255, 255, 255, 0.9);
     border-radius: 999px;
     object-fit: cover;
-    box-shadow: var(--shadow-card);
+    box-shadow: 0 16px 36px rgba(113, 87, 98, 0.18);
   }
 </style>

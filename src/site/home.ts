@@ -1,25 +1,25 @@
 import type { HomePageModel } from "../framework/contracts/home";
 
 export const homeContent = {
-  guitarImage: "/images/guitar-cutout.png",
+  avatarFrameImage: "/images/avatar-frame-guitar.png",
   avatarSpeech: "Bobobobocchi desu!",
   cue: "scroll / space",
   terminal: {
-    host: "moyue@blog:~",
-    path: "~/moyue/blog",
+    host: "moyue@Qmoyue",
+    path: "~",
     command: "cat /flag",
     output: "flag{welcome_to_moyues_blog}",
-    hint: "学习笔记 / 漏洞研究 / 一点点电波",
   },
   flowerImage: "/images/flower.jpg",
   profileGreeting: { intro: "I'm", outro: "Nice to meet you!" },
+  quoteImage: "/images/quote-character.png",
   quote: ["「梦是现实的延续，", "现实是梦的终结。」"],
   fallingWords: [
     "少女乐队",
     "二次元",
     "web安全",
     "agent",
-    "月美",
+    "TYPE-MOON",
     "[oblivious]",
     "ギター英雄",
     "だから僕は音楽を辞めた",
@@ -29,11 +29,12 @@ export const homeContent = {
 } satisfies Pick<
   HomePageModel,
   | "terminal"
-  | "guitarImage"
+  | "avatarFrameImage"
   | "avatarSpeech"
   | "cue"
   | "flowerImage"
   | "profileGreeting"
+  | "quoteImage"
   | "quote"
   | "fallingWords"
 >;

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import type { HomePageModel } from "../../../framework/contracts/home";
+import { Card, CardContent } from "../../../components/ui/card";
 
 const props = defineProps<{ model: HomePageModel }>();
 const now = ref(new Date(props.model.renderedAt));
@@ -31,8 +32,11 @@ onUnmounted(() => clearInterval(interval));
 </script>
 
 <template>
-  <section class="home-bento-card home-clock-widget" aria-label="当前时间">
-    <p class="clock-date" data-clock-date>{{ dateLabel }}</p>
-    <p class="clock-time" data-clock-time>{{ timeLabel }}</p>
-  </section>
+  <Card as="section" class="home-clock-widget" aria-label="当前时间">
+    <CardContent>
+      <p class="clock-label">CLOCK</p>
+      <p class="clock-date" data-clock-date>{{ dateLabel }}</p>
+      <p class="clock-time" data-clock-time>{{ timeLabel }}</p>
+    </CardContent>
+  </Card>
 </template>

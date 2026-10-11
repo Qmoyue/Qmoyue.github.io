@@ -66,6 +66,13 @@ for (const viewport of viewports) {
         });
       }
 
+      await expect(page.locator("[data-terminal-output]")).toHaveText(
+        /^flag\{[a-z0-9_]+\}$/,
+      );
+      await expect(page.locator("[data-terminal-output]")).not.toHaveText(
+        "flag{welcome_to_moyues_blog}",
+      );
+
       await page.keyboard.press("Space");
       await expect
         .poll(() => page.locator("[data-falling-stage] .falling-item").count())
@@ -90,6 +97,45 @@ for (const viewport of viewports) {
         type: "jpeg",
         quality: 90,
       });
+      await expect(
+        page.locator("[data-falling-stage] .falling-item"),
+      ).toHaveCount(0, {
+        timeout: 12_000,
+      });
+      await page.screenshot({
+        path: resolve(outputDir, `${viewport.name}-second-settled.jpg`),
+        type: "jpeg",
+        quality: 90,
+      });
+      if (viewport.name === "mobile") {
+        await page.evaluate(() => {
+          const profile = document.querySelector(".home-profile-widget");
+          if (!profile) throw new Error("Missing home profile");
+          window.scrollTo({
+            top: window.scrollY + profile.getBoundingClientRect().top - 140,
+            behavior: "instant",
+          });
+        });
+        await page.screenshot({
+          path: resolve(outputDir, "mobile-second-links.jpg"),
+          type: "jpeg",
+          quality: 90,
+        });
+        await page.evaluate(() =>
+          window.scrollTo({
+            top: document.body.scrollHeight,
+            behavior: "instant",
+          }),
+        );
+        await expect
+          .poll(() => page.evaluate(() => window.scrollY))
+          .toBeGreaterThan(1000);
+        await page.screenshot({
+          path: resolve(outputDir, "mobile-second-bottom.jpg"),
+          type: "jpeg",
+          quality: 90,
+        });
+      }
     } finally {
       await context.close();
     }
@@ -134,7 +180,7 @@ for (const viewport of viewports) {
       const page = await context.newPage();
       await page.goto("/", { waitUntil: "domcontentloaded" });
       await expect(page.locator("[data-terminal-output]")).toHaveText(
-        "flag{welcome_to_moyues_blog}",
+        /^flag\{[a-z0-9_]+\}$/,
       );
       await page.screenshot({
         path: resolve(outputDir, `${viewport.name}-reduced-motion.jpg`),

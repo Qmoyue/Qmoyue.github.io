@@ -19,7 +19,7 @@ defineProps<{
     aria-label="首页介绍"
   >
     <HomeBrand :identity="model.identity" />
-    <div class="identity-stage home-identity-stage">
+    <div class="home-identity-stage">
       <AvatarStage :model="model" />
       <IdentityTerminal :model="model" :command="command" :output="output" />
     </div>

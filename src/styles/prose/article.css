@@ -4,7 +4,7 @@
 
 .article-prose {
   margin-top: 72px;
-  color: #67778d;
+  color: #3b4757;
   font-size: clamp(1.06rem, 1.04vw, 1.17rem);
   line-height: 1.9;
 }
@@ -46,10 +46,8 @@
   left: 0;
   width: 24px;
   height: 24px;
-  border-radius: 999px;
   content: "";
-  background: linear-gradient(135deg, #d68fc0 0%, #b5a5d6 43%, #9ccfe3 100%);
-  box-shadow: 0 7px 14px rgba(119, 147, 174, 0.16);
+  background: var(--section-marker-image) center / contain no-repeat;
 }
 
 .article-prose p,
@@ -72,20 +70,20 @@
 .article-prose blockquote {
   margin: 36px 0;
   padding: 28px 32px;
-  border-left: 8px solid rgba(243, 166, 193, 0.62);
+  border-left: 8px solid #b17d78;
   border-radius: 0 18px 18px 0;
   background: linear-gradient(
     90deg,
-    rgba(255, 228, 238, 0.58),
-    rgba(255, 255, 255, 0.38)
+    rgba(255, 241, 223, 0.6),
+    rgba(255, 246, 232, 0.32)
   );
 }
 
 .article-prose :not(pre) > code {
   padding: 0.12em 0.38em;
   border-radius: 8px;
-  color: #9b4d72;
-  background: rgba(255, 222, 235, 0.72);
+  color: #74465a;
+  background: #f3e3df;
   font-size: 0.92em;
   font-weight: 850;
 }

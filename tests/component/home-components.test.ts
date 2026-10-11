@@ -10,11 +10,13 @@ test("home production components render core content and actions as static HTML"
   const html = await container.renderToString(HomeComponents);
 
   expect(html).toContain("Fixture Author");
-  expect(html).toContain('href="/blog/first/"');
-  expect(html).toContain("First note");
+  expect(html).toContain('href="/blog/"');
+  expect(html).toContain('href="/project/"');
+  expect(html).toContain('href="/me/"');
+  expect(html).toContain('href="/friends/"');
   expect(html).toContain("flag{fixture}");
-  expect(html).toContain('aria-label="弹一下吉他"');
-  expect(html).toContain('alt="Flower cover"');
+  expect(html).toContain('aria-label="显示头像留言"');
+  expect(html).toContain('alt="花园里捧着花的人像"');
   expect(html).toContain('aria-label="日历"');
   expect(html).toContain('aria-label="页面滚动进度"');
   expect(html).toContain("First line");

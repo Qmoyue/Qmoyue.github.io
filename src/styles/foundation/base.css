@@ -9,64 +9,27 @@ html {
 }
 
 body {
+  display: flex;
+  flex-direction: column;
   margin: 0;
-  min-height: 100%;
+  min-height: 100dvh;
   overflow-x: hidden;
   color: var(--blue-deep);
   background:
-    radial-gradient(
-      circle at 10% 10%,
-      rgba(255, 220, 233, 0.58),
-      transparent 28rem
-    ),
-    radial-gradient(
-      circle at 88% 18%,
-      rgba(190, 233, 245, 0.62),
-      transparent 34rem
-    ),
-    radial-gradient(
-      circle at 52% 94%,
-      rgba(255, 246, 232, 0.78),
-      transparent 34rem
-    ),
-    linear-gradient(128deg, #fff5ec 0%, #fffaf6 46%, #edfaff 100%);
-}
-
-body::before {
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  pointer-events: none;
-  content: "";
-  background:
+    url("/images/sakura-wood-grain.svg") left top / 960px 560px repeat,
     linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.17),
-      rgba(255, 246, 232, 0.28)
-    ),
-    var(--page-bg, none);
-  background-size: cover;
-  background-position: center;
+      135deg,
+      #f9eeeb 0%,
+      #f1e5df 30%,
+      #f2eae8 54%,
+      #eaf1f1 77%,
+      #e3f1f6 100%
+    );
   background-attachment: fixed;
 }
 
-body::after {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  content: "";
-  background:
-    radial-gradient(
-      circle at 18% 22%,
-      rgba(255, 255, 255, 0.42),
-      transparent 24rem
-    ),
-    radial-gradient(
-      circle at 84% 78%,
-      rgba(255, 235, 224, 0.36),
-      transparent 25rem
-    );
+body > main {
+  flex: 1;
 }
 
 a {
@@ -86,6 +49,21 @@ input {
 
 button {
   color: inherit;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html,
+  body {
+    cursor:
+      url("/images/cursor-folded.png") 3 3,
+      auto;
+  }
+
+  body :is(a, button, summary, [role="button"]) {
+    cursor:
+      url("/images/cursor-folded.png") 3 3,
+      pointer;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

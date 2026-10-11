@@ -1,3 +1,7 @@
+:root {
+  --section-marker-image: url("/images/sakura-marker.svg");
+}
+
 .page-shell {
   width: min(1530px, calc(100% - 72px));
   margin: 0 auto;
@@ -7,29 +11,29 @@
 .glass-card,
 .soft-card {
   position: relative;
-  border: 1px solid rgba(104, 128, 148, 0.2);
+  border: 1px solid rgba(145, 108, 103, 0.19);
   border-radius: var(--radius);
   background:
     radial-gradient(
       circle at 10% 12%,
-      rgba(255, 225, 236, 0.24),
+      rgba(248, 217, 219, 0.3),
       transparent 17rem
     ),
     radial-gradient(
       circle at 94% 76%,
-      rgba(225, 247, 253, 0.32),
+      rgba(242, 215, 210, 0.22),
       transparent 20rem
     ),
     linear-gradient(
       145deg,
-      rgba(255, 253, 248, 0.88),
-      rgba(255, 250, 246, 0.72) 45%,
-      rgba(240, 250, 253, 0.68)
+      rgba(255, 251, 247, 0.9),
+      rgba(255, 246, 242, 0.76) 45%,
+      rgba(250, 235, 230, 0.7)
     );
   box-shadow:
-    0 16px 38px rgba(91, 112, 132, 0.1),
+    0 16px 38px rgba(120, 85, 79, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.78),
-    inset 0 -1px 0 rgba(149, 190, 206, 0.08);
+    inset 0 -1px 0 rgba(184, 125, 119, 0.08);
   backdrop-filter: blur(16px) saturate(1.06);
 }
 
@@ -56,11 +60,8 @@
   flex: 0 0 auto;
   width: 24px;
   height: 24px;
-  border: 0;
-  border-radius: 999px;
   content: "";
-  background: linear-gradient(135deg, #d68fc0 0%, #b5a5d6 43%, #9ccfe3 100%);
-  box-shadow: 0 7px 14px rgba(119, 147, 174, 0.16);
+  background: var(--section-marker-image) center / contain no-repeat;
 }
 
 .tag-row {
@@ -74,15 +75,10 @@
   align-items: center;
   min-height: 34px;
   padding: 6px 15px;
-  border: 1px solid rgba(236, 165, 193, 0.18);
+  border: 1px solid var(--tag-chip-border);
   border-radius: 999px;
-  color: #6f6479;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 226, 237, 0.76),
-    rgba(236, 249, 253, 0.74)
-  );
-  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.72);
+  color: var(--tag-chip-ink);
+  background: var(--tag-chip-fill);
   font-size: 0.92rem;
   font-weight: 800;
   white-space: nowrap;

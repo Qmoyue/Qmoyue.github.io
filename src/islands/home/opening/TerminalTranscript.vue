@@ -10,15 +10,25 @@ defineProps<{
 
 <template>
   <div class="terminal-screen">
-    <p class="terminal-path">{{ terminal.path }}</p>
-    <p class="terminal-line">
-      <span class="terminal-prompt">$</span>
-      <span class="terminal-command" data-terminal-command>{{ command }}</span
-      ><span class="terminal-caret" aria-hidden="true"></span>
+    <p class="terminal-line terminal-command-line">
+      <span class="terminal-prompt">
+        <span class="terminal-prompt-host">{{ terminal.host }}</span
+        >:<span class="terminal-prompt-path">{{ terminal.path }}</span
+        >$
+      </span>
+      <span class="terminal-entry">
+        <span class="terminal-command" data-terminal-command>{{
+          command
+        }}</span>
+        <span class="terminal-caret" aria-hidden="true"></span>
+      </span>
     </p>
-    <p class="terminal-line terminal-output" data-terminal-output>
+    <p
+      class="terminal-line terminal-output"
+      :class="{ 'is-visible': output }"
+      data-terminal-output
+    >
       {{ output }}
     </p>
-    <p class="terminal-hint">{{ terminal.hint }}</p>
   </div>
 </template>

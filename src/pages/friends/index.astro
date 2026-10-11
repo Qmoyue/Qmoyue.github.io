@@ -1,8 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import FriendCard from "../../components/friends/FriendCard.astro";
-import CardStack from "../../components/shared/CardStack.astro";
-import PageIntro from "../../components/shared/PageIntro.astro";
+import FriendsIntro from "../../components/friends/FriendsIntro.astro";
+import FriendsCarousel from "../../islands/friends/FriendsCarousel.vue";
 import { friends } from "../../site/friends";
 ---
 
@@ -13,11 +12,44 @@ import { friends } from "../../site/friends";
     description: "友链和小伙伴们。",
   }}
 >
-  <main class="page-shell">
-    <PageIntro eyebrow="FRIENDS" title="Friends" scriptLead="my-friends" />
-
-    <CardStack label="友链列表">
-      {friends.map((friend) => <FriendCard friend={friend} />)}
-    </CardStack>
+  <main class="friends-page">
+    <FriendsIntro />
+    <FriendsCarousel friends={friends} client:load />
   </main>
 </BaseLayout>
+
+<style>
+  .friends-page {
+    position: relative;
+    display: grid;
+    width: 100%;
+    min-height: 100dvh;
+    align-items: center;
+    padding: 90px 0 40px;
+    overflow: hidden;
+  }
+
+  .friends-page::before {
+    position: absolute;
+    top: 165px;
+    left: 50%;
+    width: min(850px, 90vw);
+    height: 680px;
+    border-radius: 50%;
+    background: radial-gradient(
+      ellipse,
+      rgba(255, 249, 245, 0.7),
+      rgba(255, 241, 236, 0.3) 52%,
+      transparent 76%
+    );
+    content: "";
+    pointer-events: none;
+    transform: translateX(-50%);
+  }
+
+  @media (max-width: 650px) {
+    .friends-page {
+      padding-top: 85px;
+    }
+  }
+</style>

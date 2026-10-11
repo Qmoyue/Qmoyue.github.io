@@ -11,8 +11,8 @@ defineProps<{
 </script>
 
 <template>
-  <section class="terminal-card terminal-ubuntu" aria-label="terminal identity">
-    <TerminalChrome :host="model.terminal.host" />
+  <section class="terminal-ubuntu" aria-label="terminal identity">
+    <TerminalChrome :host="model.terminal.host" :path="model.terminal.path" />
     <TerminalTranscript
       :terminal="model.terminal"
       :command="command"
@@ -22,7 +22,7 @@ defineProps<{
       <a
         class="github-pill"
         :href="model.identity.githubUrl"
-        aria-label="Github"
+        aria-label="GitHub"
       >
         <span class="github-pill-icon"
           ><img
@@ -32,7 +32,6 @@ defineProps<{
             height="24"
             loading="lazy"
         /></span>
-        <span>Github</span>
       </a>
     </div>
   </section>

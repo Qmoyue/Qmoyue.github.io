@@ -1,5 +1,6 @@
 ---
 import type { Project } from "../../framework/contracts/project";
+import CardLinkArrow from "../shared/CardLinkArrow.astro";
 
 interface Props {
   project: Project;
@@ -15,29 +16,42 @@ const external = project.url.startsWith("https://");
   target={external ? "_blank" : undefined}
   rel={external ? "noopener noreferrer" : undefined}
 >
-  <span class="project-mark">{project.status}</span>
-  <div>
-    <p class="section-label">PROJECT</p>
+  <div class="project-content">
+    <div class="project-meta">
+      <p class="section-label">PROJECT</p>
+      <span class="project-mark">{project.status}</span>
+    </div>
     <h2>{project.name}</h2>
     <p>{project.description}</p>
     <div class="tag-row">
       {project.tags.map((tag) => <span class="tag-chip">#{tag}</span>)}
     </div>
   </div>
-  <span class="project-arrow" aria-hidden="true">↗</span>
+  <CardLinkArrow />
 </a>
 
 <style>
   .project-card {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) 52px;
     gap: 28px;
     align-items: center;
-    min-height: 198px;
+    min-height: 220px;
     padding: 36px 44px;
     transition:
       transform 180ms ease,
       box-shadow 180ms ease;
+  }
+
+  .project-content {
+    min-width: 0;
+  }
+
+  .project-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
   }
 
   .project-card:hover {
@@ -51,47 +65,52 @@ const external = project.url.startsWith("https://");
   }
 
   h2 {
-    margin: 18px 0 14px;
+    margin: 16px 0 8px;
     color: #30415d;
     font-size: clamp(2rem, 3.5vw, 3.4rem);
     line-height: 1.1;
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
   }
 
-  p {
-    margin: 0 0 22px;
+  .project-content > p:not(.section-label) {
+    max-width: 70ch;
+    margin: 0 0 18px;
     color: #717d91;
-    font-size: 1.13rem;
+    font-size: 1.05rem;
     font-weight: 700;
-    line-height: 1.7;
+    line-height: 1.6;
+  }
+
+  .project-meta .section-label {
+    margin: 0;
+    font-size: 0.82rem;
   }
 
   .project-mark {
-    justify-self: start;
-    padding: 10px 22px;
+    padding: 7px 12px;
     border-radius: 999px;
-    color: #6d5d28;
-    background: var(--yellow);
+    color: #796248;
+    background: rgba(235, 220, 195, 0.7);
     font-family: "Courier New", monospace;
-    font-weight: 900;
-    transform: rotate(-2deg);
-  }
-
-  .project-arrow {
-    display: grid;
-    width: 52px;
-    height: 52px;
-    place-items: center;
-    border-radius: 999px;
-    color: #7a6480;
-    background: rgba(255, 216, 231, 0.64);
-    font-size: 1.4rem;
-    font-weight: 900;
+    font-size: 0.8rem;
+    font-weight: 800;
   }
 
   @media (max-width: 980px) {
     .project-card {
       padding: 28px;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .project-card {
+      grid-template-columns: minmax(0, 1fr) 42px;
+      gap: 14px;
+      padding: 24px;
+    }
+
+    h2 {
+      font-size: 2rem;
     }
   }
 </style>

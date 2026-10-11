@@ -1,28 +1,13 @@
 ---
-import { getImage } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { createHomePageModel } from "../domain/home/model";
 import HomeExperience from "../presets/moyue/HomeExperience.vue";
-import { blogRepository } from "../site/blog";
 import { site } from "../site/config";
 import { homeContent } from "../site/home";
 import "../presets/moyue/home.css";
+import "../presets/moyue/home-second.css";
 
-const latest = (await blogRepository.listSummaries())[0];
-if (!latest)
-  throw new Error("The home latest-post block needs a published post");
-const cover = await getImage({
-  src: latest.cover.src,
-  width: 320,
-  height: 390,
-});
-const model = createHomePageModel(
-  site,
-  homeContent,
-  latest,
-  cover.src,
-  new Date(),
-);
+const model = createHomePageModel(site, homeContent, new Date());
 ---
 
 <BaseLayout

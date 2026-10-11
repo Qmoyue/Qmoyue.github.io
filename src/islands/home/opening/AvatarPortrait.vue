@@ -1,15 +1,27 @@
 <script setup lang="ts">
-defineProps<{ src: string; name: string }>();
+defineProps<{ src: string }>();
 </script>
 
 <template>
   <img
+    class="hero-avatar-portrait"
     :src="src"
-    :alt="`${name} avatar`"
-    width="226"
-    height="226"
+    alt=""
+    width="1676"
+    height="1676"
     loading="eager"
     decoding="async"
   />
-  <span class="avatar-sparkle" aria-hidden="true">♪</span>
 </template>
+
+<style scoped>
+.hero-avatar-portrait {
+  position: absolute;
+  top: 7.5%;
+  left: 8.5%;
+  width: 73%;
+  height: 73%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+</style>

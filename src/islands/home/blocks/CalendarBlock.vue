@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import type { HomePageModel } from "../../../framework/contracts/home";
+import { Card, CardContent, CardHeader } from "../../../components/ui/card";
 
 const props = defineProps<{ model: HomePageModel }>();
 const now = ref(new Date(props.model.renderedAt));
@@ -35,32 +36,34 @@ onUnmounted(() => clearInterval(interval));
 </script>
 
 <template>
-  <section class="home-bento-card home-calendar-widget" aria-label="日历">
-    <div class="home-bento-head is-small">
+  <Card as="section" class="home-calendar-widget" aria-label="日历">
+    <CardHeader class="home-calendar-head">
       <div>
-        <p class="home-bento-label">CALENDAR</p>
+        <p class="home-calendar-label">CALENDAR</p>
         <time data-calendar-month>{{ monthLabel }}</time>
       </div>
       <span data-calendar-today>{{ todayLabel }}</span>
-    </div>
-    <div class="home-calendar-weekdays" aria-hidden="true">
-      <span>一</span><span>二</span><span>三</span><span>四</span><span>五</span
-      ><span>六</span><span>日</span>
-    </div>
-    <div class="home-calendar-days" data-calendar-days>
-      <span
-        v-for="(item, index) in days"
-        :key="index"
-        :class="{
-          'is-blank': item.day === 0,
-          'is-today': item.day === now.getDate(),
-          'is-weekend': item.weekend,
-        }"
-        :aria-current="
-          item.day && item.day === now.getDate() ? 'date' : undefined
-        "
-        >{{ item.day || "" }}</span
-      >
-    </div>
-  </section>
+    </CardHeader>
+    <CardContent>
+      <div class="home-calendar-weekdays" aria-hidden="true">
+        <span>一</span><span>二</span><span>三</span><span>四</span
+        ><span>五</span><span>六</span><span>日</span>
+      </div>
+      <div class="home-calendar-days" data-calendar-days>
+        <span
+          v-for="(item, index) in days"
+          :key="index"
+          :class="{
+            'is-blank': item.day === 0,
+            'is-today': item.day === now.getDate(),
+            'is-weekend': item.weekend,
+          }"
+          :aria-current="
+            item.day && item.day === now.getDate() ? 'date' : undefined
+          "
+          >{{ item.day || "" }}</span
+        >
+      </div>
+    </CardContent>
+  </Card>
 </template>

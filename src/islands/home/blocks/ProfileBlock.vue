@@ -5,10 +5,7 @@ defineProps<{ model: HomePageModel }>();
 </script>
 
 <template>
-  <section
-    class="home-bento-card home-profile-widget"
-    :aria-label="model.identity.displayName"
-  >
+  <section class="home-profile-widget" :aria-label="model.identity.displayName">
     <img
       :src="model.identity.avatar"
       :alt="`${model.identity.displayName} avatar`"

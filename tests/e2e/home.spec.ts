@@ -1,5 +1,33 @@
 import { expect, test } from "@playwright/test";
 
+test("home identity clears the expanded navigation and stacks vertically", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await page.getByRole("button", { name: "打开导航" }).click();
+
+  const nav = page.locator(".top-nav .nav-panel");
+  await expect(nav).toBeVisible();
+  const navBox = await nav.boundingBox();
+  const avatarBox = await page
+    .locator(".home-identity-stage .hero-avatar")
+    .boundingBox();
+  const terminalBox = await page.locator(".terminal-ubuntu").boundingBox();
+  if (!navBox || !avatarBox || !terminalBox) {
+    throw new Error("The home identity layout is incomplete");
+  }
+
+  expect(avatarBox.y).toBeGreaterThan(navBox.y + navBox.height);
+  expect(terminalBox.y).toBeGreaterThan(avatarBox.y + avatarBox.height);
+  expect(
+    Math.abs(
+      avatarBox.x + avatarBox.width / 2 - terminalBox.x - terminalBox.width / 2,
+    ),
+  ).toBeLessThan(2);
+});
+
 test("home panels respond to wheel, Space, and dragging the progress rail", async ({
   page,
 }) => {
@@ -14,10 +42,29 @@ test("home panels respond to wheel, Space, and dragging the progress rail", asyn
 
   const box = await rail.boundingBox();
   if (!box) throw new Error("The home progress rail is missing");
-  await page.mouse.move(box.x + box.width / 2, box.y + box.height * 0.9);
+  const thumb = await page
+    .locator("[data-scroll-rail] .scroll-rail-thumb")
+    .boundingBox();
+  if (!thumb) throw new Error("Doro is missing from the home progress rail");
+  await page.mouse.move(thumb.x + thumb.width / 2, thumb.y + thumb.height / 2);
   await page.mouse.down();
+  await expect(page.locator("[data-scroll-rail] .scroll-rail-thumb")).toHaveCSS(
+    "animation-name",
+    "doro-run",
+  );
   await page.mouse.move(box.x + box.width / 2, box.y + 8);
+  const positionWhileDragging = await page.evaluate(() => ({
+    top: window.scrollY,
+    height: window.innerHeight,
+  }));
+  expect(positionWhileDragging.top).toBeLessThan(
+    positionWhileDragging.height * 0.2,
+  );
   await page.mouse.up();
+  await expect(page.locator("[data-scroll-rail] .scroll-rail-thumb")).toHaveCSS(
+    "animation-name",
+    "none",
+  );
   await expect(first).toBeInViewport();
   await expect(rail).toHaveAttribute("aria-valuenow", "0");
 
@@ -55,7 +102,11 @@ test("reduced motion shows terminal content and skips falling physics", async ({
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
+  await expect(page.locator(".terminal-prompt")).toHaveText("moyue@Qmoyue:~$");
   await expect(page.locator("[data-terminal-output]")).toHaveText(
+    /^flag\{[a-z0-9_]+\}$/,
+  );
+  await expect(page.locator("[data-terminal-output]")).not.toHaveText(
     "flag{welcome_to_moyues_blog}",
   );
   await page.keyboard.press("Space");
@@ -65,7 +116,7 @@ test("reduced motion shows terminal content and skips falling physics", async ({
   );
 });
 
-test("home article remains in static HTML without JavaScript", async ({
+test("home blog link remains in static HTML without JavaScript", async ({
   browser,
 }) => {
   const context = await browser.newContext({ javaScriptEnabled: false });
@@ -76,8 +127,10 @@ test("home article remains in static HTML without JavaScript", async ({
       page.getByRole("heading", { name: "Moyue", level: 1 }),
     ).toBeAttached();
     await expect(
-      page.getByRole("region", { name: "最新文章" }).getByRole("link"),
-    ).toHaveAttribute("href", /\/blog\//);
+      page
+        .getByRole("navigation", { name: "快捷入口" })
+        .getByRole("link", { name: "BLOG" }),
+    ).toHaveAttribute("href", "/blog/");
   } finally {
     await context.close();
   }

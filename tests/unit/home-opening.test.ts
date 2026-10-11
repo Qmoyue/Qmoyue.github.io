@@ -32,11 +32,10 @@ test("reduced motion settles immediately without scheduled animation", () => {
 test("terminal playback completes and cancellation stops later character changes", () => {
   vi.useFakeTimers();
   const terminal = useTerminalSequence({
-    host: "author@blog:~",
-    path: "~/blog",
+    host: "author@blog",
+    path: "~",
     command: "cat /flag",
     output: "flag{welcome}",
-    hint: "Notes",
   });
   terminal.reset(false);
   terminal.start(() => 0.5);
@@ -50,12 +49,16 @@ test("terminal playback completes and cancellation stops later character changes
 
   terminal.reset(false);
   terminal.start(() => 0.5);
+  vi.advanceTimersByTime(900);
+  expect(terminal.output.value.length).toBeLessThan("flag{welcome}".length);
   vi.runAllTimers();
   expect(terminal.command.value).toBe("cat /flag");
-  expect(terminal.output.value).toBe("flag{welcome}");
+  expect(terminal.output.value).toMatch(/^flag\{[a-z0-9_]+\}$/);
+  expect(terminal.output.value).not.toBe("flag{welcome}");
 
   terminal.reset(true);
   expect(terminal.command.value).toBe("cat /flag");
-  expect(terminal.output.value).toBe("flag{welcome}");
+  expect(terminal.output.value).toMatch(/^flag\{[a-z0-9_]+\}$/);
+  expect(terminal.output.value).not.toBe("flag{welcome}");
   expect(vi.getTimerCount()).toBe(0);
 });

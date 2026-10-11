@@ -1,29 +1,45 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import type { HomePanel } from "./useHomePanels";
 
-defineProps<{ thumbSrc: string; panel: HomePanel }>();
-const emit = defineEmits<{ seek: [panel: HomePanel, dragging: boolean] }>();
+const props = defineProps<{ thumbSrc: string; panel: HomePanel }>();
+const emit = defineEmits<{
+  seek: [panel: HomePanel, dragging: boolean];
+  drag: [ratio: number];
+}>();
 const rail = ref<HTMLElement | null>(null);
 const track = ref<HTMLButtonElement | null>(null);
 const dragging = ref(false);
 const running = ref(false);
+const position = ref(0);
+const displayedPosition = computed(() =>
+  dragging.value ? position.value : props.panel === "second" ? 1 : 0,
+);
 let wheelTimer: ReturnType<typeof setTimeout> | undefined;
+let grabOffset = 0;
 
 function seekFromPointer(event: PointerEvent): void {
   const rect = track.value?.getBoundingClientRect();
   if (!rect) return;
   const ratio = Math.min(
     1,
-    Math.max(0, (event.clientY - rect.top) / rect.height),
+    Math.max(0, (event.clientY - rect.top - grabOffset) / rect.height),
   );
-  emit("seek", ratio > 0.45 ? "second" : "first", dragging.value);
+  position.value = ratio;
+  emit("drag", ratio);
 }
 
 function startDrag(event: PointerEvent): void {
   if (event.button !== 0) return;
   event.preventDefault();
+  position.value = props.panel === "second" ? 1 : 0;
+  const rect = track.value?.getBoundingClientRect();
+  grabOffset =
+    rect && event.target === rail.value?.querySelector(".scroll-rail-thumb")
+      ? event.clientY - (rect.top + position.value * rect.height)
+      : 0;
   dragging.value = true;
+  clearTimeout(wheelTimer);
   running.value = true;
   rail.value?.setPointerCapture(event.pointerId);
   seekFromPointer(event);
@@ -33,14 +49,20 @@ function endDrag(event: PointerEvent): void {
   if (!dragging.value) return;
   dragging.value = false;
   running.value = false;
+  grabOffset = 0;
+  emit("seek", position.value >= 0.5 ? "second" : "first", true);
   if (rail.value?.hasPointerCapture(event.pointerId)) {
     rail.value.releasePointerCapture(event.pointerId);
   }
 }
 
 function loseDrag(): void {
+  if (dragging.value) {
+    emit("seek", position.value >= 0.5 ? "second" : "first", true);
+  }
   dragging.value = false;
   running.value = false;
+  grabOffset = 0;
 }
 
 function onWheel(): void {
@@ -72,7 +94,7 @@ onUnmounted(() => {
     ref="rail"
     class="scroll-rail"
     :class="{ 'is-dragging': dragging, 'is-running': running }"
-    :style="{ '--scroll-progress': panel === 'second' ? '100%' : '0%' }"
+    :style="{ '--scroll-progress': `${displayedPosition * 100}%` }"
     data-scroll-rail
     @pointerdown="startDrag"
     @pointermove="dragging && seekFromPointer($event)"
@@ -89,7 +111,7 @@ onUnmounted(() => {
       aria-orientation="vertical"
       aria-valuemin="0"
       aria-valuemax="100"
-      :aria-valuenow="panel === 'second' ? 100 : 0"
+      :aria-valuenow="Math.round(displayedPosition * 100)"
       @keydown="onKeydown"
     >
       <span class="scroll-rail-fill"></span>

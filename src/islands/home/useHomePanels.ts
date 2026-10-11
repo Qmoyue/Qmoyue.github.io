@@ -6,7 +6,6 @@ export function useHomePanels(root: Ref<HTMLElement | null>) {
   const panel = ref<HomePanel>("first");
   let locked = false;
   let lockTimer: ReturnType<typeof setTimeout> | undefined;
-  let observer: IntersectionObserver | undefined;
   let reducedMotion = false;
   let first: HTMLElement;
   let second: HTMLElement;
@@ -19,6 +18,16 @@ export function useHomePanels(root: Ref<HTMLElement | null>) {
   function targetTop(next: HomePanel): number {
     const target = next === "first" ? first : second;
     return window.scrollY + target.getBoundingClientRect().top;
+  }
+
+  function dragTo(ratio: number): void {
+    clearTimeout(lockTimer);
+    locked = true;
+    const start = targetTop("first");
+    window.scrollTo({
+      top: start + (targetTop("second") - start) * ratio,
+      behavior: "instant",
+    });
   }
 
   function goToPanel(next: HomePanel, dragging = false): void {
@@ -71,6 +80,15 @@ export function useHomePanels(root: Ref<HTMLElement | null>) {
     goToPanel(panel.value === "first" ? "second" : "first");
   }
 
+  function onScroll(): void {
+    if (locked) return;
+    setPanel(
+      second.getBoundingClientRect().top < window.innerHeight * 0.42
+        ? "second"
+        : "first",
+    );
+  }
+
   onMounted(() => {
     const home = root.value;
     const firstElement = home?.querySelector<HTMLElement>(
@@ -86,31 +104,19 @@ export function useHomePanels(root: Ref<HTMLElement | null>) {
     reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-    setPanel(window.scrollY > window.innerHeight * 0.42 ? "second" : "first");
+    onScroll();
     window.addEventListener("wheel", onWheel, { passive: false });
     window.addEventListener("keydown", onKeydown);
-    observer = new IntersectionObserver(
-      (entries) => {
-        if (locked) return;
-        const active = entries.find(
-          (entry) => entry.isIntersecting && entry.intersectionRatio > 0.62,
-        );
-        if (active?.target === first) setPanel("first");
-        if (active?.target === second) setPanel("second");
-      },
-      { threshold: [0.62] },
-    );
-    observer.observe(first);
-    observer.observe(second);
+    window.addEventListener("scroll", onScroll, { passive: true });
   });
 
   onUnmounted(() => {
     window.removeEventListener("wheel", onWheel);
     window.removeEventListener("keydown", onKeydown);
-    observer?.disconnect();
+    window.removeEventListener("scroll", onScroll);
     clearTimeout(lockTimer);
     delete document.body.dataset.homePanel;
   });
 
-  return { panel, goToPanel };
+  return { panel, goToPanel, dragTo };
 }

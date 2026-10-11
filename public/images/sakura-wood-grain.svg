@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" fill="none">
+  <g stroke="#87554e" stroke-linecap="round">
+    <path stroke-width="7" opacity=".018" d="M0 54C164 23 329 92 492 57S781 86 960 54"/>
+    <path stroke-width=".9" opacity=".055" d="M0 54C164 23 329 92 492 57S781 86 960 54"/>
+    <path stroke-width=".7" opacity=".035" d="M0 119C128 137 281 96 438 119S741 102 960 119"/>
+    <path stroke-width="1.1" opacity=".06" d="M0 188C180 161 263 220 436 188S768 163 960 188"/>
+    <path stroke-width=".8" opacity=".035" d="M0 255C139 277 287 231 462 254S759 272 960 255"/>
+    <path stroke-width="6" opacity=".02" d="M0 343C171 307 294 382 477 344S764 371 960 343"/>
+    <path stroke-width="1" opacity=".06" d="M0 343C171 307 294 382 477 344S764 371 960 343"/>
+    <path stroke-width=".75" opacity=".04" d="M0 426C160 448 325 393 489 425S786 406 960 426"/>
+    <path stroke-width=".95" opacity=".055" d="M0 514C166 479 294 540 484 513S769 540 960 514"/>
+    <path stroke-width=".65" opacity=".045" d="M242 293C360 274 478 305 590 288"/>
+    <path stroke-width=".7" opacity=".04" d="M612 470C710 452 805 471 893 460"/>
+    <path stroke-width=".8" opacity=".045" d="M571 210C615 194 700 195 756 214C708 231 625 232 571 210Z"/>
+    <path stroke-width=".65" opacity=".035" d="M619 211C653 204 701 207 722 214C688 221 649 220 619 211Z"/>
+  </g>
+  <g stroke="#fffaf7" stroke-linecap="round" opacity=".11">
+    <path d="M0 61C164 30 329 99 492 64S781 93 960 61"/>
+    <path d="M0 350C171 314 294 389 477 351S764 378 960 350"/>
+  </g>
+</svg>

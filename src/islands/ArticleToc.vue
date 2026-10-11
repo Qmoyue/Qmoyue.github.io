@@ -40,7 +40,7 @@ onUnmounted(() => observer?.disconnect());
 </script>
 
 <template>
-  <aside class="article-toc soft-card">
+  <aside class="article-toc">
     <p class="toc-label">ON THIS PAGE</p>
     <nav v-if="visibleHeadings.length" aria-label="文章目录">
       <a
@@ -70,11 +70,25 @@ onUnmounted(() => observer?.disconnect());
   overscroll-behavior: contain;
   scrollbar-gutter: stable;
   padding: 36px 30px;
+  border: 1px solid #c8bcaa;
+  border-radius: var(--radius);
+  background:
+    repeating-linear-gradient(
+      2deg,
+      transparent 0 42px,
+      rgba(102, 91, 72, 0.018) 43px 44px,
+      transparent 45px 106px
+    ),
+    linear-gradient(110deg, #f0ebe2, #e6dfd3 58%, #eee7dc);
+  box-shadow:
+    0 14px 28px rgba(81, 71, 58, 0.1),
+    inset 0 1px 0 rgba(255, 253, 246, 0.78);
+  scrollbar-color: #a49785 transparent;
 }
 
 .toc-label {
   margin: 0 0 26px;
-  color: #6f6680;
+  color: #6d5e4f;
   font-family: "Courier New", monospace;
   font-weight: 900;
   letter-spacing: 0.08em;
@@ -88,29 +102,40 @@ nav {
 
 a {
   display: grid;
-  grid-template-columns: 14px 1fr auto;
+  grid-template-columns: 4px 1fr auto;
   gap: 16px;
   align-items: start;
-  color: #5c6e86;
+  color: #4b5663;
   font-weight: 900;
   line-height: 1.4;
 }
 
 a::before {
-  width: 13px;
-  height: 18px;
+  width: 3px;
+  height: 16px;
+  margin-top: 3px;
   border-radius: 999px;
   content: "";
-  background: var(--pink);
+  background: #718993;
   opacity: 0;
 }
 
 a.is-active {
-  color: var(--blue-deep);
+  color: #30465a;
 }
 
 a.is-active::before {
-  opacity: 0.75;
+  opacity: 1;
+}
+
+a:hover {
+  color: #30465a;
+}
+
+a:focus-visible {
+  outline: 2px solid #718993;
+  outline-offset: 5px;
+  border-radius: 3px;
 }
 
 a span {
@@ -123,7 +148,7 @@ a span {
 }
 
 .toc-empty {
-  color: var(--muted);
+  color: #5f655f;
 }
 
 .article-toc::-webkit-scrollbar {
@@ -133,16 +158,12 @@ a span {
 
 .article-toc::-webkit-scrollbar-thumb {
   border-radius: 999px;
-  background: linear-gradient(
-    180deg,
-    rgba(232, 145, 183, 0.74),
-    rgba(135, 202, 228, 0.74)
-  );
+  background: #a49785;
 }
 
 .article-toc::-webkit-scrollbar-track {
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.12);
+  background: transparent;
 }
 
 @media (max-width: 1180px) {

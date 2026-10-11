@@ -10,7 +10,7 @@ import HomeSceneDeck from "./HomeSceneDeck.vue";
 
 const props = defineProps<{ model: HomePageModel; thumbSrc: string }>();
 const root = ref<HTMLElement | null>(null);
-const { panel, goToPanel } = useHomePanels(root);
+const { panel, goToPanel, dragTo } = useHomePanels(root);
 const timeline = useOpeningTimeline();
 const terminal = useTerminalSequence(props.model.terminal);
 let reducedMotion = false;
@@ -45,6 +45,11 @@ onUnmounted(() => {
       :output="terminal.output.value"
     />
     <HomeSceneDeck :model="model" :panel="panel" />
-    <HomeScrollRail :thumb-src="thumbSrc" :panel="panel" @seek="goToPanel" />
+    <HomeScrollRail
+      :thumb-src="thumbSrc"
+      :panel="panel"
+      @seek="goToPanel"
+      @drag="dragTo"
+    />
   </main>
 </template>
