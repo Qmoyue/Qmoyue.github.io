@@ -1,4 +1,4 @@
-# moyue's blog / Certain Cloud
+# moyue's blog
 
 个人静态博客，记录技术笔记、项目和兴趣。Astro 生成页面，Vue 群岛处理浏览器交互。页面由独立模块组成，可以直接修改组件、内容和样式。
 

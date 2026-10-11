@@ -45,6 +45,7 @@
   color: #30415d;
   font-size: clamp(3.2rem, 6vw, 6.2rem);
   line-height: 1.04;
+  overflow-wrap: anywhere;
   text-shadow: 0 1px 0 rgba(255, 239, 217, 0.24);
 }
 
