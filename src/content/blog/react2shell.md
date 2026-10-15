@@ -349,4 +349,4 @@ const RESPONSE_SYMBOL: RESPONSE_SYMBOL_TYPE = (Symbol(): any);
 }
 ```
 
-但你果然我们也可以不一定一定有multipart头，因为如果没有会检测我们的next actionid是否存在，所以再已存在next actionid可以用的情况下，将这个hex字符串放在Next-Action头中，即可利用application/x-www-form-urlencoded来发送数据包。
+我们也可以不一定一定有multipart头，因为如果没有multipart头会检测我们的next actionid是否存在，所以在已存在next actionid可以用的情况下，将这个hex字符串放在Next-Action头中，即可利用application/x-www-form-urlencoded来发送数据包。
