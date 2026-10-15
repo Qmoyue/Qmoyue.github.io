@@ -6,7 +6,7 @@ import ReadingProgress from "../islands/ReadingProgress.vue";
 import type { PageMetadata } from "../framework/contracts/metadata";
 import PageHead from "../components/shared/PageHead.astro";
 import "../site/styles.css";
-import { blogConfig, site, navItems } from "../site/config";
+import { site, navItems } from "../site/config";
 
 interface Props {
   metadata: PageMetadata;
@@ -24,11 +24,11 @@ const {
 ---
 
 <!doctype html>
-<html lang="zh-CN" data-theme={blogConfig.preset.id}>
+<html lang="zh-CN" data-theme="moyue">
   <PageHead metadata={metadata} />
   <body class={bodyClass}>
     <slot name="effects">
-      {showSakura && <SakuraField count={blogConfig.preset.sakura.count} />}
+      {showSakura && <SakuraField />}
     </slot>
     <slot name="navigation"><DropdownNav items={navItems} /></slot>
     <slot name="progress">

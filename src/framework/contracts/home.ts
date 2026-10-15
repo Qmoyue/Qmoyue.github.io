@@ -1,4 +1,4 @@
-import type { NavigationItem } from "./config";
+import type { NavigationItem } from "./navigation";
 
 export interface HomePageModel {
   renderedAt: string;

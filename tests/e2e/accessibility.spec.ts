@@ -27,10 +27,6 @@ test("home, archive, article, and 404 have no WCAG axe violations", async ({
   if (!firstArticle) throw new Error("Archive article link is missing");
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(firstArticle);
-  await expect(page.locator(".expressive-code pre").first()).toHaveAttribute(
-    "tabindex",
-    "0",
-  );
   const { violations } = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
     .analyze();

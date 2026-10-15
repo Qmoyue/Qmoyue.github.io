@@ -1,0 +1,24 @@
+# Dependencies, generated files and local artifacts
+node_modules/
+dist/
+.astro/
+.preview/
+.tmp/
+test-results/
+playwright-report/
+coverage/
+tests/visual/baseline/
+tests/visual/before-home/
+tests/visual/pre-*/
+.vscode/
+.idea/
+picture/
+pnpm-lock.yaml
+
+# Content, artwork and installed skill instructions have their own source format
+src/content/
+src/assets/
+public/
+.agents/
+.codex/
+ASSETS.md

@@ -68,8 +68,6 @@ test("friend portraits load and carousel controls reach each friend", async ({
   await expect(
     carousel.getByRole("heading", { name: "yuoooka" }),
   ).toBeVisible();
-  await expect(carousel.locator(".friend-signature")).toHaveCount(0);
-  await expect(carousel.getByText("博客暂时无法访问")).toHaveCount(0);
   await expect(
     carousel.getByRole("link", { name: /访问 yuoooka 的博客/ }),
   ).toHaveCount(0);

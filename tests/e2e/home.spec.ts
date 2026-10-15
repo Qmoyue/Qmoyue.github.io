@@ -1,4 +1,6 @@
 import { expect, test } from "@playwright/test";
+import { site, navItems } from "../../src/site/config";
+import { homeContent } from "../../src/site/home";
 
 test("home identity clears the expanded navigation and stacks vertically", async ({
   page,
@@ -35,6 +37,11 @@ test("home panels respond to wheel, Space, and dragging the progress rail", asyn
   const first = page.getByRole("region", { name: "首页介绍" });
   const second = page.getByRole("region", { name: "首页模块" });
   const rail = page.getByRole("slider", { name: "页面滚动进度" });
+
+  await expect(page.locator("[data-terminal-output]")).toHaveText(
+    /^flag\{[a-z0-9_]+\}$/,
+    { timeout: 10_000 },
+  );
 
   await page.keyboard.press("Space");
   await expect(second).toBeInViewport();
@@ -74,7 +81,7 @@ test("home panels respond to wheel, Space, and dragging the progress rail", asyn
   await expect(rail).toHaveAttribute("aria-valuenow", "100");
 });
 
-test("falling tags stop on the first panel and can run again", async ({
+test("falling tags stop on exit, restart on return and clear naturally", async ({
   page,
 }) => {
   await page.goto("/");
@@ -95,6 +102,7 @@ test("falling tags stop on the first panel and can run again", async ({
   await expect(tags).toHaveCount(0);
   await page.getByRole("slider", { name: "页面滚动进度" }).press("End");
   await expect.poll(() => tags.count()).toBeGreaterThanOrEqual(8);
+  await expect(tags).toHaveCount(0, { timeout: 12_000 });
 });
 
 test("reduced motion shows terminal content and skips falling physics", async ({
@@ -116,7 +124,7 @@ test("reduced motion shows terminal content and skips falling physics", async ({
   );
 });
 
-test("home blog link remains in static HTML without JavaScript", async ({
+test("home content and destinations remain in static HTML without JavaScript", async ({
   browser,
 }) => {
   const context = await browser.newContext({ javaScriptEnabled: false });
@@ -124,13 +132,25 @@ test("home blog link remains in static HTML without JavaScript", async ({
     const page = await context.newPage();
     await page.goto("/");
     await expect(
-      page.getByRole("heading", { name: "Moyue", level: 1 }),
+      page.getByRole("heading", { name: site.displayName, level: 1 }),
     ).toBeAttached();
+    const links = page.getByRole("navigation", { name: "快捷入口" });
+    for (const item of navItems.filter((item) => item.href !== "/")) {
+      await expect(
+        links.getByRole("link", { name: item.label, exact: true }),
+      ).toHaveAttribute("href", item.href);
+    }
+    await expect(page.locator(".home-portrait img")).toHaveAttribute(
+      "src",
+      homeContent.flowerImage,
+    );
+    await expect(page.locator(".home-quote-widget")).toContainText(
+      homeContent.quote.join(""),
+    );
+    await expect(page.locator("[data-clock-time]")).toHaveText(/^\d{2}:\d{2}$/);
     await expect(
-      page
-        .getByRole("navigation", { name: "快捷入口" })
-        .getByRole("link", { name: "BLOG" }),
-    ).toHaveAttribute("href", "/blog/");
+      page.locator("[data-calendar-days] [aria-current=date]"),
+    ).toHaveCount(1);
   } finally {
     await context.close();
   }
@@ -164,29 +184,111 @@ test("home clock and calendar agree when the visitor uses another time zone", as
   try {
     const page = await context.newPage();
     await page.goto("/");
-    const expected = await page.evaluate(() => {
-      const now = new Date();
-      return {
-        time: new Intl.DateTimeFormat("en-GB", {
-          timeZone: "Asia/Shanghai",
-          hour: "2-digit",
-          minute: "2-digit",
-          hourCycle: "h23",
-        }).format(now),
-        today: new Intl.DateTimeFormat("en-US", {
-          timeZone: "Asia/Shanghai",
-          month: "2-digit",
-          day: "2-digit",
-        })
-          .format(now)
-          .replace("/", "."),
-      };
-    });
-    await expect(page.locator("[data-clock-time]")).toHaveText(expected.time);
-    await expect(page.locator("[data-calendar-today]")).toHaveText(
-      expected.today,
-    );
+    await expect
+      .poll(() =>
+        page.evaluate(() => {
+          const now = new Date();
+          const expected = {
+            time: new Intl.DateTimeFormat("en-GB", {
+              timeZone: "Asia/Shanghai",
+              hour: "2-digit",
+              minute: "2-digit",
+              hourCycle: "h23",
+            }).format(now),
+            today: new Intl.DateTimeFormat("en-US", {
+              timeZone: "Asia/Shanghai",
+              month: "2-digit",
+              day: "2-digit",
+            })
+              .format(now)
+              .replace("/", "."),
+          };
+          return (
+            document.querySelector("[data-clock-time]")?.textContent ===
+              expected.time &&
+            document.querySelector("[data-calendar-today]")?.textContent ===
+              expected.today
+          );
+        }),
+      )
+      .toBe(true);
   } finally {
     await context.close();
   }
+});
+
+test("avatar artwork loads and repeated activation renews its speech", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await expect(page.locator(".home-hero-brand p")).toHaveText(site.subtitle);
+  await expect(page.locator('link[rel="icon"]')).toHaveAttribute(
+    "href",
+    site.doro,
+  );
+  await expect(page.locator(".github-pill")).toHaveAttribute(
+    "href",
+    site.githubUrl,
+  );
+  await expect(page.locator(".hero-avatar-portrait")).toHaveAttribute(
+    "src",
+    site.avatar,
+  );
+  await expect(page.locator(".hero-avatar-frame")).toHaveAttribute(
+    "src",
+    homeContent.avatarFrameImage,
+  );
+  for (const image of await page.locator(".hero-avatar-artwork img").all()) {
+    await expect
+      .poll(() =>
+        image.evaluate((element: HTMLImageElement) => element.naturalWidth),
+      )
+      .toBeGreaterThan(0);
+  }
+  const avatar = page.locator(".hero-avatar");
+  const speech = page.locator("[data-avatar-speech]");
+  await avatar.click();
+  await expect(speech).toHaveClass(/is-speaking/);
+  await expect(speech).toHaveText(homeContent.avatarSpeech);
+  // Cross the first activation's expiry while the renewed bubble is still open.
+  await page.waitForTimeout(900);
+  await avatar.click();
+  await page.waitForTimeout(1000);
+  await expect(speech).toHaveClass(/is-speaking/);
+  await expect(speech).not.toHaveClass(/is-speaking/);
+});
+
+test("desktop module layout keeps its portrait and working destinations", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1920, height: 1080 });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await page.keyboard.press("Space");
+  await expect(page.getByRole("region", { name: "首页模块" })).toBeInViewport();
+  const positions = await page.evaluate(() => {
+    const box = (selector: string) => {
+      const element = document.querySelector(selector);
+      if (!element) throw new Error(`Missing ${selector}`);
+      return element.getBoundingClientRect();
+    };
+    return {
+      portrait: box(".home-portrait"),
+      quote: box(".home-quote-widget"),
+      profile: box(".home-profile-widget"),
+      clock: box(".home-clock-widget"),
+      calendar: box(".home-calendar-widget"),
+    };
+  });
+  expect(positions.portrait.width).toBeLessThan(positions.portrait.height);
+  expect(positions.portrait.right).toBeLessThan(positions.profile.left);
+  expect(positions.quote.bottom).toBeLessThan(positions.profile.top);
+  expect(positions.clock.left).toBeGreaterThan(positions.profile.right);
+  expect(positions.calendar.left).toBeGreaterThan(positions.profile.right);
+  await page
+    .getByRole("navigation", { name: "快捷入口" })
+    .getByRole("link", { name: "BLOG" })
+    .click();
+  await expect(page).toHaveURL(/\/blog\/$/);
 });

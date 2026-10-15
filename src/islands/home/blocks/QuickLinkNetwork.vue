@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { iconPaths } from "../../../components/shared/iconPaths";
-import type { NavigationItem } from "../../../framework/contracts/config";
+import type { NavigationItem } from "../../../framework/contracts/navigation";
 
 defineProps<{ links: readonly NavigationItem[] }>();
 </script>

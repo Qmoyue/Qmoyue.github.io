@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { Card, CardContent } from "../../../components/ui/card";
 
 const props = defineProps<{ now: Date }>();
 const pad = (value: number) => String(value).padStart(2, "0");
@@ -28,13 +27,13 @@ const timeLabel = computed(() =>
 </script>
 
 <template>
-  <Card as="section" class="home-clock-widget" aria-label="当前时间">
-    <CardContent>
+  <section class="home-clock-widget" aria-label="当前时间">
+    <div>
       <p class="clock-label">CLOCK</p>
       <p class="clock-date" data-clock-date>{{ dateLabel }}</p>
       <p class="clock-time" data-clock-time>{{ timeLabel }}</p>
-    </CardContent>
-  </Card>
+    </div>
+  </section>
 </template>
 
 <style src="./clock.css"></style>

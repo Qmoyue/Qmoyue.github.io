@@ -1,7 +1,7 @@
 ﻿import { defineConfig } from "@playwright/test";
 
 const baseURL = "http://127.0.0.1:4321";
-const previewCommand = "pnpm run preview --host 127.0.0.1 --port 4321";
+const previewCommand = `node scripts/preview-test-site.mjs ${baseURL}`;
 
 export default defineConfig({
   testDir: "./tests/e2e",
@@ -20,7 +20,6 @@ export default defineConfig({
     timeout: 120_000,
     env: {
       ASTRO_TELEMETRY_DISABLED: "1",
-      ASTRO_PREVIEW_BACKGROUND: "0",
     },
   },
   use: {

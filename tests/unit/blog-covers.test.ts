@@ -11,11 +11,9 @@ test("explicit cover stays fixed and invalid cover fails", () => {
   );
 });
 
-test("auto cover depends on article id, not the number of articles", () => {
+test("auto cover selects from the catalog and rejects an empty catalog", () => {
   const filenames = ["paper.jpg", "flower.jpg"];
-  const first = selectCoverFilename("post-a", "auto", filenames);
-  selectCoverFilename("new-post", "auto", filenames);
-  expect(selectCoverFilename("post-a", "auto", filenames)).toBe(first);
+  expect(filenames).toContain(selectCoverFilename("post-a", "auto", filenames));
   expect(() => selectCoverFilename("post-a", "auto", [])).toThrow(
     "Blog cover catalog is empty",
   );

@@ -1,7 +1,6 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 import vue from "@astrojs/vue";
-import tailwindcss from "@tailwindcss/vite";
 import expressiveCode from "astro-expressive-code";
 import { satteri } from "@astrojs/markdown-satteri";
 import { keyboardTables } from "./scripts/lib/hast-keyboard-tables.mjs";
@@ -29,5 +28,4 @@ export default defineConfig({
     syntaxHighlight: false,
     processor: satteri({ hastPlugins: [keyboardTables] }),
   },
-  vite: { plugins: [tailwindcss()] },
 });

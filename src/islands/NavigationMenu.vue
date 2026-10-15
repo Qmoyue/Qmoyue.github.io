@@ -9,7 +9,7 @@ import {
   NavigationMenuTrigger,
 } from "../components/ui/navigation-menu";
 import { iconPaths } from "../components/shared/iconPaths";
-import type { NavigationItem } from "../framework/contracts/config";
+import type { NavigationItem } from "../framework/contracts/navigation";
 import { isActivePath } from "../lib/navigation";
 
 const props = defineProps<{

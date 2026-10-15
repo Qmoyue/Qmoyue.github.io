@@ -13,6 +13,10 @@ pnpm run dev:bg
 
 使用 `pnpm run dev:status`、`pnpm run dev:logs`、`pnpm run dev:stop` 管理开发服务器。构建命令是 `pnpm run build`；其他检查见 `package.json`。
 
+`pnpm run validate` 运行格式、lint、类型与单元/契约检查，CI 复用同一入口。`pnpm run verify` 另含依赖审计和真实构建的浏览器测试。首次运行浏览器测试前执行 `pnpm exec playwright install chromium`。
+
+`pnpm run capture:visual` 按需采集各页面截图；只采集首页时使用 `pnpm run capture:visual capture-home`。截图供人工复看，不会重复加入 CI。测试职责与维护边界见 [测试说明](docs/testing.md)。
+
 ## 目录
 
 | 路径                              | 内容                         |

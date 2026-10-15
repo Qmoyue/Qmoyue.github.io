@@ -5,13 +5,7 @@
   "engines": {
     "node": "^22.18.0 || ^24.11.0"
   },
-  "devEngines": {
-    "packageManager": {
-      "name": "pnpm",
-      "version": ">=11.28.4 <13",
-      "onFail": "download"
-    }
-  },
+  "packageManager": "pnpm@11.28.4",
   "scripts": {
     "dev:bg": "astro dev --background",
     "dev:status": "astro dev status",
@@ -21,13 +15,14 @@
     "content:check": "node scripts/report-content-contract.ts --strict",
     "build": "pnpm run content:check && astro build",
     "check": "astro check",
-    "lint": "vp lint src scripts tests",
-    "format": "prettier --plugin prettier-plugin-astro --write \"src/**/*.{astro,ts,js,css,vue}\" \"scripts/**/*.{js,mjs,ts}\" \"tests/**/*.{astro,vue,js,ts}\" astro.config.mjs playwright.config.ts playwright.visual.config.ts vitest.config.ts tsconfig.json components.json package.json AGENTS.md README.md docs/architecture.md .github/workflows/deploy.yml",
-    "format:check": "prettier --plugin prettier-plugin-astro --check \"src/**/*.{astro,ts,js,css,vue}\" \"scripts/**/*.{js,mjs,ts}\" \"tests/**/*.{astro,vue,js,ts}\" astro.config.mjs playwright.config.ts playwright.visual.config.ts vitest.config.ts tsconfig.json components.json package.json AGENTS.md README.md docs/architecture.md .github/workflows/deploy.yml",
+    "lint": "oxlint src scripts tests",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "test:unit": "vitest run",
     "test:e2e": "playwright test",
-    "capture:home": "playwright test --config playwright.visual.config.ts",
-    "verify": "pnpm audit --audit-level low && pnpm run format:check && pnpm run lint && pnpm run check && pnpm run test:unit && pnpm run test:e2e",
+    "capture:visual": "playwright test --config playwright.visual.config.ts",
+    "validate": "pnpm run format:check && pnpm run lint && pnpm run check && pnpm run test:unit",
+    "verify": "pnpm audit --audit-level low && pnpm run validate && pnpm run test:e2e",
     "preview": "astro preview",
     "astro": "astro"
   },
@@ -46,18 +41,17 @@
     "@astrojs/check": "0.9.9",
     "@axe-core/playwright": "4.13.0",
     "@playwright/test": "1.61.1",
-    "@tailwindcss/vite": "4.3.3",
     "@types/matter-js": "0.20.2",
     "@types/mdast": "4.0.4",
-    "@types/node": "26.1.0",
+    "@types/node": "24.19.2",
     "mdast-util-from-markdown": "2.0.3",
     "mdast-util-gfm": "3.1.0",
     "micromark-extension-gfm": "3.0.0",
+    "oxlint": "1.83.0",
     "prettier": "3.9.4",
     "prettier-plugin-astro": "0.14.1",
-    "tailwindcss": "4.3.3",
     "typescript": "6.0.3",
-    "vite-plus": "0.3.3",
+    "vite": "8.3.0",
     "vitest": "4.1.11",
     "yaml": "2.9.0"
   }

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { Card, CardContent, CardHeader } from "../../../components/ui/card";
 
 const props = defineProps<{ now: Date }>();
 // Use the same calendar day during static rendering and browser hydration.
@@ -33,15 +32,15 @@ const days = computed(() => {
 </script>
 
 <template>
-  <Card as="section" class="home-calendar-widget" aria-label="日历">
-    <CardHeader class="home-calendar-head">
+  <section class="home-calendar-widget" aria-label="日历">
+    <div class="home-calendar-head">
       <div>
         <p class="home-calendar-label">CALENDAR</p>
         <time data-calendar-month>{{ monthLabel }}</time>
       </div>
       <span data-calendar-today>{{ todayLabel }}</span>
-    </CardHeader>
-    <CardContent>
+    </div>
+    <div>
       <div class="home-calendar-weekdays" aria-hidden="true">
         <span>一</span><span>二</span><span>三</span><span>四</span
         ><span>五</span><span>六</span><span>日</span>
@@ -61,8 +60,8 @@ const days = computed(() => {
           >{{ item.day || "" }}</span
         >
       </div>
-    </CardContent>
-  </Card>
+    </div>
+  </section>
 </template>
 
 <style src="./calendar.css"></style>

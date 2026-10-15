@@ -4,16 +4,16 @@
 
 ## 模块与目录
 
-| 路径                          | 职责                                    |
-| ----------------------------- | --------------------------------------- |
-| `src/pages/`                  | Astro 文件路由，读取内容并组合页面      |
-| `src/layouts/`                | 页面外壳、导航、页脚与元数据            |
-| `src/components/`             | 静态展示组件和 UI 原语                  |
-| `src/islands/`                | Vue 模块与浏览器交互                    |
-| `src/presets/moyue/`          | 本站主题、首页场景和模块布局            |
-| `src/site/`                   | 站点身份、导航、首页文案、项目与友链    |
-| `src/content/`、`src/domain/` | 文章 schema、查询和页面数据处理         |
-| `src/framework/`              | 项目内部的类型、配置校验和 SEO 辅助函数 |
+| 路径                          | 职责                                 |
+| ----------------------------- | ------------------------------------ |
+| `src/pages/`                  | Astro 文件路由，读取内容并组合页面   |
+| `src/layouts/`                | 页面外壳、导航、页脚与元数据         |
+| `src/components/`             | 静态展示组件和 UI 原语               |
+| `src/islands/`                | Vue 模块与浏览器交互                 |
+| `src/presets/moyue/`          | 本站主题、首页场景和模块布局         |
+| `src/site/`                   | 站点身份、导航、首页文案、项目与友链 |
+| `src/content/`、`src/domain/` | 文章 schema、查询和页面数据处理      |
+| `src/framework/`              | 项目内部的类型与 SEO 辅助函数        |
 
 首页由 `src/pages/index.astro` 传入真实内容，`HomeExperience.vue` 作为 Vue 群岛管理两屏切换，开场状态归 `HomeOpeningSequence.vue` 管理。场景和各块组件分别负责自己的画面；共享状态由最近的组合组件或 composable 管理。其他页面以 Astro 静态组件为主，在导航、搜索、目录和阅读进度等交互处加载 Vue。
 
@@ -42,3 +42,17 @@
 首页开场、头像、终端、时钟、日历、介绍、快捷入口及掉落词的 CSS 位于各自组件目录；`home.css` 与 `home-second.css` 仅管理页面背景和区域组合布局。保留现有类名与 CSS 声明值，避免重排组件时把主题样式复制到多处。
 
 文章元数据的唯一契约是 `src/domain/blog/metadata.ts`，内容集合与 `content:check` 共用它。`pubDate` 和可选 `updatedDate` 必须是有效的 `YYYY-MM-DD`，更新日期不能早于发布日期；文章日期按 UTC 日历日显示，不随构建机时区漂移。缺失内容与无效资源由构建检查直接报错。
+
+## 工具与配置职责
+
+| 入口                                              | 职责                                                                 |
+| ------------------------------------------------- | -------------------------------------------------------------------- |
+| `src/site/config.ts`                              | 实际站点资料、导航及其导入校验；不注册主题或生成配置对象             |
+| `BaseLayout.astro`、`src/presets/moyue/theme.css` | 使用本站主题；樱花数量等组件默认值由组件自身管理                     |
+| `astro.config.mjs`                                | 站点发布 URL、Vue、Markdown 与代码展示；构建使用原生 Vite            |
+| `package.json`、`.node-version`                   | 运行时兼容范围、统一的 pnpm 版本与开发命令；CI 使用相同 pnpm 版本    |
+| `pnpm-workspace.yaml`                             | 依赖安装脚本许可和安全补丁版本约束                                   |
+| `.prettierrc.json`、`.prettierignore`             | 格式插件和文件范围；正文、素材、生成物不参与批量格式化               |
+| `vitest.config.ts`、`playwright.config.ts`        | 契约/组件测试与真实静态站点的浏览器测试，详见 [测试说明](testing.md) |
+
+样式使用主题变量和各模块 CSS。时钟、日历直接使用语义标签，不依赖通用卡片样式或 Tailwind；可访问性用的 `.sr-only` 由基础样式维护。

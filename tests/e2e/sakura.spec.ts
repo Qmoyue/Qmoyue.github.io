@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("decorative sakura keeps the preset density and respects reduced motion", async ({
+test("decorative sakura keeps the default density and respects reduced motion", async ({
   page,
 }) => {
   await page.goto("/");

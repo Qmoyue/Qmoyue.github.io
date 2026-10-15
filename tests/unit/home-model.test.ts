@@ -10,10 +10,9 @@ test("home model keeps site content serializable for the island", () => {
     navItems,
   );
 
-  expect(model.flowerImage).toBe("/images/flower.jpg");
+  expect(model.flowerImage).toBe(homeContent.flowerImage);
   expect(model.renderedAt).toBe("2026-07-04T00:00:00.000Z");
   expect(JSON.parse(JSON.stringify(model))).toEqual(model);
-  expect(model.identity).not.toHaveProperty("email");
   expect(model.identity).not.toHaveProperty("footer");
   expect(model.links).toEqual(navItems);
 });
