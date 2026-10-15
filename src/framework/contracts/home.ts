@@ -24,3 +24,8 @@ export interface HomePageModel {
   fallingWords: readonly string[];
   links: readonly NavigationItem[];
 }
+
+export type HomeContent = Omit<
+  HomePageModel,
+  "renderedAt" | "identity" | "links"
+>;

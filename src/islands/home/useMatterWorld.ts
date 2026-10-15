@@ -10,6 +10,7 @@ import type MatterTypes from "matter-js";
 
 const colors = ["pink", "blue", "yellow", "mint", "lavender", "cream"] as const;
 const edgeInset = 24;
+const physicsStep = 1000 / 60;
 
 export interface FallingChip {
   id: number;
@@ -42,6 +43,8 @@ export function useMatterWorld(
   let active = false;
   let fadeStarted = false;
   let startedAt = 0;
+  let lastFrameAt = 0;
+  let elapsed = 0;
   let motion: MediaQueryList;
 
   function publish(): void {
@@ -71,6 +74,7 @@ export function useMatterWorld(
     chips.value = [];
     running.value = false;
     fadeStarted = false;
+    elapsed = 0;
   }
 
   function measureChip(
@@ -168,7 +172,14 @@ export function useMatterWorld(
 
   function tick(now: number): void {
     if (!matter || !engine || !running.value) return;
-    matter.Engine.update(engine, 1000 / 60);
+    // Keep the tuned 60 Hz simulation independent of the display's refresh rate.
+    // Drop long background-tab pauses instead of replaying an unbounded backlog.
+    elapsed = Math.min(elapsed + Math.max(0, now - lastFrameAt), 100);
+    lastFrameAt = now;
+    while (elapsed >= physicsStep) {
+      matter.Engine.update(engine, physicsStep);
+      elapsed -= physicsStep;
+    }
     for (const { body, chip } of bodies) {
       chip.x = body.position.x;
       chip.y = body.position.y;
@@ -232,6 +243,7 @@ export function useMatterWorld(
     await nextTick();
     if (!active || !running.value || currentGeneration !== generation) return;
     startedAt = performance.now();
+    lastFrameAt = startedAt;
     const count = Math.min(10, Math.max(8, words.length));
     for (let index = 0; index < count; index++) {
       later(() => spawn(index, width, random), index * 128);
@@ -268,5 +280,5 @@ export function useMatterWorld(
     window.removeEventListener("resize", onResize);
   });
 
-  return { chips, running, setActive, cleanup };
+  return { chips, running, setActive };
 }

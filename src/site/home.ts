@@ -1,4 +1,4 @@
-import type { HomePageModel } from "../framework/contracts/home";
+import type { HomeContent } from "../framework/contracts/home";
 
 export const homeContent = {
   avatarFrameImage: "/images/avatar-frame-guitar.png",
@@ -26,15 +26,4 @@ export const homeContent = {
     "私が神になります",
     "個性を捨てたら、死んだも同然",
   ],
-} satisfies Pick<
-  HomePageModel,
-  | "terminal"
-  | "avatarFrameImage"
-  | "avatarSpeech"
-  | "cue"
-  | "flowerImage"
-  | "profileGreeting"
-  | "quoteImage"
-  | "quote"
-  | "fallingWords"
->;
+} satisfies HomeContent;

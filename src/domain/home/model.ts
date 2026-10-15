@@ -1,26 +1,10 @@
-import type { HomePageModel } from "../../framework/contracts/home";
-
-interface HomeIdentity {
-  subtitle: string;
-  displayName: string;
-  avatar: string;
-  githubUrl: string;
-}
-
-interface HomeContent {
-  terminal: HomePageModel["terminal"];
-  avatarFrameImage: string;
-  avatarSpeech: string;
-  cue: string;
-  flowerImage: string;
-  profileGreeting: HomePageModel["profileGreeting"];
-  quoteImage: string;
-  quote: HomePageModel["quote"];
-  fallingWords: HomePageModel["fallingWords"];
-}
+import type {
+  HomeContent,
+  HomePageModel,
+} from "../../framework/contracts/home";
 
 export function createHomePageModel(
-  identity: HomeIdentity,
+  identity: HomePageModel["identity"],
   content: HomeContent,
   renderedAt: Date,
   links: HomePageModel["links"],

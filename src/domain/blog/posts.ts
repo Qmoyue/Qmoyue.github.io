@@ -1,5 +1,5 @@
 import type { CollectionEntry } from "astro:content";
-import { countWords } from "../../lib/reading";
+import { articleText, countWords } from "./text";
 import { resolveBlogCover, type BlogCover } from "./covers";
 
 export type BlogEntry = CollectionEntry<"blog">;
@@ -23,16 +23,6 @@ export interface PostDetail {
   entry: BlogEntry;
 }
 
-function plainText(body: string): string {
-  return body
-    .replace(/```[\s\S]*?```/g, " ")
-    .replace(/!\[[^\]]*\]\([^)]*\)/g, " ")
-    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
-    .replace(/[#>*_`\-[\](){}|]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
 export function getPostSearchText(post: {
   id: string;
   title: string;
@@ -45,7 +35,7 @@ export function getPostSearchText(post: {
     post.description,
     ...post.tags,
     post.id,
-    plainText(post.body).slice(0, 2200),
+    articleText(post.body),
   ]
     .join(" ")
     .toLowerCase();

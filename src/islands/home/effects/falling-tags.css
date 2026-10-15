@@ -4,10 +4,6 @@
   overflow: hidden;
 }
 
-.falling-stage.is-physics-running {
-  overflow: hidden;
-}
-
 .falling-stage.is-physics-running .falling-item {
   position: absolute;
   top: 0;

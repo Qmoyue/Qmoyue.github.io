@@ -48,6 +48,13 @@ test("archive commits search on Enter and recovers from no results", async ({
     )
     .toBe(true);
 
+  // This phrase is near the end of the published SQL article, beyond its opening excerpt.
+  await search.fill("成就感");
+  await search.press("Enter");
+  await expect(
+    page.locator('[data-note-card] a[href="/blog/sql-injection-summary/"]'),
+  ).toBeVisible();
+
   await search.fill("a-term-that-is-not-in-any-article");
   await search.press("Enter");
   await expect(cards).toHaveCount(0);

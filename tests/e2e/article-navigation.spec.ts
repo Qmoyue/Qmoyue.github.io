@@ -69,3 +69,24 @@ test("reading progress follows Doro while dragging", async ({ page }) => {
   expect(position.top / position.max).toBeGreaterThan(0.7);
   await page.mouse.up();
 });
+
+test("reading progress stays at zero when the page has no scrollable range", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 1200 });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/404.html");
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollHeight - window.innerHeight,
+    ),
+  ).toBe(0);
+  const rail = page.getByRole("slider", { name: "页面滚动进度" });
+  await expect(
+    page.locator("astro-island").filter({ has: rail }),
+  ).not.toHaveAttribute("ssr", "");
+  await rail.press("End");
+  await expect(rail).toHaveAttribute("aria-valuenow", "0");
+  await rail.press("ArrowDown");
+  await expect(rail).toHaveAttribute("aria-valuenow", "0");
+});

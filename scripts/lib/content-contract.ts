@@ -88,6 +88,12 @@ export function inspectArticle(
     extensions: [gfm()],
     mdastExtensions: [gfmFromMarkdown()],
   });
+  const references = new Map<string, string>();
+  visit(tree, (node) => {
+    if (node.type === "definition" && !references.has(node.identifier)) {
+      references.set(node.identifier, node.url);
+    }
+  });
   let previousHeading = 1;
 
   visit(tree, (node) => {
@@ -125,13 +131,27 @@ export function inspectArticle(
       }
     }
 
-    if (node.type === "image") {
-      if (!node.alt?.trim())
+    if (
+      node.type === "image" ||
+      node.type === "imageReference" ||
+      node.type === "link" ||
+      node.type === "linkReference"
+    ) {
+      const image = node.type === "image" || node.type === "imageReference";
+      if ("alt" in node && !node.alt?.trim())
         add(line, "IMAGE_ALT", "image needs meaningful alt text");
-      checkLocalTarget(node.url, line, "IMAGE_PATH", true);
-    }
-    if (node.type === "link") {
-      checkLocalTarget(node.url, line, "LINK", false);
+      const code = image ? "IMAGE_PATH" : "LINK";
+      let url: string;
+      if ("url" in node) url = node.url;
+      else {
+        const target = references.get(node.identifier);
+        if (target === undefined) {
+          add(line, code, `missing reference definition: ${node.identifier}`);
+          return;
+        }
+        url = target;
+      }
+      checkLocalTarget(url, line, code, image);
     }
     if (node.type === "html") {
       if (!rawHtmlLines.has(line)) {

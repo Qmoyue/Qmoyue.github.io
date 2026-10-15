@@ -30,7 +30,7 @@ function seek(ratio: number, behavior: ScrollBehavior = "smooth"): void {
     top: maxScroll() * next,
     behavior: reducedMotion ? "instant" : behavior,
   });
-  progress.value = next;
+  updateProgress();
 }
 
 onMounted(() => {

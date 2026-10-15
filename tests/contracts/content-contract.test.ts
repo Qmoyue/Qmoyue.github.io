@@ -19,15 +19,17 @@ test("contract reports invalid metadata, body H1, and unlabeled code", () => {
 });
 
 test("contract reports missing local images, unsafe links, and raw HTML", () => {
-  const issues = inspectArticle(
-    '![diagram](./missing-diagram.png) [unsafe](javascript:alert(1)) <img onerror="alert(1)">',
-    file,
-    root,
-  );
-
-  expect(issues.map((issue) => issue.code)).toContain("IMAGE_PATH");
-  expect(issues.map((issue) => issue.code)).toContain("LINK");
-  expect(issues.map((issue) => issue.code)).toContain("RAW_HTML");
+  for (const source of [
+    '![](./missing-diagram.png) [unsafe](javascript:alert(1)) <img onerror="alert(1)">',
+    '![][Picture] [unsafe][Target] <img onerror="alert(1)">\n\n[picture]: ./missing-diagram.png\n[target]: javascript:alert(1)',
+  ]) {
+    const issues = inspectArticle(source, file, root);
+    const codes = issues.map((issue) => issue.code);
+    expect(codes).toContain("IMAGE_ALT");
+    expect(codes).toContain("IMAGE_PATH");
+    expect(codes).toContain("LINK");
+    expect(codes).toContain("RAW_HTML");
+  }
 });
 
 test("content checks reject invalid and backward update dates on a published article", () => {

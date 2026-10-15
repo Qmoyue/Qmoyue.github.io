@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import {
-  NavigationMenu as UiNavigationMenu,
+  NavigationMenuRoot,
   NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-} from "../components/ui/navigation-menu";
+} from "reka-ui";
 import { iconPaths } from "../components/shared/iconPaths";
 import type { NavigationItem } from "../framework/contracts/navigation";
 import { isActivePath } from "../lib/navigation";
@@ -22,7 +22,7 @@ const isActive = (href: string) => isActivePath(props.currentPath, href);
 </script>
 
 <template>
-  <UiNavigationMenu
+  <NavigationMenuRoot
     v-model="activeMenu"
     class="top-nav"
     aria-label="主导航"
@@ -58,7 +58,7 @@ const isActive = (href: string) => isActivePath(props.currentPath, href);
         </NavigationMenuContent>
       </NavigationMenuItem>
     </NavigationMenuList>
-  </UiNavigationMenu>
+  </NavigationMenuRoot>
 </template>
 
 <style src="./navigation.css"></style>

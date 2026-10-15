@@ -2,6 +2,21 @@ import { expect, test } from "@playwright/test";
 import { site, navItems } from "../../src/site/config";
 import { homeContent } from "../../src/site/home";
 
+test("home panel state follows an interrupted smooth scroll", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.keyboard.press("Space");
+  await expect
+    .poll(() => page.evaluate(() => window.scrollY))
+    .toBeGreaterThan(50);
+  await page.keyboard.press("Home");
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+  await expect(
+    page.getByRole("slider", { name: "页面滚动进度" }),
+  ).toHaveAttribute("aria-valuenow", "0");
+});
+
 test("home identity clears the expanded navigation and stacks vertically", async ({
   page,
 }) => {

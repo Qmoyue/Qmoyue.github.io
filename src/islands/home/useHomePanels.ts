@@ -11,10 +11,6 @@ export function useHomePanels(root: Ref<HTMLElement | null>) {
   let first: HTMLElement;
   let second: HTMLElement;
 
-  function setPanel(next: HomePanel): void {
-    panel.value = next;
-  }
-
   function targetTop(next: HomePanel): number {
     const target = next === "first" ? first : second;
     return window.scrollY + target.getBoundingClientRect().top;
@@ -34,7 +30,7 @@ export function useHomePanels(root: Ref<HTMLElement | null>) {
     if (locked && !dragging) return;
     const top = targetTop(next);
     locked = !reducedMotion();
-    setPanel(next);
+    panel.value = next;
     window.scrollTo({ top, behavior: reducedMotion() ? "instant" : "smooth" });
     clearTimeout(lockTimer);
     if (!locked) return;
@@ -46,6 +42,7 @@ export function useHomePanels(root: Ref<HTMLElement | null>) {
         performance.now() - started > 1150
       ) {
         locked = false;
+        onScroll();
         return;
       }
       lockTimer = setTimeout(check, 80);
@@ -91,11 +88,10 @@ export function useHomePanels(root: Ref<HTMLElement | null>) {
 
   function onScroll(): void {
     if (locked) return;
-    setPanel(
+    panel.value =
       second.getBoundingClientRect().top < window.innerHeight * 0.42
         ? "second"
-        : "first",
-    );
+        : "first";
   }
 
   onMounted(() => {
