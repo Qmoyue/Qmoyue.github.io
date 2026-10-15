@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from "vue";
-import type { HomePageModel } from "../../../framework/contracts/home";
+import { computed } from "vue";
 import { Card, CardContent } from "../../../components/ui/card";
 
-const props = defineProps<{ model: HomePageModel }>();
-const now = ref(new Date(props.model.renderedAt));
+const props = defineProps<{ now: Date }>();
 const pad = (value: number) => String(value).padStart(2, "0");
 const weekdays = [
   "星期日",
@@ -16,19 +14,17 @@ const weekdays = [
   "星期六",
 ];
 const dateLabel = computed(() => {
-  const date = now.value;
-  return `${date.getFullYear()}年${pad(date.getMonth() + 1)}月${pad(date.getDate())}日${weekdays[date.getDay()]}`;
+  const date = new Date(props.now.getTime() + 8 * 60 * 60 * 1000);
+  return `${date.getUTCFullYear()}年${pad(date.getUTCMonth() + 1)}月${pad(date.getUTCDate())}日${weekdays[date.getUTCDay()]}`;
 });
-const timeLabel = computed(
-  () => `${pad(now.value.getHours())}:${pad(now.value.getMinutes())}`,
+const timeLabel = computed(() =>
+  new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Asia/Shanghai",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).format(props.now),
 );
-let interval: ReturnType<typeof setInterval> | undefined;
-
-onMounted(() => {
-  now.value = new Date();
-  interval = setInterval(() => (now.value = new Date()), 1000);
-});
-onUnmounted(() => clearInterval(interval));
 </script>
 
 <template>
@@ -40,3 +36,5 @@ onUnmounted(() => clearInterval(interval));
     </CardContent>
   </Card>
 </template>
+
+<style src="./clock.css"></style>

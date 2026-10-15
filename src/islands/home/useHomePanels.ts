@@ -6,13 +6,13 @@ export function useHomePanels(root: Ref<HTMLElement | null>) {
   const panel = ref<HomePanel>("first");
   let locked = false;
   let lockTimer: ReturnType<typeof setTimeout> | undefined;
-  let reducedMotion = false;
+  const reducedMotion = () =>
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   let first: HTMLElement;
   let second: HTMLElement;
 
   function setPanel(next: HomePanel): void {
     panel.value = next;
-    document.body.dataset.homePanel = next;
   }
 
   function targetTop(next: HomePanel): number {
@@ -33,9 +33,9 @@ export function useHomePanels(root: Ref<HTMLElement | null>) {
   function goToPanel(next: HomePanel, dragging = false): void {
     if (locked && !dragging) return;
     const top = targetTop(next);
-    locked = !reducedMotion;
+    locked = !reducedMotion();
     setPanel(next);
-    window.scrollTo({ top, behavior: reducedMotion ? "instant" : "smooth" });
+    window.scrollTo({ top, behavior: reducedMotion() ? "instant" : "smooth" });
     clearTimeout(lockTimer);
     if (!locked) return;
 
@@ -54,6 +54,7 @@ export function useHomePanels(root: Ref<HTMLElement | null>) {
   }
 
   function onWheel(event: WheelEvent): void {
+    if (event.defaultPrevented || event.ctrlKey) return;
     if (Math.abs(event.deltaY) < 8) return;
     const wantsSecond = event.deltaY > 0;
     const wantsFirst =
@@ -68,7 +69,15 @@ export function useHomePanels(root: Ref<HTMLElement | null>) {
   }
 
   function onKeydown(event: KeyboardEvent): void {
-    if (event.code !== "Space") return;
+    if (
+      event.code !== "Space" ||
+      event.defaultPrevented ||
+      event.repeat ||
+      event.ctrlKey ||
+      event.metaKey ||
+      event.altKey
+    )
+      return;
     if (
       event.target instanceof Element &&
       event.target.closest(
@@ -101,9 +110,6 @@ export function useHomePanels(root: Ref<HTMLElement | null>) {
       throw new Error("The home experience needs two panels");
     first = firstElement;
     second = secondElement;
-    reducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
     onScroll();
     window.addEventListener("wheel", onWheel, { passive: false });
     window.addEventListener("keydown", onKeydown);
@@ -115,7 +121,6 @@ export function useHomePanels(root: Ref<HTMLElement | null>) {
     window.removeEventListener("keydown", onKeydown);
     window.removeEventListener("scroll", onScroll);
     clearTimeout(lockTimer);
-    delete document.body.dataset.homePanel;
   });
 
   return { panel, goToPanel, dragTo };

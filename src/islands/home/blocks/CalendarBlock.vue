@@ -1,38 +1,35 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from "vue";
-import type { HomePageModel } from "../../../framework/contracts/home";
+import { computed } from "vue";
 import { Card, CardContent, CardHeader } from "../../../components/ui/card";
 
-const props = defineProps<{ model: HomePageModel }>();
-const now = ref(new Date(props.model.renderedAt));
+const props = defineProps<{ now: Date }>();
+// Use the same calendar day during static rendering and browser hydration.
+const today = computed(
+  () => new Date(props.now.getTime() + 8 * 60 * 60 * 1000),
+);
 const pad = (value: number) => String(value).padStart(2, "0");
 const monthLabel = computed(
-  () => `${now.value.getFullYear()} / ${pad(now.value.getMonth() + 1)}`,
+  () =>
+    `${today.value.getUTCFullYear()} / ${pad(today.value.getUTCMonth() + 1)}`,
 );
 const todayLabel = computed(
-  () => `${pad(now.value.getMonth() + 1)}.${pad(now.value.getDate())}`,
+  () =>
+    `${pad(today.value.getUTCMonth() + 1)}.${pad(today.value.getUTCDate())}`,
 );
 const days = computed(() => {
-  const year = now.value.getFullYear();
-  const month = now.value.getMonth();
-  const blanks = (new Date(year, month, 1).getDay() + 6) % 7;
-  const count = new Date(year, month + 1, 0).getDate();
+  const year = today.value.getUTCFullYear();
+  const month = today.value.getUTCMonth();
+  const blanks = (new Date(Date.UTC(year, month, 1)).getUTCDay() + 6) % 7;
+  const count = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
   return [
     ...Array.from({ length: blanks }, () => ({ day: 0, weekend: false })),
     ...Array.from({ length: count }, (_, index) => {
       const day = index + 1;
-      const weekday = new Date(year, month, day).getDay();
+      const weekday = new Date(Date.UTC(year, month, day)).getUTCDay();
       return { day, weekend: weekday === 0 || weekday === 6 };
     }),
   ];
 });
-let interval: ReturnType<typeof setInterval> | undefined;
-
-onMounted(() => {
-  now.value = new Date();
-  interval = setInterval(() => (now.value = new Date()), 60_000);
-});
-onUnmounted(() => clearInterval(interval));
 </script>
 
 <template>
@@ -55,11 +52,11 @@ onUnmounted(() => clearInterval(interval));
           :key="index"
           :class="{
             'is-blank': item.day === 0,
-            'is-today': item.day === now.getDate(),
+            'is-today': item.day === today.getUTCDate(),
             'is-weekend': item.weekend,
           }"
           :aria-current="
-            item.day && item.day === now.getDate() ? 'date' : undefined
+            item.day && item.day === today.getUTCDate() ? 'date' : undefined
           "
           >{{ item.day || "" }}</span
         >
@@ -67,3 +64,5 @@ onUnmounted(() => clearInterval(interval));
     </CardContent>
   </Card>
 </template>
+
+<style src="./calendar.css"></style>

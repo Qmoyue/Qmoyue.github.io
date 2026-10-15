@@ -1,12 +1,8 @@
 <script setup lang="ts">
 import { iconPaths } from "../../../components/shared/iconPaths";
+import type { NavigationItem } from "../../../framework/contracts/config";
 
-const links = [
-  { label: "BLOG", href: "/blog/", icon: iconPaths.blog },
-  { label: "PROJECT", href: "/project/", icon: iconPaths.project },
-  { label: "FRIENDS", href: "/friends/", icon: iconPaths.friends },
-  { label: "ME", href: "/me/", icon: iconPaths.me },
-];
+defineProps<{ links: readonly NavigationItem[] }>();
 </script>
 
 <template>
@@ -18,9 +14,11 @@ const links = [
       :aria-label="link.label"
     >
       <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path :d="link.icon" />
+        <path :d="iconPaths[link.icon]" />
       </svg>
       <span>{{ link.label }}</span>
     </a>
   </nav>
 </template>
+
+<style src="./quick-links.css"></style>

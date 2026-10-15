@@ -1,3 +1,5 @@
+import type { NavigationItem } from "./config";
+
 export interface HomePageModel {
   renderedAt: string;
   identity: {
@@ -20,4 +22,5 @@ export interface HomePageModel {
   quoteImage: string;
   quote: readonly [string, string];
   fallingWords: readonly string[];
+  links: readonly NavigationItem[];
 }

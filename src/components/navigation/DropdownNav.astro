@@ -1,15 +1,17 @@
 ---
 import NavigationMenu from "../../islands/NavigationMenu.vue";
 import Icon from "../shared/Icon.astro";
-import { navItems } from "../../site/config";
+import type { NavigationItem } from "../../framework/contracts/config";
+import { isActivePath } from "../../lib/navigation";
+
+interface Props {
+  items: readonly NavigationItem[];
+}
+const { items } = Astro.props;
 ---
 
 <div class="nav-island">
-  <NavigationMenu
-    items={navItems}
-    currentPath={Astro.url.pathname}
-    client:load
-  />
+  <NavigationMenu items={items} currentPath={Astro.url.pathname} client:load />
 </div>
 <noscript>
   <style>
@@ -22,8 +24,17 @@ import { navItems } from "../../site/config";
       <summary class="nav-trigger" aria-label="打开导航"></summary>
       <div class="nav-panel">
         {
-          navItems.map((item) => (
-            <a class="nav-item" href={item.href}>
+          items.map((item) => (
+            <a
+              class:list={[
+                "nav-item",
+                { "is-active": isActivePath(Astro.url.pathname, item.href) },
+              ]}
+              href={item.href}
+              aria-current={
+                isActivePath(Astro.url.pathname, item.href) ? "page" : undefined
+              }
+            >
               <span class="nav-icon">
                 <Icon name={item.icon} />
               </span>

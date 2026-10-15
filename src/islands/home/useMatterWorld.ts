@@ -25,19 +25,9 @@ export interface FallingChip {
   fading: boolean;
 }
 
-export function makeFallingRandom(seed?: number): () => number {
-  if (seed === undefined) return Math.random;
-  let state = seed >>> 0;
-  return () => {
-    state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
-    return state / 4294967296;
-  };
-}
-
 export function useMatterWorld(
   stage: Ref<HTMLElement | null>,
   words: readonly string[],
-  seed?: number,
 ) {
   if (words.length === 0)
     throw new Error("Falling tags need at least one word");
@@ -202,7 +192,7 @@ export function useMatterWorld(
     const rect = element.getBoundingClientRect();
     const width = Math.max(rect.width, window.innerWidth, 320);
     const height = Math.max(rect.height, window.innerHeight, 480);
-    const random = makeFallingRandom(seed);
+    const random = Math.random;
 
     const newEngine = matter.Engine.create({ enableSleeping: true });
     engine = newEngine;

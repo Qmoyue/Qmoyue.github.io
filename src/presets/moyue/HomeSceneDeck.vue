@@ -14,6 +14,6 @@ defineProps<{ model: HomePageModel; panel: HomePanel }>();
     aria-label="首页模块"
   >
     <HomeBentoGrid :model="model" />
-    <FallingTags :panel="panel" :words="model.fallingWords" />
+    <FallingTags :active="panel === 'second'" :words="model.fallingWords" />
   </section>
 </template>

@@ -3,9 +3,9 @@ import { render } from "astro:content";
 import { getImage } from "astro:assets";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ArticleToc from "../../islands/ArticleToc.vue";
-import { formatDate } from "../../lib/dates";
+import ArticleCard from "../../components/blog/ArticleCard.astro";
+import ArticleHeader from "../../components/blog/ArticleHeader.astro";
 import { blogRepository } from "../../site/blog";
-import "../../styles/prose/article.css";
 import "./article.css";
 
 export async function getStaticPaths() {
@@ -18,7 +18,7 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content, headings } = await render(post.entry);
-const { title, description, pubDate, tags, words } = post.summary;
+const { title, description, pubDate } = post.summary;
 const socialCover = await getImage({
   src: post.summary.cover.src,
   width: 1200,
@@ -38,23 +38,10 @@ const socialCover = await getImage({
   }}
 >
   <main class="page-shell article-shell">
-    <article class="article-card">
-      <a class="back-link" href="/blog/">← 回到文章列表</a>
-      <p class="article-meta">
-        <span>{tags[0]}</span>
-        <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
-        <span>{words.toLocaleString("zh-CN")} 字</span>
-      </p>
-      <h1 class="article-title">{title}</h1>
-      <p class="article-description">{description}</p>
-      <div class="tag-row">
-        {tags.map((tag) => <span class="tag-chip">#{tag}</span>)}
-      </div>
-
-      <div class="article-prose">
-        <Content />
-      </div>
-    </article>
+    <ArticleCard>
+      <ArticleHeader slot="header" post={post.summary} />
+      <Content />
+    </ArticleCard>
 
     <ArticleToc headings={headings} client:idle />
   </main>

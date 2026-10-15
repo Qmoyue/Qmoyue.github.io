@@ -152,6 +152,31 @@ test.describe("visual smoke", () => {
     expect(matches).toBeGreaterThan(0);
     expect(matches).toBeLessThan(total);
 
+    await search.fill("");
+    await search.press("Enter");
+    await search.fill("CTF");
+    await page.evaluate(() =>
+      window.scrollTo({ top: 650, behavior: "instant" }),
+    );
+    const rail = page.getByRole("slider", { name: "页面滚动进度" });
+    await expect(rail).not.toHaveAttribute("aria-valuenow", "0");
+    await search.press("Enter");
+    await expect
+      .poll(async () => {
+        const actual = await page.evaluate(() =>
+          Math.round(
+            (window.scrollY /
+              Math.max(
+                1,
+                document.documentElement.scrollHeight - window.innerHeight,
+              )) *
+              100,
+          ),
+        );
+        return Number(await rail.getAttribute("aria-valuenow")) === actual;
+      })
+      .toBe(true);
+
     await search.fill("a-term-that-is-not-in-any-article");
     await search.press("Enter");
     await expect(page.locator("[data-note-card]:visible")).toHaveCount(0);

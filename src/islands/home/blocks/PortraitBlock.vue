@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import type { HomePageModel } from "../../../framework/contracts/home";
-
-defineProps<{ model: HomePageModel }>();
+defineProps<{ src: string }>();
 </script>
 
 <template>
@@ -9,7 +7,7 @@ defineProps<{ model: HomePageModel }>();
     <div class="home-portrait__wood">
       <div class="home-portrait__pane">
         <img
-          :src="model.flowerImage"
+          :src="src"
           alt="花园里捧着花的人像"
           width="1200"
           height="512"

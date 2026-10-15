@@ -1,3 +1,12 @@
+import type { IconName } from "../../components/shared/iconPaths";
+
+export interface NavigationItem {
+  href: string;
+  label: string;
+  subtitle: string;
+  icon: IconName;
+}
+
 export interface ThemePreset {
   id: string;
 }
@@ -30,7 +39,11 @@ export function defineBlogConfig<const T extends BlogConfig>(config: T): T {
   }
 
   for (const item of config.navigation) {
-    if (!item.href.startsWith("/") || !item.label.trim()) {
+    if (
+      !item.href.startsWith("/") ||
+      item.href.startsWith("//") ||
+      !item.label.trim()
+    ) {
       throw new Error("Navigation items need a local href and label");
     }
   }

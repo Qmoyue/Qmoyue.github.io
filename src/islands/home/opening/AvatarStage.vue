@@ -1,11 +1,7 @@
 <script setup lang="ts">
 import { onUnmounted, ref } from "vue";
-import type { HomePageModel } from "../../../framework/contracts/home";
-import AvatarFrame from "./AvatarFrame.vue";
-import AvatarPortrait from "./AvatarPortrait.vue";
-import AvatarSpeech from "./AvatarSpeech.vue";
 
-defineProps<{ model: HomePageModel }>();
+defineProps<{ avatar: string; frame: string; speech: string }>();
 const speaking = ref(false);
 const speechKey = ref(0);
 let speechTimer: ReturnType<typeof setTimeout> | undefined;
@@ -30,13 +26,34 @@ onUnmounted(() => {
     @click="showSpeech"
   >
     <span class="hero-avatar-artwork">
-      <AvatarPortrait :src="model.identity.avatar" />
-      <AvatarFrame :src="model.avatarFrameImage" />
+      <img
+        class="hero-avatar-portrait"
+        :src="avatar"
+        alt=""
+        width="1676"
+        height="1676"
+        loading="eager"
+        decoding="async"
+      />
+      <img
+        class="hero-avatar-frame"
+        :src="frame"
+        alt=""
+        width="1254"
+        height="1254"
+        loading="eager"
+        decoding="async"
+      />
     </span>
-    <AvatarSpeech
+    <span
       :key="speechKey"
-      :text="model.avatarSpeech"
-      :speaking="speaking"
-    />
+      class="avatar-speech"
+      :class="{ 'is-speaking': speaking }"
+      data-avatar-speech
+      aria-hidden="true"
+      >{{ speech }}</span
+    >
   </button>
 </template>
+
+<style src="./avatar.css"></style>

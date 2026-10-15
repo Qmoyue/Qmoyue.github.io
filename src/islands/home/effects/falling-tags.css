@@ -1,0 +1,89 @@
+.falling-stage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.falling-stage.is-physics-running {
+  overflow: hidden;
+}
+
+.falling-stage.is-physics-running .falling-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 108px;
+  max-width: min(340px, calc(100% - 64px));
+  min-height: 42px;
+  padding: 8px 18px;
+  border: 2px solid rgba(255, 255, 255, 0.58);
+  border-radius: 999px;
+  color: #33445e;
+  font-family: "Courier New", monospace;
+  font-weight: 900;
+  opacity: 0;
+  box-shadow: 0 12px 24px rgba(52, 62, 79, 0.16);
+  transform: translate3d(-999px, -999px, 0);
+  will-change: transform, opacity, filter;
+}
+
+.falling-stage.is-physics-running .falling-item.is-wide {
+  min-width: 210px;
+}
+
+.falling-stage.is-physics-running .falling-item b {
+  display: block;
+  width: 100%;
+  font-family: "Courier New", "Microsoft YaHei", monospace;
+  font-size: clamp(0.78rem, 1.06vw, 0.98rem);
+  font-weight: 950;
+  line-height: 1.15;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.falling-stage.is-physics-running .falling-item.is-pink {
+  background: linear-gradient(135deg, #ffd7e5, #ffeef5);
+  border-color: rgba(235, 137, 178, 0.42);
+}
+
+.falling-stage.is-physics-running .falling-item.is-blue {
+  background: linear-gradient(135deg, #d8eff9, #f1fbff);
+  border-color: rgba(135, 198, 224, 0.42);
+}
+
+.falling-stage.is-physics-running .falling-item.is-yellow {
+  background: linear-gradient(135deg, #fff0a9, #fff8d3);
+  border-color: rgba(230, 195, 84, 0.42);
+}
+
+.falling-stage.is-physics-running .falling-item.is-mint {
+  background: linear-gradient(135deg, #d5f3e5, #effcf6);
+  border-color: rgba(116, 198, 162, 0.42);
+}
+
+.falling-stage.is-physics-running .falling-item.is-lavender {
+  background: linear-gradient(135deg, #e8ddff, #f4efff);
+  border-color: rgba(172, 148, 220, 0.42);
+}
+
+.falling-stage.is-physics-running .falling-item.is-cream {
+  background: linear-gradient(135deg, #fff9ed, #f6fbff);
+  border-color: rgba(204, 190, 168, 0.42);
+}
+
+.falling-stage.is-physics-running .falling-item.is-physics-fading {
+  opacity: 0 !important;
+  filter: blur(5px) saturate(0.88);
+  transition:
+    opacity 1400ms ease,
+    filter 1400ms ease;
+}
+
+.falling-stage {
+  z-index: 2;
+  pointer-events: none;
+}

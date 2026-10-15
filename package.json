@@ -17,8 +17,6 @@
     "dev:status": "astro dev status",
     "dev:logs": "astro dev logs",
     "dev:stop": "astro dev stop",
-    "prepare:blog-covers": "node scripts/prepare-blog-covers.mjs",
-    "refine:metadata": "node scripts/refine-post-metadata.mjs",
     "content:report": "node scripts/report-content-contract.ts",
     "content:check": "node scripts/report-content-contract.ts --strict",
     "build": "pnpm run content:check && astro build",
@@ -36,13 +34,12 @@
   "dependencies": {
     "@astrojs/markdown-satteri": "0.3.8",
     "@astrojs/vue": "7.0.3",
-    "@lucide/astro": "1.23.0",
     "astro": "7.2.8",
     "astro-expressive-code": "0.44.2",
     "matter-js": "0.20.0",
     "reka-ui": "2.10.5",
     "satteri": "0.10.5",
-    "sharp": "0.35.4",
+    "sharp": "0.35.5",
     "vue": "3.5.43"
   },
   "devDependencies": {

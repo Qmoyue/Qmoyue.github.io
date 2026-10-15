@@ -1,19 +1,21 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from "vue";
-import type { HomePanel } from "./useHomePanels";
+import "./scroll-rail.css";
 
-const props = defineProps<{ thumbSrc: string; panel: HomePanel }>();
-const emit = defineEmits<{
-  seek: [panel: HomePanel, dragging: boolean];
-  drag: [ratio: number];
-}>();
+const props = withDefaults(
+  defineProps<{ thumbSrc: string; progress: number; step?: number }>(),
+  { step: 1 },
+);
+const emit = defineEmits<{ seek: [ratio: number]; drag: [ratio: number] }>();
 const rail = ref<HTMLElement | null>(null);
 const track = ref<HTMLButtonElement | null>(null);
+const thumb = ref<HTMLImageElement | null>(null);
 const dragging = ref(false);
 const running = ref(false);
 const position = ref(0);
+const clamp = (ratio: number) => Math.min(1, Math.max(0, ratio));
 const displayedPosition = computed(() =>
-  dragging.value ? position.value : props.panel === "second" ? 1 : 0,
+  dragging.value ? position.value : clamp(props.progress),
 );
 let wheelTimer: ReturnType<typeof setTimeout> | undefined;
 let grabOffset = 0;
@@ -21,48 +23,40 @@ let grabOffset = 0;
 function seekFromPointer(event: PointerEvent): void {
   const rect = track.value?.getBoundingClientRect();
   if (!rect) return;
-  const ratio = Math.min(
-    1,
-    Math.max(0, (event.clientY - rect.top - grabOffset) / rect.height),
-  );
-  position.value = ratio;
-  emit("drag", ratio);
+  position.value = clamp((event.clientY - rect.top - grabOffset) / rect.height);
+  emit("drag", position.value);
 }
 
 function startDrag(event: PointerEvent): void {
   if (event.button !== 0) return;
   event.preventDefault();
-  position.value = props.panel === "second" ? 1 : 0;
+  position.value = clamp(props.progress);
   const rect = track.value?.getBoundingClientRect();
   grabOffset =
-    rect && event.target === rail.value?.querySelector(".scroll-rail-thumb")
+    rect && event.target === thumb.value
       ? event.clientY - (rect.top + position.value * rect.height)
       : 0;
   dragging.value = true;
   clearTimeout(wheelTimer);
   running.value = true;
+  track.value?.focus({ preventScroll: true });
   rail.value?.setPointerCapture(event.pointerId);
   seekFromPointer(event);
 }
 
-function endDrag(event: PointerEvent): void {
+function finishDrag(): void {
   if (!dragging.value) return;
   dragging.value = false;
   running.value = false;
   grabOffset = 0;
-  emit("seek", position.value >= 0.5 ? "second" : "first", true);
+  emit("seek", position.value);
+}
+
+function endDrag(event: PointerEvent): void {
+  finishDrag();
   if (rail.value?.hasPointerCapture(event.pointerId)) {
     rail.value.releasePointerCapture(event.pointerId);
   }
-}
-
-function loseDrag(): void {
-  if (dragging.value) {
-    emit("seek", position.value >= 0.5 ? "second" : "first", true);
-  }
-  dragging.value = false;
-  running.value = false;
-  grabOffset = 0;
 }
 
 function onWheel(): void {
@@ -73,13 +67,16 @@ function onWheel(): void {
 }
 
 function onKeydown(event: KeyboardEvent): void {
+  let ratio: number;
   if (event.key === "ArrowDown" || event.key === "ArrowUp") {
-    event.preventDefault();
-    emit("seek", event.key === "ArrowDown" ? "second" : "first", true);
+    ratio =
+      displayedPosition.value +
+      (event.key === "ArrowDown" ? props.step : -props.step);
   } else if (event.key === "Home" || event.key === "End") {
-    event.preventDefault();
-    emit("seek", event.key === "End" ? "second" : "first", true);
-  }
+    ratio = event.key === "End" ? 1 : 0;
+  } else return;
+  event.preventDefault();
+  emit("seek", clamp(ratio));
 }
 
 onMounted(() => window.addEventListener("wheel", onWheel, { passive: true }));
@@ -100,7 +97,7 @@ onUnmounted(() => {
     @pointermove="dragging && seekFromPointer($event)"
     @pointerup="endDrag"
     @pointercancel="endDrag"
-    @lostpointercapture="loseDrag"
+    @lostpointercapture="finishDrag"
   >
     <button
       ref="track"
@@ -116,6 +113,7 @@ onUnmounted(() => {
     >
       <span class="scroll-rail-fill"></span>
       <img
+        ref="thumb"
         class="scroll-rail-thumb"
         :src="thumbSrc"
         alt=""

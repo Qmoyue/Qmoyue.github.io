@@ -135,3 +135,58 @@ test("home blog link remains in static HTML without JavaScript", async ({
     await context.close();
   }
 });
+
+test("enabling reduced motion during the opening settles its playback", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/");
+  await expect(page.locator("[data-home-root]")).toBeVisible();
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect(page.locator("[data-terminal-command]")).toHaveText("cat /flag");
+  await expect(page.locator("[data-terminal-output]")).toHaveText(
+    /^flag\{[a-z0-9_]+\}$/,
+  );
+  await page.getByRole("slider", { name: "页面滚动进度" }).press("End");
+  await expect(page.getByRole("region", { name: "首页模块" })).toBeInViewport();
+  await expect(page.locator("[data-falling-stage] .falling-item")).toHaveCount(
+    0,
+  );
+});
+
+test("home clock and calendar agree when the visitor uses another time zone", async ({
+  browser,
+}) => {
+  const context = await browser.newContext({
+    timezoneId: "America/Los_Angeles",
+    reducedMotion: "reduce",
+  });
+  try {
+    const page = await context.newPage();
+    await page.goto("/");
+    const expected = await page.evaluate(() => {
+      const now = new Date();
+      return {
+        time: new Intl.DateTimeFormat("en-GB", {
+          timeZone: "Asia/Shanghai",
+          hour: "2-digit",
+          minute: "2-digit",
+          hourCycle: "h23",
+        }).format(now),
+        today: new Intl.DateTimeFormat("en-US", {
+          timeZone: "Asia/Shanghai",
+          month: "2-digit",
+          day: "2-digit",
+        })
+          .format(now)
+          .replace("/", "."),
+      };
+    });
+    await expect(page.locator("[data-clock-time]")).toHaveText(expected.time);
+    await expect(page.locator("[data-calendar-today]")).toHaveText(
+      expected.today,
+    );
+  } finally {
+    await context.close();
+  }
+});

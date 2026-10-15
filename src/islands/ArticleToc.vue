@@ -14,29 +14,46 @@ const visibleHeadings = computed(() =>
   ),
 );
 const activeSlug = ref<string | null>(null);
-let observer: IntersectionObserver | undefined;
+let sections: HTMLElement[] = [];
+let observer: ResizeObserver;
+let frame = 0;
+
+function updateActive(): void {
+  frame = 0;
+  const current = sections.findLast(
+    (section) =>
+      section.getBoundingClientRect().top <=
+      Math.max(
+        window.innerHeight * 0.12,
+        parseFloat(getComputedStyle(section).scrollMarginTop) || 0,
+      ) +
+        2,
+  );
+  activeSlug.value = current?.id ?? null;
+}
+
+function scheduleUpdate(): void {
+  if (!frame) frame = requestAnimationFrame(updateActive);
+}
 
 onMounted(() => {
-  const sections = visibleHeadings.value
+  sections = visibleHeadings.value
     .map((heading) => document.getElementById(heading.slug))
     .filter((section): section is HTMLElement => section !== null);
 
-  observer = new IntersectionObserver(
-    (entries) => {
-      const firstVisible = entries
-        .filter((entry) => entry.isIntersecting)
-        .sort(
-          (left, right) =>
-            left.boundingClientRect.top - right.boundingClientRect.top,
-        )[0];
-      if (firstVisible) activeSlug.value = firstVisible.target.id;
-    },
-    { rootMargin: "-12% 0px -72% 0px", threshold: [0, 1] },
-  );
-  sections.forEach((section) => observer?.observe(section));
+  observer = new ResizeObserver(scheduleUpdate);
+  observer.observe(document.body);
+  window.addEventListener("scroll", scheduleUpdate, { passive: true });
+  window.addEventListener("resize", scheduleUpdate);
+  updateActive();
 });
 
-onUnmounted(() => observer?.disconnect());
+onUnmounted(() => {
+  observer.disconnect();
+  cancelAnimationFrame(frame);
+  window.removeEventListener("scroll", scheduleUpdate);
+  window.removeEventListener("resize", scheduleUpdate);
+});
 </script>
 
 <template>

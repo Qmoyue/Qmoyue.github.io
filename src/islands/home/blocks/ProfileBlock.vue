@@ -1,14 +1,17 @@
 <script setup lang="ts">
 import type { HomePageModel } from "../../../framework/contracts/home";
 
-defineProps<{ model: HomePageModel }>();
+defineProps<{
+  identity: Pick<HomePageModel["identity"], "avatar" | "displayName">;
+  greeting: HomePageModel["profileGreeting"];
+}>();
 </script>
 
 <template>
-  <section class="home-profile-widget" :aria-label="model.identity.displayName">
+  <section class="home-profile-widget" :aria-label="identity.displayName">
     <img
-      :src="model.identity.avatar"
-      :alt="`${model.identity.displayName} avatar`"
+      :src="identity.avatar"
+      :alt="`${identity.displayName} avatar`"
       width="120"
       height="120"
       loading="lazy"
@@ -16,9 +19,10 @@ defineProps<{ model: HomePageModel }>();
     />
     <p>
       <span
-        >{{ model.profileGreeting.intro }}
-        <strong>{{ model.identity.displayName }}</strong></span
-      ><span>{{ model.profileGreeting.outro }}</span>
+        >{{ greeting.intro }} <strong>{{ identity.displayName }}</strong></span
+      ><span>{{ greeting.outro }}</span>
     </p>
   </section>
 </template>
+
+<style src="./profile.css"></style>

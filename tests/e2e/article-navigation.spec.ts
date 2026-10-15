@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 test("article TOC tracks the section in view", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/blog/web/");
   const link = page
     .getByRole("navigation", { name: "文章目录" })
@@ -8,16 +9,44 @@ test("article TOC tracks the section in view", async ({ page }) => {
   await link.click();
   await expect(page).toHaveURL(/#path$/);
   await expect(link).toHaveAttribute("aria-current", "location");
+
+  const keep = page
+    .getByRole("navigation", { name: "文章目录" })
+    .getByRole("link", { name: /^keep/ });
+  await keep.click();
+  await expect(keep).toHaveAttribute("aria-current", "location");
+  await page
+    .getByRole("heading", { name: "Path", exact: true })
+    .evaluate((heading) => {
+      window.scrollTo({
+        top: window.scrollY + heading.getBoundingClientRect().top + 400,
+        behavior: "instant",
+      });
+    });
+  await expect(link).toHaveAttribute("aria-current", "location");
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+  await expect(
+    page.locator('.article-toc [aria-current="location"]'),
+  ).toHaveCount(0);
 });
 
 test("reading progress can seek through a long article by keyboard", async ({
   page,
 }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/blog/web/");
   const rail = page.getByRole("slider", { name: "页面滚动进度" });
   await rail.focus();
   await rail.press("End");
   await expect(rail).toHaveAttribute("aria-valuenow", "100");
+  expect(
+    await page.evaluate(
+      () =>
+        document.documentElement.scrollHeight -
+        window.innerHeight -
+        window.scrollY,
+    ),
+  ).toBeLessThan(2);
   await rail.press("Home");
   await expect(rail).toHaveAttribute("aria-valuenow", "0");
 });

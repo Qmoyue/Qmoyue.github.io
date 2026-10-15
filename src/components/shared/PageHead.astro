@@ -1,0 +1,79 @@
+---
+import type { PageMetadata } from "../../framework/contracts/metadata";
+import { absoluteSiteUrl } from "../../framework/seo";
+import { site } from "../../site/config";
+
+interface Props {
+  metadata: PageMetadata;
+}
+const { metadata } = Astro.props;
+if (!Astro.site)
+  throw new Error("Astro site URL is required for page metadata");
+const fullTitle =
+  metadata.title === site.name
+    ? metadata.title
+    : `${metadata.title} · ${site.name}`;
+const canonical = absoluteSiteUrl(Astro.url.pathname, Astro.site);
+const image = metadata.image
+  ? absoluteSiteUrl(metadata.image, Astro.site)
+  : undefined;
+---
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width" />
+  <meta name="description" content={metadata.description} />
+  <meta name="generator" content={Astro.generator} />
+  {
+    metadata.kind === "website" && metadata.noindex && (
+      <meta name="robots" content="noindex" />
+    )
+  }
+  {
+    !(metadata.kind === "website" && metadata.noindex) && (
+      <link rel="canonical" href={canonical} />
+    )
+  }
+  <meta property="og:type" content={metadata.kind} />
+  <meta property="og:title" content={fullTitle} />
+  <meta property="og:description" content={metadata.description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:site_name" content={site.name} />
+  {image && <meta property="og:image" content={image} />}
+  {
+    metadata.kind === "article" && (
+      <meta
+        property="article:published_time"
+        content={metadata.publishedAt.toISOString()}
+      />
+    )
+  }
+  {
+    metadata.kind === "article" && metadata.updatedAt && (
+      <meta
+        property="article:modified_time"
+        content={metadata.updatedAt.toISOString()}
+      />
+    )
+  }
+  <meta
+    name="twitter:card"
+    content={image ? "summary_large_image" : "summary"}
+  />
+  <meta name="twitter:title" content={fullTitle} />
+  <meta name="twitter:description" content={metadata.description} />
+  {image && <meta name="twitter:image" content={image} />}
+  <link
+    rel="alternate"
+    type="application/rss+xml"
+    title={`${site.name} RSS`}
+    href={absoluteSiteUrl("/rss.xml", Astro.site)}
+  />
+  <link
+    rel="sitemap"
+    type="application/xml"
+    href={absoluteSiteUrl("/sitemap.xml", Astro.site)}
+  />
+  <link rel="icon" type="image/png" href={site.doro} />
+  <title>{fullTitle}</title>
+</head>

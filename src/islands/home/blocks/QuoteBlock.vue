@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import type { HomePageModel } from "../../../framework/contracts/home";
 
-defineProps<{ model: HomePageModel }>();
+defineProps<{ src: string; quote: HomePageModel["quote"] }>();
 </script>
 
 <template>
   <section class="home-quote-widget" aria-label="签名">
     <img
       class="home-quote-widget__portrait"
-      :src="model.quoteImage"
+      :src="src"
       alt="银蓝色短发、红色眼睛的人物"
       width="424"
       height="346"
@@ -16,8 +16,8 @@ defineProps<{ model: HomePageModel }>();
       decoding="async"
     />
     <blockquote>
-      <p>{{ model.quote[0] }}</p>
-      <p>{{ model.quote[1] }}</p>
+      <p>{{ quote[0] }}</p>
+      <p>{{ quote[1] }}</p>
     </blockquote>
   </section>
 </template>

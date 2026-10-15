@@ -5,6 +5,8 @@ import FriendBubble from "./FriendBubble.vue";
 import FriendPortrait from "./FriendPortrait.vue";
 
 const props = defineProps<{ friends: readonly FriendLink[] }>();
+if (props.friends.length === 0)
+  throw new Error("FriendsCarousel needs at least one friend");
 const activeIndex = ref(0);
 const active = computed(() => props.friends[activeIndex.value]!);
 const previous = computed(
@@ -32,6 +34,7 @@ function move(direction: -1 | 1) {
     @keydown.right.prevent="move(1)"
   >
     <button
+      v-if="friends.length > 1"
       class="friend-neighbor friend-neighbor--previous"
       type="button"
       :aria-label="`查看上一位友链：${previous.name}`"
@@ -41,6 +44,7 @@ function move(direction: -1 | 1) {
     </button>
 
     <button
+      v-if="friends.length > 1"
       class="friend-neighbor friend-neighbor--next"
       type="button"
       :aria-label="`查看下一位友链：${next.name}`"
@@ -50,6 +54,7 @@ function move(direction: -1 | 1) {
     </button>
 
     <button
+      v-if="friends.length > 1"
       class="friend-arrow friend-arrow--previous"
       type="button"
       :aria-label="`上一位：${previous.name}`"
@@ -67,7 +72,7 @@ function move(direction: -1 | 1) {
     </button>
 
     <Transition name="friend-swap" mode="out-in">
-      <div :key="active.name" class="friend-current" aria-live="polite">
+      <div :key="active.url" class="friend-current" aria-live="polite">
         <component
           :is="active.unavailable ? 'div' : 'a'"
           class="friend-current-link"
@@ -91,6 +96,7 @@ function move(direction: -1 | 1) {
     </Transition>
 
     <button
+      v-if="friends.length > 1"
       class="friend-arrow friend-arrow--next"
       type="button"
       :aria-label="`下一位：${next.name}`"

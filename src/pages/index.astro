@@ -2,12 +2,17 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { createHomePageModel } from "../domain/home/model";
 import HomeExperience from "../presets/moyue/HomeExperience.vue";
-import { site } from "../site/config";
+import { site, navItems } from "../site/config";
 import { homeContent } from "../site/home";
 import "../presets/moyue/home.css";
 import "../presets/moyue/home-second.css";
 
-const model = createHomePageModel(site, homeContent, new Date());
+const model = createHomePageModel(
+  site,
+  homeContent,
+  new Date(),
+  navItems.filter((item) => item.href !== "/"),
+);
 ---
 
 <BaseLayout

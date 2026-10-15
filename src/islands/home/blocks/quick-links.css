@@ -1,0 +1,86 @@
+.home-quick-links {
+  position: absolute;
+  inset: 0;
+}
+
+.home-quick-links a {
+  position: absolute;
+  display: flex;
+  width: 18%;
+  aspect-ratio: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border-radius: 50%;
+  color: #315471;
+  text-decoration: none;
+  transform: translate(-50%, -50%);
+  transition: transform 0.2s ease;
+}
+
+.home-quick-links a:nth-of-type(1) {
+  top: 73.5%;
+  left: 14.4%;
+}
+
+.home-quick-links a:nth-of-type(2) {
+  top: 83.5%;
+  left: 36%;
+}
+
+.home-quick-links a:nth-of-type(3) {
+  top: 83.5%;
+  left: 64%;
+}
+
+.home-quick-links a:nth-of-type(4) {
+  top: 73.5%;
+  left: 85.6%;
+}
+
+.home-quick-links a:hover {
+  transform: translate(-50%, -50%) scale(1.08);
+}
+
+.home-quick-links a:active {
+  transform: translate(-50%, -50%) scale(0.97);
+}
+
+.home-quick-links a:focus-visible {
+  outline: 3px solid #5595ae;
+  outline-offset: -3px;
+}
+
+.home-quick-links a svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.home-quick-links a span {
+  font-size: 0.72rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+@media (max-width: 800px) {
+  .home-quick-links a svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .home-quick-links a span {
+    font-size: 0.58rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-quick-links a {
+    transition: none;
+  }
+}

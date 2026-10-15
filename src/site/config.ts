@@ -20,7 +20,6 @@ export const blogConfig = defineBlogConfig({
       line: "学习笔记 & 漏洞研究",
       status: "sakura: falling / doro: on duty",
     },
-    email: "hello@example.com",
   },
   navigation: [
     { href: "/", label: "HOME", subtitle: "front page", icon: "home" },

@@ -23,13 +23,20 @@ export function createHomePageModel(
   identity: HomeIdentity,
   content: HomeContent,
   renderedAt: Date,
+  links: HomePageModel["links"],
 ): HomePageModel {
   if (content.fallingWords.length === 0)
     throw new Error("Falling tags need at least one word");
 
   return {
     renderedAt: renderedAt.toISOString(),
-    identity,
+    links,
+    identity: {
+      subtitle: identity.subtitle,
+      displayName: identity.displayName,
+      avatar: identity.avatar,
+      githubUrl: identity.githubUrl,
+    },
     ...content,
   };
 }

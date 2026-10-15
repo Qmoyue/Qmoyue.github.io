@@ -5,6 +5,7 @@ import { fromMarkdown } from "mdast-util-from-markdown";
 import { gfmFromMarkdown } from "mdast-util-gfm";
 import { gfm } from "micromark-extension-gfm";
 import { parseDocument } from "yaml";
+import { articleMetadataSchema } from "../../src/domain/blog/metadata.ts";
 
 export interface ContentIssue {
   file: string;
@@ -61,38 +62,13 @@ export function inspectArticle(
         ) {
           add(2, "FRONTMATTER", "frontmatter must be a mapping");
         } else {
-          const values = metadata as Record<string, unknown>;
-          for (const key of [
-            "title",
-            "description",
-            "pubDate",
-            "cover",
-            "coverAlt",
-          ]) {
-            if (typeof values[key] !== "string" || !values[key].trim()) {
-              add(2, "METADATA", `${key} must be a non-empty string`);
+          const result = articleMetadataSchema.safeParse(metadata);
+          if (!result.success) {
+            for (const issue of result.error.issues) {
+              add(2, "METADATA", `${issue.path.join(".")}: ${issue.message}`);
             }
           }
-          if (
-            typeof values.pubDate === "string" &&
-            (!/^\d{4}-\d{2}-\d{2}$/.test(values.pubDate) ||
-              Number.isNaN(Date.parse(`${values.pubDate}T00:00:00Z`)) ||
-              new Date(`${values.pubDate}T00:00:00Z`)
-                .toISOString()
-                .slice(0, 10) !== values.pubDate)
-          ) {
-            add(2, "METADATA", "pubDate must be a valid YYYY-MM-DD date");
-          }
-          if (
-            !Array.isArray(values.tags) ||
-            values.tags.length === 0 ||
-            values.tags.some((tag) => typeof tag !== "string" || !tag.trim())
-          ) {
-            add(2, "METADATA", "tags must be non-empty strings");
-          }
-          if (typeof values.draft !== "boolean") {
-            add(2, "METADATA", "draft must be a boolean");
-          }
+          const values = metadata as Record<string, unknown>;
           if (typeof values.cover === "string" && values.cover !== "auto") {
             const cover = resolve(
               projectRoot,

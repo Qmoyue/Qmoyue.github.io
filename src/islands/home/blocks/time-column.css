@@ -1,0 +1,20 @@
+.home-time-column {
+  display: grid;
+  gap: 34px;
+}
+
+@media (max-width: 1190px) {
+  .home-time-column {
+    grid-column: 1 / -1;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
+
+@media (max-width: 800px) {
+  .home-time-column {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+}

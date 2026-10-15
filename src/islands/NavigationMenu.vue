@@ -8,27 +8,17 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "../components/ui/navigation-menu";
-import { iconPaths, type IconName } from "../components/shared/iconPaths";
-
-interface NavItem {
-  href: string;
-  label: string;
-  subtitle: string;
-  icon: IconName;
-}
+import { iconPaths } from "../components/shared/iconPaths";
+import type { NavigationItem } from "../framework/contracts/config";
+import { isActivePath } from "../lib/navigation";
 
 const props = defineProps<{
-  items: readonly NavItem[];
+  items: readonly NavigationItem[];
   currentPath: string;
 }>();
 
 const activeMenu = ref("");
-const normalize = (path: string) =>
-  path === "/" ? "/" : path.replace(/\/$/, "");
-const isActive = (href: string) =>
-  href === "/"
-    ? props.currentPath === "/"
-    : normalize(props.currentPath).startsWith(normalize(href));
+const isActive = (href: string) => isActivePath(props.currentPath, href);
 </script>
 
 <template>
